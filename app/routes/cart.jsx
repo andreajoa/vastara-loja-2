@@ -1,4 +1,4 @@
-import {json} from '@shopify/remix-oxygen';
+import {json} from '@shopify/hydrogen';
 import {CART_FRAGMENT, CREATE_CART_MUTATION, ADD_TO_CART_MUTATION, REMOVE_FROM_CART_MUTATION, UPDATE_CART_MUTATION} from '~/lib/cart';
 
 export async function loader({context}) {

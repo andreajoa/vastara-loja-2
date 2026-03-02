@@ -1,4 +1,4 @@
-import {json} from '@shopify/remix-oxygen';
+import {json} from '@shopify/hydrogen';
 import {useLoaderData, Link} from 'react-router';
 import {useContext} from 'react';
 import {PRODUCT_CARD_FRAGMENT} from '~/lib/fragments';

@@ -1,4 +1,4 @@
-import {json, redirect} from '@shopify/remix-oxygen';
+import {json, redirect} from '@shopify/hydrogen';
 import {useLoaderData, Link} from 'react-router';
 import {useState, useContext} from 'react';
 import {CartContext} from '~/components/Layout';
