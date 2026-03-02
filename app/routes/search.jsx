@@ -1,5 +1,5 @@
-import {json} from '@shopify/hydrogen';
-import {useLoaderData, Link} from 'react-router';
+
+import {data as json, useLoaderData, Link} from 'react-router';
 import {useContext} from 'react';
 import {PRODUCT_CARD_FRAGMENT} from '~/lib/fragments';
 import ProductCard from '~/components/ProductCard';
