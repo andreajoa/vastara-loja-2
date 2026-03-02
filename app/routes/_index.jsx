@@ -55,6 +55,7 @@ export default function Homepage() {
         .hp-catlist-r img{width:100%;height:100%;object-fit:cover}
         .hp-cat-row{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid #f0ede8;text-decoration:none;color:#0a0a0a;transition:color 0.2s}
         .hp-cat-row:hover{color:#c9a84c}
+        .hp-stky-wrap{position:relative}
         .hp-stky{height:100vh;display:flex;align-items:center;overflow:hidden;position:sticky;top:0}
         .hp-stky-in{max-width:1400px;margin:0 auto;width:100%;padding:0 56px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
         .hp-stky-img{width:100%;max-width:440px;aspect-ratio:4/5;overflow:hidden}
@@ -92,8 +93,11 @@ export default function Homepage() {
         }
       `}</style>
 
+      {/* HERO */}
       <div className="hp-hero">
-        {col1?.image ? <img src={col1.image.url} alt="Hero" /> : <div style={{width:'100%',height:'100%',background:'linear-gradient(135deg,#1a1a2e,#0f3460)'}} />}
+        {col1?.image
+          ? <img src={col1.image.url} alt="Hero" />
+          : <div style={{width:'100%',height:'100%',background:'linear-gradient(135deg,#1a1a2e,#0f3460)'}} />}
         <div className="hp-hero-overlay" />
         <div className="hp-hero-text">
           <p style={{fontFamily:'monospace',fontSize:'11px',letterSpacing:'4px',textTransform:'uppercase',color:'#c9a84c',marginBottom:'12px'}}>New Collection 2026</p>
@@ -105,6 +109,7 @@ export default function Homepage() {
         </div>
       </div>
 
+      {/* TWO COLUMN COLLECTIONS */}
       {(col2||col3) && (
         <div className="hp-2col">
           {[col2,col3].filter(Boolean).map(col => (
@@ -121,6 +126,7 @@ export default function Homepage() {
         </div>
       )}
 
+      {/* FEATURED PRODUCTS */}
       <section className="hp-sec">
         <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:'40px',flexWrap:'wrap',gap:'12px'}}>
           <div>
@@ -134,6 +140,7 @@ export default function Homepage() {
         </div>
       </section>
 
+      {/* EDITORIAL MIXED */}
       <div className="hp-edit">
         <div className="hp-edit-l">
           {p[0]?.images?.nodes?.[0] && <img src={p[0].images.nodes[0].url} alt={p[0].title} />}
@@ -155,6 +162,7 @@ export default function Homepage() {
         </div>
       </div>
 
+      {/* CATEGORY LIST + IMAGE */}
       <div className="hp-catlist">
         <div className="hp-catlist-l">
           <p style={{fontSize:'10px',fontFamily:'monospace',letterSpacing:'3px',textTransform:'uppercase',color:'#c9a84c',marginBottom:'24px'}}>Browse By Style</p>
@@ -171,7 +179,8 @@ export default function Homepage() {
         </div>
       </div>
 
-      <div>
+      {/* STICKY STACKING BANNERS */}
+      <div className="hp-stky-wrap">
         {[
           {prod:p[0],bg:'#f0ede6',dark:false,tag:'Dive Collection',title:'Harborside Coast',sub:'Water-resistant to 300M. Built for the deep.',link:'/collections/dive',rev:false},
           {prod:p[2],bg:'#1c2331',dark:true,tag:'Automatic',title:'Automatic 1983 Line',sub:'The original automatic. Reborn for a new generation.',link:'/collections/automatic',rev:true},
@@ -189,7 +198,9 @@ export default function Homepage() {
                 </div>
                 <div style={{direction:'ltr',display:'flex',alignItems:'center',justifyContent:'center'}}>
                   <div className="hp-stky-img" style={{background:dark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)'}}>
-                    {img ? <img src={img.url} alt={title} /> : <div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'64px'}}>&#8987;</div>}
+                    {img
+                      ? <img src={img.url} alt={title} />
+                      : <div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'64px'}}>&#8987;</div>}
                   </div>
                 </div>
               </div>
@@ -198,15 +209,19 @@ export default function Homepage() {
         })}
       </div>
 
+      {/* QUOTE */}
       <div className="hp-quote">
         <h2>Every watch has<br/>a soul and a story<br/>to be told.</h2>
       </div>
 
+      {/* COLLECTIONS GRID */}
       {collections.length > 0 && (
         <div className="hp-cgrid">
           {collections.slice(0,3).map(col => (
             <Link key={col.id} to={'/collections/'+col.handle} className="hp-citem">
-              {col.image ? <img src={col.image.url} alt={col.title} /> : <div style={{width:'100%',height:'100%',background:'#1a1a2e'}} />}
+              {col.image
+                ? <img src={col.image.url} alt={col.title} />
+                : <div style={{width:'100%',height:'100%',background:'#1a1a2e'}} />}
               <div style={{position:'absolute',inset:0,background:'linear-gradient(to top,rgba(0,0,0,0.7),transparent 50%)'}} />
               <div style={{position:'absolute',bottom:0,left:0,padding:'28px',color:'#fff'}}>
                 <p style={{fontSize:'10px',fontFamily:'monospace',letterSpacing:'3px',textTransform:'uppercase',color:'#c9a84c',marginBottom:'8px'}}>{col.handle}</p>
@@ -217,6 +232,7 @@ export default function Homepage() {
         </div>
       )}
 
+      {/* MORE TO LOVE */}
       <section className="hp-sec">
         <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:'32px',flexWrap:'wrap',gap:'12px'}}>
           <div>
@@ -244,5 +260,19 @@ export default function Homepage() {
   );
 }
 
-const FEATURED_QUERY = `#graphql\n  ${PRODUCT_CARD_FRAGMENT}\n  query FeaturedProducts {\n    products(first: 8, sortKey: BEST_SELLING) {\n      nodes { ...ProductCard }\n    }\n  }\n`;
-const COLLECTIONS_QUERY = `#graphql\n  query HomepageCollections {\n    collections(first: 6, sortKey: UPDATED_AT, reverse: true) {\n      nodes { id title handle image { url altText width height } }\n    }\n  }\n`;
+const FEATURED_QUERY = `#graphql
+  ${PRODUCT_CARD_FRAGMENT}
+  query FeaturedProducts {
+    products(first: 8, sortKey: BEST_SELLING) {
+      nodes { ...ProductCard }
+    }
+  }
+`;
+
+const COLLECTIONS_QUERY = `#graphql
+  query HomepageCollections {
+    collections(first: 6, sortKey: UPDATED_AT, reverse: true) {
+      nodes { id title handle image { url altText width height } }
+    }
+  }
+`;
