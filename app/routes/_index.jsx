@@ -1,5 +1,5 @@
 
-import {defer, Await, useLoaderData, Link} from 'react-router';
+import {Await, useLoaderData, Link} from 'react-router';
 import {Suspense, useContext} from 'react';
 import {Analytics} from '@shopify/hydrogen';
 import {PRODUCT_CARD_FRAGMENT} from '~/lib/fragments';
