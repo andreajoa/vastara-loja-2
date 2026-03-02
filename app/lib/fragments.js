@@ -1,242 +1,36 @@
-// NOTE: https://shopify.dev/docs/api/storefront/latest/queries/cart
-export const CART_QUERY_FRAGMENT = `#graphql
-  fragment Money on MoneyV2 {
-    currencyCode
-    amount
-  }
-  fragment CartLine on CartLine {
+export const PRODUCT_CARD_FRAGMENT = `#graphql
+  fragment ProductCard on Product {
     id
-    quantity
-    attributes {
-      key
-      value
+    title
+    handle
+    vendor
+    tags
+    priceRange {
+      minVariantPrice { amount currencyCode }
     }
-    cost {
-      totalAmount {
-        ...Money
-      }
-      amountPerQuantity {
-        ...Money
-      }
-      compareAtAmountPerQuantity {
-        ...Money
-      }
+    compareAtPriceRange {
+      minVariantPrice { amount currencyCode }
     }
-    merchandise {
-      ... on ProductVariant {
+    images(first: 2) {
+      nodes { url altText width height }
+    }
+    variants(first: 1) {
+      nodes {
         id
         availableForSale
-        compareAtPrice {
-          ...Money
-        }
-        price {
-          ...Money
-        }
-        requiresShipping
-        title
-        image {
-          id
-          url
-          altText
-          width
-          height
-
-        }
-        product {
-          handle
-          title
-          id
-          vendor
-        }
-        selectedOptions {
-          name
-          value
-        }
+        selectedOptions { name value }
       }
-    }
-    parentRelationship {
-      parent {
-        id
-      }
-    }
-  }
-  fragment CartLineComponent on ComponentizableCartLine {
-    id
-    quantity
-    attributes {
-      key
-      value
-    }
-    cost {
-      totalAmount {
-        ...Money
-      }
-      amountPerQuantity {
-        ...Money
-      }
-      compareAtAmountPerQuantity {
-        ...Money
-      }
-    }
-    merchandise {
-      ... on ProductVariant {
-        id
-        availableForSale
-        compareAtPrice {
-          ...Money
-        }
-        price {
-          ...Money
-        }
-        requiresShipping
-        title
-        image {
-          id
-          url
-          altText
-          width
-          height
-        }
-        product {
-          handle
-          title
-          id
-          vendor
-        }
-        selectedOptions {
-          name
-          value
-        }
-      }
-    }
-    lineComponents {
-      ...CartLine
-    }
-  }
-  fragment CartApiQuery on Cart {
-    updatedAt
-    id
-    appliedGiftCards {
-      id
-      lastCharacters
-      amountUsed {
-        ...Money
-      }
-    }
-    checkoutUrl
-    totalQuantity
-    buyerIdentity {
-      countryCode
-      customer {
-        id
-        email
-        firstName
-        lastName
-        displayName
-      }
-      email
-      phone
-    }
-    lines(first: $numCartLines) {
-      nodes {
-        ...CartLine
-      }
-      nodes {
-        ...CartLineComponent
-      }
-    }
-    cost {
-      subtotalAmount {
-        ...Money
-      }
-      totalAmount {
-        ...Money
-      }
-      totalDutyAmount {
-        ...Money
-      }
-      totalTaxAmount {
-        ...Money
-      }
-    }
-    note
-    attributes {
-      key
-      value
-    }
-    discountCodes {
-      code
-      applicable
     }
   }
 `;
 
-const MENU_FRAGMENT = `#graphql
+export const MENU_FRAGMENT = `#graphql
   fragment MenuItem on MenuItem {
-    id
-    resourceId
-    tags
-    title
-    type
-    url
-  }
-  fragment ChildMenuItem on MenuItem {
-    ...MenuItem
-  }
-  fragment ParentMenuItem on MenuItem {
-    ...MenuItem
-    items {
-      ...ChildMenuItem
-    }
+    id title url type
+    items { id title url type }
   }
   fragment Menu on Menu {
-    id
-    items {
-      ...ParentMenuItem
-    }
+    id handle
+    items { ...MenuItem }
   }
-`;
-
-export const HEADER_QUERY = `#graphql
-  fragment Shop on Shop {
-    id
-    name
-    description
-    primaryDomain {
-      url
-    }
-    brand {
-      logo {
-        image {
-          url
-        }
-      }
-    }
-  }
-  query Header(
-    $country: CountryCode
-    $headerMenuHandle: String!
-    $language: LanguageCode
-  ) @inContext(language: $language, country: $country) {
-    shop {
-      ...Shop
-    }
-    menu(handle: $headerMenuHandle) {
-      ...Menu
-    }
-  }
-  ${MENU_FRAGMENT}
-`;
-
-export const FOOTER_QUERY = `#graphql
-  query Footer(
-    $country: CountryCode
-    $footerMenuHandle: String!
-    $language: LanguageCode
-  ) @inContext(language: $language, country: $country) {
-    menu(handle: $footerMenuHandle) {
-      ...Menu
-    }
-  }
-  ${MENU_FRAGMENT}
 `;
