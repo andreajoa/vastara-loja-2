@@ -30,6 +30,24 @@ export async function loader({context}) {
   };
 }
 
+// CRITICAL: Always revalidate root when cart is modified
+export const shouldRevalidate = ({
+  currentUrl,
+  nextUrl,
+  formMethod,
+  defaultShouldRevalidate,
+}) => {
+  // Revalidate if we're making a non-GET request (cart actions)
+  if (formMethod && formMethod !== 'GET') {
+    return true;
+  }
+  // Revalidate if cart is in URL (drawer scenario)
+  if (currentUrl.searchParams.has('cart') || nextUrl.searchParams.has('cart')) {
+    return true;
+  }
+  return defaultShouldRevalidate;
+};
+
 export const handle = {id: "root"};
 export default function App() {
   const nonce = useNonce();
@@ -49,25 +67,6 @@ export default function App() {
         </Analytics.Provider>
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-      </body>
-    </html>
-  );
-}
-
-export function ErrorBoundary() {
-  const error = useRouteError();
-  const nonce = useNonce();
-  let msg = 'Unknown error', status = 500;
-  if (isRouteErrorResponse(error)) { msg = error?.data?.message ?? error.data; status = error.status; }
-  else if (error instanceof Error) { msg = error.message; }
-  return (
-    <html lang="en">
-      <head><meta charSet="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><Meta /><Links /></head>
-      <body style={{background:'#0a0a0a',color:'#f5f5f0',display:'flex',alignItems:'center',justifyContent:'center',height:'100vh',flexDirection:'column',gap:'16px',fontFamily:'sans-serif'}}>
-        <h1 style={{fontSize:'64px',color:'#c9a84c'}}>{status}</h1>
-        <p>{msg}</p>
-        <a href="/" style={{color:'#c9a84c'}}>← Back Home</a>
-        <ScrollRestoration nonce={nonce} /><Scripts nonce={nonce} />
       </body>
     </html>
   );
