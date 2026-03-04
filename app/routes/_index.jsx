@@ -43,6 +43,90 @@ const categories = [
   ['Digital', 'digital'],
 ]
 
+const footerLinks = [
+  { id: 'explore', title: 'EXPLORE WATCHES', links: [
+    { label: 'New Arrivals', url: '#' },
+    { label: "Men's Watches", url: '#' },
+    { label: "Women's Watches", url: '#' },
+    { label: 'Sport Watches', url: '#' },
+    { label: 'Automatic', url: '#' },
+    { label: 'Quartz', url: '#' },
+    { label: 'Watch Blog', url: '#' },
+  ]},
+  { id: 'support', title: 'SUPPORT', links: [
+    { label: 'FAQ', url: '#' },
+    { label: 'Returns & Refunds', url: '#' },
+    { label: 'Shipping Policy', url: '#' },
+    { label: 'Contact Us', url: '#' },
+    { label: 'Warranty', url: '#' },
+  ]},
+  { id: 'company', title: 'COMPANY', links: [
+    { label: 'Our Story', url: '#' },
+    { label: 'Careers', url: '#' },
+    { label: 'Press', url: '#' },
+    { label: 'Privacy Policy', url: '#' },
+    { label: 'Terms of Service', url: '#' },
+    { label: 'Cookie Policy', url: '#' },
+    { label: 'Your Privacy Choices', url: '#' },
+  ]},
+]
+
+function FooterAccordion({ sections }) {
+  const [openSections, setOpenSections] = useState({})
+
+  const toggleSection = (id) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }))
+  }
+
+  return (
+    <div className="hp-footer-acc-grid">
+      {sections.map((section) => {
+        const isOpen = openSections[section.id]
+        return (
+          <div key={section.id} className="hp-footer-acc-col">
+            <button
+              type="button"
+              className="hp-footer-acc-btn"
+              onClick={() => toggleSection(section.id)}
+              aria-expanded={isOpen}
+            >
+              <span>{section.title}</span>
+              <svg
+                className={`hp-footer-acc-icon ${isOpen ? 'open' : ''}`}
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M4 6l4 4 4-4" />
+              </svg>
+            </button>
+            <div
+              className={`hp-footer-acc-content ${isOpen ? 'open' : ''}`}
+              style={{
+                display: isOpen ? 'block' : 'none'
+              }}
+            >
+              <div className="hp-footer-acc-inner">
+                {section.links.map((link, i) => (
+                  <a key={i} href={link.url} className="hp-footer-link">
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function Homepage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const p = featuredProducts
@@ -117,7 +201,7 @@ export default function Homepage() {
         .hp-banner { position: relative; height: 50vh; min-height: 400px; background: #1a1a2e; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .hp-banner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
         .hp-banner-content { position: relative; z-index: 2; text-align: center; color: #fff; padding: 0 24px; }
-        .hp-footer { background: #0a0a0a; color: #fff; padding: 64px 40px 32px; }
+        .hp-footer { background: #2d4a3d; color: #fff; padding: 64px 40px 32px; }
         .hp-footer-grid { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 48px; max-width: 1400px; margin: 0 auto; }
         .hp-footer-col h4 { font-size: 11px; font-family: monospace; letter-spacing: 3px; text-transform: uppercase; color: #c9a84c; margin-bottom: 20px; }
         .hp-footer-col a { display: block; color: #9ca3af; text-decoration: none; font-size: 14px; margin-bottom: 12px; transition: color 0.2s; }
@@ -129,6 +213,22 @@ export default function Homepage() {
         .hp-footer-bottom { max-width: 1400px; margin: 48px auto 0; padding-top: 32px; border-top: 1px solid #222; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
         .hp-footer-bottom p { color: #666; font-size: 13px; }
         .hp-mobile-menu-btn { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: #0a0a0a; }
+
+        /* Footer Accordion Styles */
+        .hp-footer-acc { display: none; }
+        .hp-footer-acc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+        .hp-footer-acc-col { display: flex; flex-direction: column; }
+        .hp-footer-acc-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 12px 0; background: none; border: none; border-bottom: 2px solid #c9a84c; cursor: pointer; color: #c9a84c; font-size: 11px; font-family: monospace; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; }
+        .hp-footer-acc-btn:hover { color: #d4b85e; }
+        .hp-footer-acc-btn span { flex: 1; text-align: left; }
+        .hp-footer-acc-icon { color: #9ca3af; transition: transform 0.3s ease; flex-shrink: 0; margin-left: 12px; }
+        .hp-footer-acc-icon.open { transform: rotate(180deg); }
+        .hp-footer-acc-content { display: none; }
+        .hp-footer-acc-content.open { display: block; }
+        .hp-footer-acc-inner { padding: 16px 0; }
+        .hp-footer-link { display: block; padding: 6px 0; color: #9ca3af; text-decoration: none; font-size: 14px; transition: color 0.2s; line-height: 1.6; }
+        .hp-footer-link:hover { color: #fff; }
+
         @media (max-width: 1024px) {
           .hp-pgrid { grid-template-columns: repeat(2, 1fr); }
           .hp-mlgrid { grid-template-columns: repeat(3, 1fr); }
@@ -147,7 +247,11 @@ export default function Homepage() {
           .hp-cgrid { grid-template-columns: repeat(2, 1fr); }
           .hp-mlgrid { grid-template-columns: repeat(2, 1fr); }
           .hp-sec { padding: 60px 24px; }
-          .hp-footer-grid { grid-template-columns: 1fr 1fr; }
+
+          /* Show accordion on mobile/tablet, hide static footer cols */
+          .hp-footer-col { display: none; }
+          .hp-footer-acc { display: block; }
+          .hp-footer-acc-grid { grid-template-columns: 1fr; gap: 0; }
         }
         @media (max-width: 600px) {
           .hp-hero { height: 70vh; min-height: 400px; }
@@ -158,6 +262,7 @@ export default function Homepage() {
           .hp-quote { padding: 72px 20px; }
           .hp-footer-grid { grid-template-columns: 1fr; gap: 32px; }
           .hp-footer-bottom { flex-direction: column; text-align: center; }
+          .hp-footer-acc-btn { font-size: 10px; padding: 10px 0; }
         }
       `}</style>
 
@@ -287,9 +392,9 @@ export default function Homepage() {
       {/* STICKY STACKING BANNERS */}
       <div className="hp-stky-wrap">
         {[
-          { prod: p[1], bg: '#f0ede6', dark: false, tag: 'Dive Collection', title: 'Harborside Coast', sub: 'Water-resistant to 300M. Built for the deep.', rev: false },
+          { prod: p[1], bg: '#f0ede6', dark: false, tag: 'Dive Collection', title: 'Harborside Coast', sub: 'Water-resistant to 300M. Built for deep.', rev: false },
           { prod: p[2], bg: '#1c2331', dark: true, tag: 'Automatic', title: 'Automatic 1983 Line', sub: 'The original automatic. Reborn for a new generation.', rev: true },
-          { prod: p[4], bg: '#fdf8f0', dark: false, tag: 'Dress Watches', title: 'Courthouse Men', sub: 'Refined dress watches for the modern gentleman.', rev: false },
+          { prod: p[4], bg: '#fdf8f0', dark: false, tag: 'Dress Watches', title: 'Courthouse Men', sub: 'Refined dress watches for modern gentleman.', rev: false },
         ].map(({ prod, bg, dark, tag, title, sub, rev }, i) => (
           <div key={i} className="hp-stky" style={{ background: bg, zIndex: 10 + i }}>
             <div className="hp-stky-in" style={{ direction: rev ? 'rtl' : 'ltr' }}>
@@ -393,6 +498,8 @@ export default function Homepage() {
               <button>Subscribe</button>
             </div>
           </div>
+
+          {/* Static columns for desktop */}
           <div className="hp-footer-col">
             <h4>Shop</h4>
             <a href="#">New Arrivals</a>
@@ -417,6 +524,9 @@ export default function Homepage() {
             <a href="#">Blog</a>
             <a href="#">Stores</a>
           </div>
+
+          {/* Accordion for mobile/tablet */}
+          <FooterAccordion sections={footerLinks} />
         </div>
         <div className="hp-footer-bottom">
           <p>© 2026 Vastara. All rights reserved.</p>

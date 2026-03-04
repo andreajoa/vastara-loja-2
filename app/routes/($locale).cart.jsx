@@ -22,6 +22,16 @@ export async function action({request, context}) {
 
   const formData = await request.formData();
 
+  // Suporte ao formato legado cartAction
+  const cartActionLegacy = formData.get('cartAction');
+  if (cartActionLegacy === 'ADD_TO_CART') {
+    const lines = JSON.parse(formData.get('lines') || '[]');
+    const result = await cart.addLines(lines);
+    const cartId = result?.cart?.id;
+    const headers = cartId ? cart.setCartId(result.cart.id) : new Headers();
+    return data({cart: result.cart, errors: result.errors}, {headers});
+  }
+
   const {action, inputs} = CartForm.getFormInput(formData);
 
   if (!action) {

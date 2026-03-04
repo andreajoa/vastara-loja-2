@@ -8,6 +8,7 @@ export const links = () => [
   {rel:'stylesheet', href:appStyles},
   {rel:'preconnect', href:'https://fonts.googleapis.com'},
   {rel:'preconnect', href:'https://fonts.gstatic.com', crossOrigin:'anonymous'},
+  {rel:'stylesheet', href:'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap'},
 ];
 
 export async function loader({context}) {
@@ -29,6 +30,7 @@ export async function loader({context}) {
   };
 }
 
+export const handle = {id: "root"};
 export default function App() {
   const nonce = useNonce();
   const data = useLoaderData();
@@ -41,7 +43,7 @@ export default function App() {
       </head>
       <body>
         <Analytics.Provider cart={data.cart} shop={data.shop} consent={data.consent}>
-          <Layout header={data.header} footer={data.footer} cart={data.cart}>
+          <Layout header={data.header} footer={data.footer}>
             <Outlet />
           </Layout>
         </Analytics.Provider>
