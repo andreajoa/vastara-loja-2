@@ -9,10 +9,34 @@ export const meta = () => {
   return [{title: `Hydrogen | Cart`}];
 };
 
-/**
- * @type {HeadersFunction}
- */
-export const headers = ({actionHeaders}) => actionHeaders;
+// CRITICAL: Force revalidation after cart actions
+export const headers = ({actionHeaders, loaderHeaders}) => {
+  return {
+    'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+  };
+};
+
+// CRITICAL: Always revalidate after cart mutations
+export const shouldRevalidate = ({
+  currentUrl,
+  nextUrl,
+  formMethod,
+  defaultShouldRevalidate,
+}) => {
+  // Always revalidate after POST/PUT/PATCH/DELETE
+  if (formMethod && formMethod !== 'GET') {
+    return true;
+  }
+
+  // Always revalidate if we're on the same URL (drawer scenario)
+  if (currentUrl.pathname === nextUrl.pathname) {
+    return true;
+  }
+
+  return defaultShouldRevalidate;
+};
 
 /**
  * @param {Route.ActionArgs}
@@ -22,18 +46,10 @@ export async function action({request, context}) {
 
   const formData = await request.formData();
 
-  // Debug: log form data
-  const formEntries = {};
-  for (const [key, value] of formData.entries()) {
-    formEntries[key] = value;
-  }
-  console.log('Cart action form data:', JSON.stringify(formEntries));
-
   // Suporte ao formato legado cartAction
   const cartActionLegacy = formData.get('cartAction');
   if (cartActionLegacy === 'ADD_TO_CART') {
     const lines = JSON.parse(formData.get('lines') || '[]');
-    console.log('Legacy add to cart, lines:', lines);
     const result = await cart.addLines(lines);
     const cartId = result?.cart?.id;
     const headers = cartId ? cart.setCartId(result.cart.id) : new Headers();
@@ -41,7 +57,6 @@ export async function action({request, context}) {
   }
 
   const {action, inputs} = CartForm.getFormInput(formData);
-  console.log('CartForm action:', action, 'inputs:', inputs);
 
   if (!action) {
     throw new Error('No action provided');
@@ -97,6 +112,12 @@ export async function action({request, context}) {
 
   const cartId = result?.cart?.id;
   const headers = cartId ? cart.setCartId(result.cart.id) : new Headers();
+
+  // CRITICAL: Prevent caching of cart actions
+  headers.set('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+  headers.set('Pragma', 'no-cache');
+  headers.set('Expires', '0');
+
   const {cart: cartResult, errors, warnings} = result;
 
   const redirectTo = formData.get('redirectTo') ?? null;

@@ -97,22 +97,16 @@ function AddBtn({variantId, qty, available, label, style}) {
     return <button disabled style={{...style, background:'#d1d5db', cursor:'not-allowed'}}>Sold Out</button>;
   }
 
-  const linesData = [{merchandiseId: variantId, quantity: qty}];
-  console.log('AddBtn: variantId=', variantId, 'qty=', qty, 'lines=', linesData);
-
   return (
     <CartForm
       route="/cart"
       action={CartForm.ACTIONS.LinesAdd}
-      inputs={{lines: linesData}}
+      inputs={{lines: [{merchandiseId: variantId, quantity: qty}]}}
     >
       {(fetcher) => (
         <button
           type="submit"
-          onClick={(e) => {
-            console.log('AddBtn clicked, fetcher.state=', fetcher.state);
-            open('cart');
-          }}
+          onClick={() => open('cart')}
           disabled={fetcher.state !== 'idle'}
           style={style}
         >

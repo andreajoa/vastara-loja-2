@@ -1,6 +1,5 @@
 import {createContext, useContext} from 'react';
 import {useRouteLoaderData} from 'react-router';
-import {useOptimisticCart} from '@shopify/hydrogen';
 import Header from './Header';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
@@ -16,21 +15,17 @@ function LayoutInner({children, header, footer}) {
   const totalQuantity = cart?.totalQuantity ?? 0;
   const isCartOpen = type === 'cart';
 
-  // Use cart route data for updates
-  const cartData = useRouteLoaderData('routes/($locale).cart');
-  const cartRouteData = cartData?.cart ?? cart;
-
   return (
     <CartContext.Provider value={{
       openCart: () => open('cart'),
       closeCart: close,
-      cart: cartRouteData,
-      totalQuantity: cartRouteData?.totalQuantity ?? totalQuantity,
+      cart,
+      totalQuantity,
     }}>
       <div style={{minHeight:'100vh',display:'flex',flexDirection:'column'}}>
-        <Header header={header} cartCount={cartRouteData?.totalQuantity ?? totalQuantity} onCartOpen={() => open('cart')} />
+        <Header header={header} cartCount={totalQuantity} onCartOpen={() => open('cart')} />
         <main style={{flex:1}}>{children}</main>
-        <CartDrawer isOpen={isCartOpen} onClose={close} cart={cartRouteData} />
+        <CartDrawer isOpen={isCartOpen} onClose={close} cart={cart} />
         <Footer footer={footer} />
       </div>
     </CartContext.Provider>
