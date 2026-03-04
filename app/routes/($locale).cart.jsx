@@ -22,10 +22,18 @@ export async function action({request, context}) {
 
   const formData = await request.formData();
 
+  // Debug: log form data
+  const formEntries = {};
+  for (const [key, value] of formData.entries()) {
+    formEntries[key] = value;
+  }
+  console.log('Cart action form data:', JSON.stringify(formEntries));
+
   // Suporte ao formato legado cartAction
   const cartActionLegacy = formData.get('cartAction');
   if (cartActionLegacy === 'ADD_TO_CART') {
     const lines = JSON.parse(formData.get('lines') || '[]');
+    console.log('Legacy add to cart, lines:', lines);
     const result = await cart.addLines(lines);
     const cartId = result?.cart?.id;
     const headers = cartId ? cart.setCartId(result.cart.id) : new Headers();
@@ -33,6 +41,7 @@ export async function action({request, context}) {
   }
 
   const {action, inputs} = CartForm.getFormInput(formData);
+  console.log('CartForm action:', action, 'inputs:', inputs);
 
   if (!action) {
     throw new Error('No action provided');
