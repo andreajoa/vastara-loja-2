@@ -1,32 +1,28 @@
-const {execSync} = require('child_process');
-const fs = require('fs');
-const path = require('path');
+import {execSync} from 'child_process';
+import path from 'path';
+import {fileURLToPath} from 'url';
 
-// Encontra o CLI do Hydrogen nos node_modules
-const hydrogenCliPath = path.join(__dirname, 'node_modules/@shopify/cli/bin/hydrogen.js');
+// Encontra o diretório do projeto
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function deploy() {
-  console.log('Iniciando deploy...');
+  console.log('🚀 Iniciando deploy para GitHub...');
 
   try {
-    // Executa o comando de deploy
-    const {execSync: spawn} = require('child_process');
-    const result = execSync('node', [hydrogenCliPath, 'deploy', '--force', '--metadata-description="Fix cart functionality"], {
+    // Executa o comando de deploy usando npx
+    const result = execSync('npx shopify hydrogen deploy --force', {
       cwd: __dirname,
-      env: { ...process.env }
+      env: { ...process.env },
+      stdio: 'inherit'
     });
 
-    console.log('Resultado:', result.stdout);
-    console.error('Erros:', result.stderr);
-    console.log('Exit code:', result.status);
-
-    if (result.status !== 0) {
-      console.error('Deploy falhou com código:', result.status);
-      process.exit(result.status);
-    }
+    console.log('✅ Deploy concluído com sucesso!');
 
   } catch (error) {
-    console.error('Erro durante deploy:', error);
+    console.error('❌ Erro durante deploy:', error.message);
+    if (error.status) {
+      process.exit(error.status);
+    }
     process.exit(1);
   }
 }
