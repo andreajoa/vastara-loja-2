@@ -536,6 +536,8 @@ export default function Product() {
   const [floatingVisible, setFloatingVisible] = useState(false);
   const [wishlist, setWishlist] = useState(false);
   const [activeTab, setActiveTab] = useState('description');
+  const {open} = useAside();
+  const bitPrevRef = useRef(null);
 
   const selectedVariant = useOptimisticVariant(
     product.selectedOrFirstAvailableVariant,
@@ -845,7 +847,6 @@ export default function Product() {
       </div>
 
       {/* BUY IT TOGETHER — real different products */}
-      const bitPrevRef = useRef(null);
       {buyTogetherProducts.length > 0 && (
         <div className="pdp-bit-section">
           <div className="pdp-bit-inner">
