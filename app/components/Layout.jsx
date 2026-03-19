@@ -3,7 +3,8 @@ import Header from './Header';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
 
-const CartContext = createContext(null);
+// Keep CartContext for backwards compatibility
+export const CartContext = createContext(null);
 export const useCart = () => useContext(CartContext);
 
 export default function Layout({children, header, footer, cart}) {
