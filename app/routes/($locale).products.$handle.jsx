@@ -300,16 +300,25 @@ const CSS = `
 // ============================================
 function AddBtn({variantId, qty, available, label, style}) {
   const {open} = useAside();
+  const prevRef = useRef(null);
+  
   if (!available) {
     return <button disabled style={{...style, background:'#d1d5db', cursor:'not-allowed'}}>{label || 'Sold Out'}</button>;
   }
+  
   return (
     <CartForm route="/cart" action={CartForm.ACTIONS.LinesAdd} inputs={{lines: [{merchandiseId: variantId, quantity: qty}]}}>
-      {(fetcher) => (
-        <button type="submit" onClick={() => open('cart')} disabled={fetcher.state !== 'idle'} style={style}>
-          {fetcher.state !== 'idle' ? 'Adding...' : label}
-        </button>
-      )}
+      {(fetcher) => {
+        if (prevRef.current === 'submitting' && fetcher.state === 'idle') {
+          setTimeout(() => open('cart'), 50);
+        }
+        prevRef.current = fetcher.state;
+        return (
+          <button type="submit" disabled={fetcher.state !== 'idle'} style={style}>
+            {fetcher.state !== 'idle' ? 'Adding...' : label}
+          </button>
+        );
+      }}
     </CartForm>
   );
 }
@@ -836,6 +845,7 @@ export default function Product() {
       </div>
 
       {/* BUY IT TOGETHER — real different products */}
+      const bitPrevRef = useRef(null);
       {buyTogetherProducts.length > 0 && (
         <div className="pdp-bit-section">
           <div className="pdp-bit-inner">
@@ -886,9 +896,12 @@ export default function Product() {
               {variantId && (
                 <CartForm route="/cart" action={CartForm.ACTIONS.LinesAdd} inputs={{lines: bitLines}}>
                   {(fetcher) => {
-                    const {open} = useAside();
+                    if (bitPrevRef.current === 'submitting' && fetcher.state === 'idle') {
+                      setTimeout(() => open('cart'), 50);
+                    }
+                    bitPrevRef.current = fetcher.state;
                     return (
-                      <button type="submit" onClick={() => open('cart')} disabled={fetcher.state !== 'idle'}
+                      <button type="submit" disabled={fetcher.state !== 'idle'}
                         style={{display:'inline-block',padding:'14px 40px',background:'#0a0a0a',color:'#fff',fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',cursor:'pointer',border:'none'}}>
                         {fetcher.state !== 'idle' ? 'Adding...' : `Add All ${bitSelectedProducts.length + 1} Items to Bag`}
                       </button>
