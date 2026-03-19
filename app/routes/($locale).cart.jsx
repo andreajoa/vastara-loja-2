@@ -1,26 +1,40 @@
-import {useLoaderData} from 'react-router';
+import {useLoaderData, data} from 'react-router';
 import {CartForm} from '@shopify/hydrogen';
-import {json} from '@shopify/remix-oxygen';
 
 export const meta = () => [{title: 'Cart | Vastara'}];
 
 export async function action({request, context}) {
   const {cart} = context;
   const formData = await request.formData();
-  
-  // Legacy format support
+
   const cartAction = formData.get('cartAction');
+  
   if (cartAction === 'ADD_TO_CART') {
     const lines = JSON.parse(formData.get('lines') || '[]');
     const result = await cart.addLines(lines);
     const headers = cart.setCartId(result.cart.id);
-    return json({cart: result.cart, errors: result.errors}, {headers});
+    return data({cart: result.cart, errors: result.errors}, {headers});
   }
 
-  const {action, inputs} = CartForm.getFormInput(formData);
+  if (cartAction === 'REMOVE') {
+    const lineIds = JSON.parse(formData.get('lineIds') || '[]');
+    const result = await cart.removeLines(lineIds);
+    const headers = cart.setCartId(result.cart.id);
+    return data({cart: result.cart, errors: result.errors}, {headers});
+  }
+
+  if (cartAction === 'UPDATE') {
+    const lines = JSON.parse(formData.get('lines') || '[]');
+    const result = await cart.updateLines(lines);
+    const headers = cart.setCartId(result.cart.id);
+    return data({cart: result.cart, errors: result.errors}, {headers});
+  }
+
+  // CartForm format
+  const {action: formAction, inputs} = CartForm.getFormInput(formData);
   let result;
 
-  switch (action) {
+  switch (formAction) {
     case CartForm.ACTIONS.LinesAdd:
       result = await cart.addLines(inputs.lines);
       break;
@@ -40,18 +54,17 @@ export async function action({request, context}) {
   }
 
   const headers = result.cart?.id ? cart.setCartId(result.cart.id) : new Headers();
-  return json({cart: result.cart, errors: result.errors}, {headers});
+  return data({cart: result.cart, errors: result.errors}, {headers});
 }
 
 export async function loader({context}) {
-  const {cart} = context;
-  return json(await cart.get());
+  return await context.cart.get();
 }
 
 export default function CartPage() {
   const cart = useLoaderData();
   const lines = cart?.lines?.nodes || [];
-  
+
   return (
     <div style={{padding:'120px 40px 60px',maxWidth:'800px',margin:'0 auto'}}>
       <h1 style={{fontSize:'28px',marginBottom:'32px'}}>Your Cart</h1>

@@ -1,6 +1,5 @@
 import {useNonce, Analytics, getShopAnalytics} from '@shopify/hydrogen';
-import {Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData, useRevalidator} from 'react-router';
-import {json} from '@shopify/remix-oxygen';
+import {Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData} from 'react-router';
 import appStyles from '~/styles/app.css?url';
 import {MENU_FRAGMENT} from '~/lib/fragments';
 import Layout from '~/components/Layout';
@@ -19,7 +18,7 @@ export async function loader({context}) {
     storefront.query(FOOTER_QUERY, {variables:{footerMenuHandle:'footer'}}),
     cart.get(),
   ]);
-  return json({
+  return {
     header,
     footer,
     cart: cartData,
@@ -28,7 +27,7 @@ export async function loader({context}) {
       checkoutDomain: env.PUBLIC_STORE_DOMAIN,
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
     },
-  });
+  };
 }
 
 export const shouldRevalidate = ({formMethod, defaultShouldRevalidate}) => {
@@ -41,7 +40,6 @@ export const handle = {id: 'root'};
 export default function App() {
   const nonce = useNonce();
   const data = useLoaderData();
-  
   return (
     <html lang="en">
       <head>
