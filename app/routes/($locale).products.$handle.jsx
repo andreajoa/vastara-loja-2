@@ -800,7 +800,8 @@ export default function Product() {
           {variantId && (
             <AddBtn variantId={variantId} qty={qty} available={available}
               label={`Add to Bag  |  ${price ? fmt(price.amount, price.currencyCode) : ''}`}
-              style={addBtnStyle} />
+              style={addBtnStyle}
+              onDone={() => openCart()} />
           )}
 
           <div style={{marginTop:'16px',paddingTop:'14px',borderTop:'1px solid #f5f5f5',display:'flex',flexDirection:'column',gap:'10px'}}>
@@ -864,7 +865,8 @@ export default function Product() {
             {variantId && available && (
               <AddBtn variantId={variantId} qty={1} available={available}
                 label={`Add to Bag — ${price ? fmt(price.amount,price.currencyCode) : ''}`}
-                style={{padding:'14px 36px',background:'#fff',color:'#0a0a0a',fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',cursor:'pointer',border:'none',fontWeight:'500'}} />
+                style={{padding:'14px 36px',background:'#fff',color:'#0a0a0a',fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',cursor:'pointer',border:'none',fontWeight:'500'}}
+                onDone={() => openCart()} />
             )}
             <span style={{fontSize:'12px',color:'rgba(255,255,255,0.5)',letterSpacing:'1px'}}>Free shipping on orders $75+</span>
           </div>
@@ -982,7 +984,8 @@ export default function Product() {
         {variantId && (
           <AddBtn variantId={variantId} qty={1} available={available}
             label="Add to Bag →"
-            style={{flexShrink:0,padding:'11px 20px',background:available?'#0a0a0a':'#d1d5db',color:'#fff',border:'none',borderRadius:'12px',fontSize:'11px',letterSpacing:'1px',textTransform:'uppercase',cursor:available?'pointer':'not-allowed',whiteSpace:'nowrap',fontWeight:'500'}} />
+            style={{flexShrink:0,padding:'11px 20px',background:available?'#0a0a0a':'#d1d5db',color:'#fff',border:'none',borderRadius:'12px',fontSize:'11px',letterSpacing:'1px',textTransform:'uppercase',cursor:available?'pointer':'not-allowed',whiteSpace:'nowrap',fontWeight:'500'}}
+            onDone={() => openCart()} />
         )}
       </div>
 

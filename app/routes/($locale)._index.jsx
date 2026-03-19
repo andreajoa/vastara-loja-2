@@ -261,7 +261,7 @@ export default function Homepage() {
   return (
     <div className="hp">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        /* font loaded in root.jsx */
         *{box-sizing:border-box;margin:0;padding:0}
         .hp{font-family:'Inter',-apple-system,sans-serif;background:#fff;color:#000;overflow-x:hidden}
 

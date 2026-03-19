@@ -4,34 +4,8 @@ function fmt(amount, currency = 'USD') {
   return new Intl.NumberFormat('en-US', {style:'currency', currency}).format(Number(amount));
 }
 
-function UpdateButton({lineId, quantity, children}) {
-  const fetcher = useFetcher();
-  const isRemoving = quantity === 0;
-  
-  return (
-    <fetcher.Form method="post" action="/cart">
-      <input type="hidden" name="cartAction" value={isRemoving ? 'REMOVE' : 'UPDATE'} />
-      {isRemoving ? (
-        <>
-          <input type="hidden" name="cartAction" value="REMOVE" />
-          <input type="hidden" name="lineIds" value={JSON.stringify([lineId])} />
-        </>
-      ) : (
-        <>
-          <input type="hidden" name="cartAction" value="UPDATE" />
-          <input type="hidden" name="lines" value={JSON.stringify([{id: lineId, quantity}])} />
-        </>
-      )}
-      <button type="submit" disabled={fetcher.state !== 'idle'} style={{width:'30px',height:'30px',background:'none',border:'none',cursor:'pointer',fontSize:'18px',color:'#555'}}>
-        {children}
-      </button>
-    </fetcher.Form>
-  );
-}
-
 function RemoveButton({lineId}) {
   const fetcher = useFetcher();
-  
   return (
     <fetcher.Form method="post" action="/cart">
       <input type="hidden" name="cartAction" value="REMOVE" />
@@ -48,43 +22,26 @@ export default function CartDrawer({isOpen, onClose, cart}) {
   const subtotal = cart?.cost?.subtotalAmount;
   const checkoutUrl = cart?.checkoutUrl;
 
-  if (typeof window === 'undefined') return null;
-
   return (
     <>
-      {/* Overlay */}
       <div 
         onClick={onClose} 
         style={{
-          position:'fixed',
-          inset:0,
+          position:'fixed',inset:0,
           background:'rgba(0,0,0,0.5)',
-          backdropFilter:'blur(4px)',
           zIndex:9998,
           opacity:isOpen?1:0,
           pointerEvents:isOpen?'auto':'none',
           transition:'opacity 0.3s ease'
         }} 
       />
-
-      {/* Drawer */}
       <div style={{
-        position:'fixed',
-        top:0,
-        right:0,
-        height:'100%',
-        width:'100%',
-        maxWidth:'420px',
-        background:'#fff',
-        display:'flex',
-        flexDirection:'column',
-        zIndex:9999,
+        position:'fixed',top:0,right:0,height:'100%',width:'100%',maxWidth:'420px',
+        background:'#fff',display:'flex',flexDirection:'column',zIndex:9999,
         transform:isOpen?'translateX(0)':'translateX(100%)',
         transition:'transform 0.35s cubic-bezier(0.4,0,0.2,1)',
         boxShadow:'-8px 0 40px rgba(0,0,0,0.12)'
       }}>
-
-        {/* Header */}
         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'20px 24px',borderBottom:'1px solid #f0f0f0',flexShrink:0}}>
           <div>
             <h2 style={{fontFamily:'Georgia,serif',fontSize:'18px',fontWeight:'400',letterSpacing:'1px',color:'#0a0a0a',margin:0}}>Your Bag</h2>
@@ -92,12 +49,9 @@ export default function CartDrawer({isOpen, onClose, cart}) {
           </div>
           <button onClick={onClose} style={{width:'32px',height:'32px',borderRadius:'50%',background:'#f5f5f5',border:'none',cursor:'pointer',fontSize:'16px',display:'flex',alignItems:'center',justifyContent:'center',color:'#666'}}>✕</button>
         </div>
-
-        {/* Items */}
         <div style={{flex:1,overflowY:'auto',padding:'0 24px'}}>
           {lines.length === 0 ? (
             <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',height:'100%',textAlign:'center',padding:'60px 0'}}>
-              <div style={{fontSize:'52px',marginBottom:'16px',opacity:0.12}}>🛍</div>
               <p style={{color:'#9ca3af',fontSize:'14px',margin:'0 0 16px'}}>Your bag is empty</p>
               <button onClick={onClose} style={{fontSize:'13px',textDecoration:'underline',color:'#c9a84c',background:'none',border:'none',cursor:'pointer'}}>Continue Shopping</button>
             </div>
@@ -109,23 +63,14 @@ export default function CartDrawer({isOpen, onClose, cart}) {
             return (
               <div key={line.id} style={{display:'flex',gap:'14px',padding:'16px 0',borderBottom:'1px solid #f5f5f5'}}>
                 <div style={{width:'80px',height:'80px',background:'#f5f5f0',flexShrink:0,overflow:'hidden',borderRadius:'8px'}}>
-                  {img
-                    ? <img src={img.url} alt={title||''} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} />
-                    : <div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'28px',opacity:0.2}}>⌚</div>
-                  }
+                  {img ? <img src={img.url} alt={title||''} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} /> : null}
                 </div>
                 <div style={{flex:1,minWidth:0}}>
                   <p style={{fontSize:'13px',fontWeight:'600',color:'#0a0a0a',margin:'0 0 3px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{title}</p>
-                  {opts.length > 0 && (
-                    <p style={{fontSize:'11px',color:'#9ca3af',margin:'0 0 6px'}}>{opts.map(o=>o.value).join(' / ')}</p>
-                  )}
-                  <p style={{fontSize:'13px',fontWeight:'700',color:'#0a0a0a',margin:'0 0 10px'}}>
-                    {total ? fmt(total.amount, total.currencyCode) : ''}
-                  </p>
+                  {opts.length > 0 && <p style={{fontSize:'11px',color:'#9ca3af',margin:'0 0 6px'}}>{opts.map(o=>o.value).join(' / ')}</p>}
+                  <p style={{fontSize:'13px',fontWeight:'700',color:'#0a0a0a',margin:'0 0 10px'}}>{total ? fmt(total.amount, total.currencyCode) : ''}</p>
                   <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                    <div style={{display:'flex',alignItems:'center',border:'1px solid #e5e7eb',borderRadius:'8px',overflow:'hidden'}}>
-                      <span style={{padding:'0 12px',fontSize:'13px',fontWeight:'600'}}>{line.quantity}</span>
-                    </div>
+                    <span style={{fontSize:'13px',color:'#666'}}>Qty: {line.quantity}</span>
                     <RemoveButton lineId={line.id} />
                   </div>
                 </div>
@@ -133,27 +78,18 @@ export default function CartDrawer({isOpen, onClose, cart}) {
             );
           })}
         </div>
-
-        {/* Footer */}
         {lines.length > 0 && (
           <div style={{padding:'16px 24px 28px',borderTop:'1px solid #f0f0f0',background:'#fff',flexShrink:0}}>
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'4px'}}>
               <span style={{fontSize:'13px',color:'#6b7280'}}>Subtotal</span>
-              <span style={{fontSize:'16px',fontWeight:'700',color:'#0a0a0a'}}>
-                {subtotal ? fmt(subtotal.amount, subtotal.currencyCode) : ''}
-              </span>
+              <span style={{fontSize:'16px',fontWeight:'700',color:'#0a0a0a'}}>{subtotal ? fmt(subtotal.amount, subtotal.currencyCode) : ''}</span>
             </div>
             <p style={{fontSize:'11px',color:'#bbb',margin:'0 0 16px'}}>Taxes and shipping calculated at checkout</p>
             {checkoutUrl ? (
-              <a href={checkoutUrl} style={{display:'block',width:'100%',background:'#0a0a0a',color:'#fff',textAlign:'center',padding:'16px',fontSize:'12px',letterSpacing:'2px',textTransform:'uppercase',textDecoration:'none',borderRadius:'10px',boxSizing:'border-box',marginBottom:'10px',fontWeight:'600'}}>
-                Checkout →
-              </a>
+              <a href={checkoutUrl} style={{display:'block',width:'100%',background:'#0a0a0a',color:'#fff',textAlign:'center',padding:'16px',fontSize:'12px',letterSpacing:'2px',textTransform:'uppercase',textDecoration:'none',borderRadius:'10px',boxSizing:'border-box',fontWeight:'600'}}>Checkout</a>
             ) : (
-              <Link to="/cart" onClick={onClose} style={{display:'block',width:'100%',background:'#0a0a0a',color:'#fff',textAlign:'center',padding:'16px',fontSize:'12px',letterSpacing:'2px',textTransform:'uppercase',textDecoration:'none',borderRadius:'10px',boxSizing:'border-box',marginBottom:'10px',fontWeight:'600'}}>
-                View Cart →
-              </Link>
+              <Link to="/cart" onClick={onClose} style={{display:'block',width:'100%',background:'#0a0a0a',color:'#fff',textAlign:'center',padding:'16px',fontSize:'12px',letterSpacing:'2px',textTransform:'uppercase',textDecoration:'none',borderRadius:'10px',boxSizing:'border-box',fontWeight:'600'}}>View Cart</Link>
             )}
-            <button onClick={onClose} style={{display:'block',width:'100%',border:'1px solid #e5e7eb',background:'none',padding:'13px',fontSize:'12px',cursor:'pointer',borderRadius:'10px',color:'#666',letterSpacing:'1px'}}>Continue Shopping</button>
           </div>
         )}
       </div>
