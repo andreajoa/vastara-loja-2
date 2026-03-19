@@ -1,9 +1,9 @@
 import {useState, useEffect} from 'react';
-import {CartForm} from '@shopify/hydrogen';
+import {CartForm, useOptimisticCart} from '@shopify/hydrogen';
 import {Link} from 'react-router';
 
-function fmt(amount, currency = 'BRL') {
-  return new Intl.NumberFormat('pt-BR', {style:'currency', currency}).format(Number(amount));
+function fmt(amount, currency = 'USD') {
+  return new Intl.NumberFormat('en-US', {style:'currency', currency}).format(Number(amount));
 }
 
 function RemoveButton({lineId}) {
@@ -31,7 +31,10 @@ function QtyButton({lineId, newQty, children}) {
   );
 }
 
-export default function CartDrawer({isOpen, onClose, cart}) {
+export default function CartDrawer({isOpen, onClose, cart: originalCart}) {
+  // Use optimistic cart for immediate updates
+  const cart = useOptimisticCart(originalCart);
+  
   const lines = cart?.lines?.nodes ?? [];
   const subtotal = cart?.cost?.subtotalAmount;
   const checkoutUrl = cart?.checkoutUrl;
