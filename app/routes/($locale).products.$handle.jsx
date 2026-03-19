@@ -1,4 +1,4 @@
-import {useLoaderData, Link, useNavigate} from 'react-router';
+import {useLoaderData, Link, useNavigate, useFetcher} from 'react-router';
 import {useState, useEffect, useRef, useMemo, useCallback} from 'react';
 import {
   getSelectedProductOptions,
@@ -10,7 +10,7 @@ import {
   CartForm,
   Image,
 } from '@shopify/hydrogen';
-import {useAside} from '~/components/Aside';
+import {useCart} from '~/components/Layout';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta = ({data}) => [
@@ -298,28 +298,53 @@ const CSS = `
 // ============================================
 // ADD TO CART BUTTON
 // ============================================
-function AddBtn({variantId, qty, available, label, style}) {
-  const {open} = useAside();
-  const prevRef = useRef(null);
-  
+function AddBtn({variantId, qty, available, label, style, onDone}) {
+  const fetcher = useFetcher();
+  const wasAdding = useRef(false);
+
+  useEffect(() => {
+    if (wasAdding.current && fetcher.state === 'idle') {
+      onDone?.();
+    }
+    wasAdding.current = fetcher.state === 'submitting';
+  }, [fetcher.state, onDone]);
+
   if (!available) {
-    return <button disabled style={{...style, background:'#d1d5db', cursor:'not-allowed'}}>{label || 'Sold Out'}</button>;
+    return <button disabled style={{...style, background:'#d1d5db', cursor:'not-allowed'}}>Sold Out</button>;
   }
-  
+
   return (
-    <CartForm route="/cart" action={CartForm.ACTIONS.LinesAdd} inputs={{lines: [{merchandiseId: variantId, quantity: qty}]}}>
-      {(fetcher) => {
-        if (prevRef.current === 'submitting' && fetcher.state === 'idle') {
-          setTimeout(() => open('cart'), 50);
-        }
-        prevRef.current = fetcher.state;
-        return (
-          <button type="submit" disabled={fetcher.state !== 'idle'} style={style}>
-            {fetcher.state !== 'idle' ? 'Adding...' : label}
-          </button>
-        );
-      }}
-    </CartForm>
+    <fetcher.Form method="post" action="/cart">
+      <input type="hidden" name="cartAction" value="ADD_TO_CART" />
+      <input type="hidden" name="lines" value={JSON.stringify([{merchandiseId: variantId, quantity: qty}])} />
+      <button type="submit" disabled={fetcher.state !== 'idle'} style={style}>
+        {fetcher.state !== 'idle' ? 'Adding...' : label}
+      </button>
+    </fetcher.Form>
+  );
+}
+
+
+function BundleAddButton({lines, count, onDone}) {
+  const fetcher = useFetcher();
+  const wasAdding = useRef(false);
+
+  useEffect(() => {
+    if (wasAdding.current && fetcher.state === 'idle') {
+      onDone?.();
+    }
+    wasAdding.current = fetcher.state === 'submitting';
+  }, [fetcher.state, onDone]);
+
+  return (
+    <fetcher.Form method="post" action="/cart">
+      <input type="hidden" name="cartAction" value="ADD_TO_CART" />
+      <input type="hidden" name="lines" value={JSON.stringify(lines)} />
+      <button type="submit" disabled={fetcher.state !== 'idle'}
+        style={{display:'inline-block',padding:'14px 40px',background:'#0a0a0a',color:'#fff',fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',cursor:'pointer',border:'none'}}>
+        {fetcher.state !== 'idle' ? 'Adding...' : `Add All ${count} Items to Bag`}
+      </button>
+    </fetcher.Form>
   );
 }
 
@@ -536,7 +561,7 @@ export default function Product() {
   const [floatingVisible, setFloatingVisible] = useState(false);
   const [wishlist, setWishlist] = useState(false);
   const [activeTab, setActiveTab] = useState('description');
-  const {open} = useAside();
+  const {openCart} = useCart();
   const bitPrevRef = useRef(null);
 
   const selectedVariant = useOptimisticVariant(
@@ -895,20 +920,7 @@ export default function Product() {
                 Bundle Price: {fmt(bitTotal, price?.currencyCode || 'USD')}
               </div>
               {variantId && (
-                <CartForm route="/cart" action={CartForm.ACTIONS.LinesAdd} inputs={{lines: bitLines}}>
-                  {(fetcher) => {
-                    if (bitPrevRef.current === 'submitting' && fetcher.state === 'idle') {
-                      setTimeout(() => open('cart'), 50);
-                    }
-                    bitPrevRef.current = fetcher.state;
-                    return (
-                      <button type="submit" disabled={fetcher.state !== 'idle'}
-                        style={{display:'inline-block',padding:'14px 40px',background:'#0a0a0a',color:'#fff',fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',cursor:'pointer',border:'none'}}>
-                        {fetcher.state !== 'idle' ? 'Adding...' : `Add All ${bitSelectedProducts.length + 1} Items to Bag`}
-                      </button>
-                    );
-                  }}
-                </CartForm>
+                <BundleAddButton lines={bitLines} count={bitSelectedProducts.length + 1} onDone={() => setTimeout(() => openCart(), 300)} />
               )}
             </div>
           </div>
@@ -1060,3 +1072,5 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
     }
   }
 `;
+
+// Import at top - add this manually if needed

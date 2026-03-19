@@ -1,5 +1,6 @@
 import {useNonce, Analytics, getShopAnalytics} from '@shopify/hydrogen';
-import {Links, Meta, Outlet, Scripts, ScrollRestoration, useRouteError, isRouteErrorResponse, useLoaderData} from 'react-router';
+import {Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData, useRevalidator} from 'react-router';
+import {json} from '@shopify/remix-oxygen';
 import appStyles from '~/styles/app.css?url';
 import {MENU_FRAGMENT} from '~/lib/fragments';
 import Layout from '~/components/Layout';
@@ -18,7 +19,7 @@ export async function loader({context}) {
     storefront.query(FOOTER_QUERY, {variables:{footerMenuHandle:'footer'}}),
     cart.get(),
   ]);
-  return {
+  return json({
     header,
     footer,
     cart: cartData,
@@ -27,31 +28,20 @@ export async function loader({context}) {
       checkoutDomain: env.PUBLIC_STORE_DOMAIN,
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
     },
-  };
+  });
 }
 
-// CRITICAL: Always revalidate root when cart is modified
-export const shouldRevalidate = ({
-  currentUrl,
-  nextUrl,
-  formMethod,
-  defaultShouldRevalidate,
-}) => {
-  // Revalidate if we're making a non-GET request (cart actions)
-  if (formMethod && formMethod !== 'GET') {
-    return true;
-  }
-  // Revalidate if cart is in URL (drawer scenario)
-  if (currentUrl.searchParams.has('cart') || nextUrl.searchParams.has('cart')) {
-    return true;
-  }
+export const shouldRevalidate = ({formMethod, defaultShouldRevalidate}) => {
+  if (formMethod && formMethod !== 'GET') return true;
   return defaultShouldRevalidate;
 };
 
-export const handle = {id: "root"};
+export const handle = {id: 'root'};
+
 export default function App() {
   const nonce = useNonce();
   const data = useLoaderData();
+  
   return (
     <html lang="en">
       <head>
@@ -61,7 +51,7 @@ export default function App() {
       </head>
       <body>
         <Analytics.Provider cart={data.cart} shop={data.shop} consent={data.consent}>
-          <Layout header={data.header} footer={data.footer}>
+          <Layout header={data.header} footer={data.footer} cart={data.cart}>
             <Outlet />
           </Layout>
         </Analytics.Provider>

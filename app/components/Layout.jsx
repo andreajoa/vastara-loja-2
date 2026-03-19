@@ -1,48 +1,31 @@
-import {createContext, useContext} from 'react';
-import {useRouteLoaderData, useRevalidator} from 'react-router';
-import {useOptimisticCart} from '@shopify/hydrogen';
+import {createContext, useContext, useState} from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
-import {Aside, useAside} from './Aside';
 
-export const CartContext = createContext(null);
+const CartContext = createContext(null);
 export const useCart = () => useContext(CartContext);
 
-function LayoutInner({children, header, footer}) {
-  const {type, open, close} = useAside();
-  const rootData = useRouteLoaderData('root');
-  const originalCart = rootData?.cart ?? null;
-  
-  // Use optimistic cart for immediate UI updates
-  const cart = useOptimisticCart(originalCart);
-  
-  const totalQuantity = cart?.totalQuantity ?? 0;
-  const isCartOpen = type === 'cart';
+export default function Layout({children, header, footer, cart}) {
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const totalQuantity = cart?.totalQuantity || 0;
 
   return (
     <CartContext.Provider value={{
-      openCart: () => open('cart'),
-      closeCart: close,
       cart,
       totalQuantity,
+      openCart: () => setIsCartOpen(true),
+      closeCart: () => setIsCartOpen(false),
     }}>
       <div style={{minHeight:'100vh',display:'flex',flexDirection:'column'}}>
-        <Header header={header} cartCount={totalQuantity} onCartOpen={() => open('cart')} />
+        <Header header={header} cartCount={totalQuantity} onCartOpen={() => setIsCartOpen(true)} />
         <main style={{flex:1}}>{children}</main>
-        <CartDrawer isOpen={isCartOpen} onClose={close} cart={cart} />
+        <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} cart={cart} />
         <Footer footer={footer} />
       </div>
     </CartContext.Provider>
   );
 }
 
-export default function Layout({children, header, footer}) {
-  return (
-    <Aside.Provider>
-      <LayoutInner header={header} footer={footer}>
-        {children}
-      </LayoutInner>
-    </Aside.Provider>
-  );
-}
+// Re-export Aside for compatibility
+export {Aside, useAside} from './Aside';

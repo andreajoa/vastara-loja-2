@@ -1,68 +1,23 @@
-import {useLoaderData, data} from 'react-router';
+import {useLoaderData} from 'react-router';
 import {CartForm} from '@shopify/hydrogen';
-import {CartMain} from '~/components/CartMain';
+import {json} from '@shopify/remix-oxygen';
 
-/**
- * @type {Route.MetaFunction}
- */
-export const meta = () => {
-  return [{title: `Hydrogen | Cart`}];
-};
+export const meta = () => [{title: 'Cart | Vastara'}];
 
-// CRITICAL: Force revalidation after cart actions
-export const headers = ({actionHeaders, loaderHeaders}) => {
-  return {
-    'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
-    'Pragma': 'no-cache',
-    'Expires': '0',
-  };
-};
-
-// CRITICAL: Always revalidate after cart mutations
-export const shouldRevalidate = ({
-  currentUrl,
-  nextUrl,
-  formMethod,
-  defaultShouldRevalidate,
-}) => {
-  // Always revalidate after POST/PUT/PATCH/DELETE
-  if (formMethod && formMethod !== 'GET') {
-    return true;
-  }
-
-  // Always revalidate if we're on the same URL (drawer scenario)
-  if (currentUrl.pathname === nextUrl.pathname) {
-    return true;
-  }
-
-  return defaultShouldRevalidate;
-};
-
-/**
- * @param {Route.ActionArgs}
- */
 export async function action({request, context}) {
   const {cart} = context;
-
   const formData = await request.formData();
-
-  // Suporte ao formato legado cartAction
-  const cartActionLegacy = formData.get('cartAction');
-  if (cartActionLegacy === 'ADD_TO_CART') {
+  
+  // Legacy format support
+  const cartAction = formData.get('cartAction');
+  if (cartAction === 'ADD_TO_CART') {
     const lines = JSON.parse(formData.get('lines') || '[]');
     const result = await cart.addLines(lines);
-    const cartId = result?.cart?.id;
-    const headers = cartId ? cart.setCartId(result.cart.id) : new Headers();
-    return data({cart: result.cart, errors: result.errors}, {headers});
+    const headers = cart.setCartId(result.cart.id);
+    return json({cart: result.cart, errors: result.errors}, {headers});
   }
 
   const {action, inputs} = CartForm.getFormInput(formData);
-
-  if (!action) {
-    throw new Error('No action provided');
-  }
-
-  let status = 200;
   let result;
 
   switch (action) {
@@ -75,92 +30,54 @@ export async function action({request, context}) {
     case CartForm.ACTIONS.LinesRemove:
       result = await cart.removeLines(inputs.lineIds);
       break;
-    case CartForm.ACTIONS.DiscountCodesUpdate: {
-      const formDiscountCode = inputs.discountCode;
-
-      // User inputted discount code
-      const discountCodes = formDiscountCode ? [formDiscountCode] : [];
-
-      // Combine discount codes already applied on cart
-      discountCodes.push(...inputs.discountCodes);
-
-      result = await cart.updateDiscountCodes(discountCodes);
+    case CartForm.ACTIONS.DiscountCodesUpdate:
+      const codes = inputs.discountCode ? [inputs.discountCode] : [];
+      codes.push(...(inputs.discountCodes || []));
+      result = await cart.updateDiscountCodes(codes);
       break;
-    }
-    case CartForm.ACTIONS.GiftCardCodesAdd: {
-      const formGiftCardCode = inputs.giftCardCode;
-
-      const giftCardCodes = formGiftCardCode ? [formGiftCardCode] : [];
-
-      result = await cart.addGiftCardCodes(giftCardCodes);
-      break;
-    }
-    case CartForm.ACTIONS.GiftCardCodesRemove: {
-      const appliedGiftCardIds = inputs.giftCardCodes;
-      result = await cart.removeGiftCardCodes(appliedGiftCardIds);
-      break;
-    }
-    case CartForm.ACTIONS.BuyerIdentityUpdate: {
-      result = await cart.updateBuyerIdentity({
-        ...inputs.buyerIdentity,
-      });
-      break;
-    }
     default:
-      throw new Error(`${action} cart action is not defined`);
+      result = {cart: null, errors: [{message: 'Invalid action'}]};
   }
 
-  const cartId = result?.cart?.id;
-  const headers = cartId ? cart.setCartId(result.cart.id) : new Headers();
-
-  // CRITICAL: Prevent caching of cart actions
-  headers.set('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
-  headers.set('Pragma', 'no-cache');
-  headers.set('Expires', '0');
-
-  const {cart: cartResult, errors, warnings} = result;
-
-  const redirectTo = formData.get('redirectTo') ?? null;
-  if (typeof redirectTo === 'string') {
-    status = 303;
-    headers.set('Location', redirectTo);
-  }
-
-  return data(
-    {
-      cart: cartResult,
-      errors,
-      warnings,
-      analytics: {
-        cartId,
-      },
-    },
-    {status, headers},
-  );
+  const headers = result.cart?.id ? cart.setCartId(result.cart.id) : new Headers();
+  return json({cart: result.cart, errors: result.errors}, {headers});
 }
 
-/**
- * @param {Route.LoaderArgs}
- */
 export async function loader({context}) {
   const {cart} = context;
-  return await cart.get();
+  return json(await cart.get());
 }
 
-export default function Cart() {
-  /** @type {LoaderReturnData} */
+export default function CartPage() {
   const cart = useLoaderData();
-
+  const lines = cart?.lines?.nodes || [];
+  
   return (
-    <div className="cart">
-      <h1>Cart</h1>
-      <CartMain layout="page" cart={cart} />
+    <div style={{padding:'120px 40px 60px',maxWidth:'800px',margin:'0 auto'}}>
+      <h1 style={{fontSize:'28px',marginBottom:'32px'}}>Your Cart</h1>
+      {lines.length === 0 ? (
+        <p>Your cart is empty</p>
+      ) : (
+        <div>
+          {lines.map(line => (
+            <div key={line.id} style={{display:'flex',gap:'16px',padding:'16px 0',borderBottom:'1px solid #eee'}}>
+              {line.merchandise?.image && (
+                <img src={line.merchandise.image.url} alt="" style={{width:'80px',height:'80px',objectFit:'cover'}} />
+              )}
+              <div>
+                <p style={{fontWeight:'600'}}>{line.merchandise?.product?.title}</p>
+                <p>Qty: {line.quantity}</p>
+                <p>${line.cost?.totalAmount?.amount}</p>
+              </div>
+            </div>
+          ))}
+          {cart.checkoutUrl && (
+            <a href={cart.checkoutUrl} style={{display:'inline-block',marginTop:'24px',padding:'14px 28px',background:'#000',color:'#fff',textDecoration:'none'}}>
+              Checkout
+            </a>
+          )}
+        </div>
+      )}
     </div>
   );
 }
-
-/** @typedef {import('react-router').HeadersFunction} HeadersFunction */
-/** @typedef {import('./+types/cart').Route} Route */
-/** @typedef {import('@shopify/hydrogen').CartQueryDataReturn} CartQueryDataReturn */
-/** @typedef {import('@shopify/remix-oxygen').SerializeFrom<typeof loader>} LoaderReturnData */
-/** @typedef {import('@shopify/remix-oxygen').SerializeFrom<typeof action>} ActionReturnData */

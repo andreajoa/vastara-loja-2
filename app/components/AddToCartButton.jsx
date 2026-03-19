@@ -1,42 +1,29 @@
-import {CartForm} from '@shopify/hydrogen';
+import {useFetcher} from 'react-router';
+import {useEffect, useRef} from 'react';
 
-/**
- * @param {{
- *   analytics?: unknown;
- *   children: React.ReactNode;
- *   disabled?: boolean;
- *   lines: Array<OptimisticCartLineInput>;
- *   onClick?: () => void;
- * }}
- */
-export function AddToCartButton({
-  analytics,
-  children,
-  disabled,
-  lines,
-  onClick,
-}) {
+export function AddToCartButton({variantId, quantity = 1, disabled, children, style, onSuccess}) {
+  const fetcher = useFetcher();
+  const isAdding = fetcher.state !== 'idle';
+  const wasAdding = useRef(false);
+
+  useEffect(() => {
+    if (wasAdding.current && fetcher.state === 'idle' && !fetcher.data?.errors?.length) {
+      onSuccess?.();
+    }
+    wasAdding.current = fetcher.state === 'submitting';
+  }, [fetcher.state, fetcher.data, onSuccess]);
+
   return (
-    <CartForm route="/cart" inputs={{lines}} action={CartForm.ACTIONS.LinesAdd}>
-      {(fetcher) => (
-        <>
-          <input
-            name="analytics"
-            type="hidden"
-            value={JSON.stringify(analytics)}
-          />
-          <button
-            type="submit"
-            onClick={onClick}
-            disabled={disabled ?? fetcher.state !== 'idle'}
-          >
-            {children}
-          </button>
-        </>
-      )}
-    </CartForm>
+    <fetcher.Form method="post" action="/cart">
+      <input type="hidden" name="cartAction" value="ADD_TO_CART" />
+      <input type="hidden" name="lines" value={JSON.stringify([{merchandiseId: variantId, quantity}])} />
+      <button 
+        type="submit" 
+        disabled={disabled || isAdding || !variantId}
+        style={style}
+      >
+        {isAdding ? 'Adding...' : children}
+      </button>
+    </fetcher.Form>
   );
 }
-
-/** @typedef {import('react-router').FetcherWithComponents} FetcherWithComponents */
-/** @typedef {import('@shopify/hydrogen').OptimisticCartLineInput} OptimisticCartLineInput */
