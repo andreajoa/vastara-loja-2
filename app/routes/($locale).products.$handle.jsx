@@ -299,14 +299,8 @@ const CSS = `
 // ============================================
 // ADD TO CART BUTTON
 // ============================================
-function AddBtn({variantId, qty, available, label, style, onDone}) {
-  const fetcher = useFetcher({key: 'add-to-cart-' + variantId});
-
-  useEffect(() => {
-    if (fetcher.state === 'idle' && fetcher.data && !fetcher.data?.errors?.length) {
-      onDone?.();
-    }
-  }, [fetcher.state, fetcher.data]);
+function AddBtn({variantId, qty, available, label, style}) {
+  const fetcher = useFetcher();
 
   if (!available) {
     return <button disabled style={{...style, background:'#d1d5db', cursor:'not-allowed'}}>Sold Out</button>;
@@ -324,14 +318,8 @@ function AddBtn({variantId, qty, available, label, style, onDone}) {
 }
 
 
-function BundleAddButton({lines, count, onDone}) {
-  const fetcher = useFetcher({key: 'add-bundle'});
-
-  useEffect(() => {
-    if (fetcher.state === 'idle' && fetcher.data && !fetcher.data?.errors?.length) {
-      onDone?.();
-    }
-  }, [fetcher.state, fetcher.data]);
+function BundleAddButton({lines, count}) {
+  const fetcher = useFetcher();
 
   return (
     <fetcher.Form method="post" action="/cart">
@@ -558,7 +546,6 @@ export default function Product() {
   const [floatingVisible, setFloatingVisible] = useState(false);
   const [wishlist, setWishlist] = useState(false);
   const [activeTab, setActiveTab] = useState('description');
-  const {openCart} = useCart();
   const bitPrevRef = useRef(null);
 
   const selectedVariant = useOptimisticVariant(
@@ -797,8 +784,7 @@ export default function Product() {
           {variantId && (
             <AddBtn variantId={variantId} qty={qty} available={available}
               label={`Add to Bag  |  ${price ? fmt(price.amount, price.currencyCode) : ''}`}
-              style={addBtnStyle}
-              onDone={() => openCart()} />
+              style={addBtnStyle} />
           )}
 
           <div style={{marginTop:'16px',paddingTop:'14px',borderTop:'1px solid #f5f5f5',display:'flex',flexDirection:'column',gap:'10px'}}>
@@ -862,8 +848,7 @@ export default function Product() {
             {variantId && available && (
               <AddBtn variantId={variantId} qty={1} available={available}
                 label={`Add to Bag — ${price ? fmt(price.amount,price.currencyCode) : ''}`}
-                style={{padding:'14px 36px',background:'#fff',color:'#0a0a0a',fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',cursor:'pointer',border:'none',fontWeight:'500'}}
-                onDone={() => openCart()} />
+                style={{padding:'14px 36px',background:'#fff',color:'#0a0a0a',fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',cursor:'pointer',border:'none',fontWeight:'500'}} />
             )}
             <span style={{fontSize:'12px',color:'rgba(255,255,255,0.5)',letterSpacing:'1px'}}>Free shipping on orders $75+</span>
           </div>
@@ -919,7 +904,7 @@ export default function Product() {
                 Bundle Price: {fmt(bitTotal, price?.currencyCode || 'USD')}
               </div>
               {variantId && (
-                <BundleAddButton lines={bitLines} count={bitSelectedProducts.length + 1} onDone={() => setTimeout(() => openCart(), 300)} />
+                <BundleAddButton lines={bitLines} count={bitSelectedProducts.length + 1} />
               )}
             </div>
           </div>

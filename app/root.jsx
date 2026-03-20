@@ -30,8 +30,13 @@ export async function loader({context}) {
   };
 }
 
-// CRITICAL: Always revalidate - fetchers and form submissions
-export const shouldRevalidate = () => true;
+// Always revalidate root to keep cart fresh
+export const shouldRevalidate = ({formMethod, defaultShouldRevalidate, formAction}) => {
+  // Always revalidate when any form is submitted (including fetchers to /cart)
+  if (formMethod && formMethod !== 'GET') return true;
+  if (formAction?.includes('/cart')) return true;
+  return defaultShouldRevalidate;
+};
 
 export const handle = {id: 'root'};
 
