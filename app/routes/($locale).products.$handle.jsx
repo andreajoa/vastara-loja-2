@@ -299,15 +299,13 @@ const CSS = `
 // ADD TO CART BUTTON
 // ============================================
 function AddBtn({variantId, qty, available, label, style, onDone}) {
-  const fetcher = useFetcher();
-  const wasAdding = useRef(false);
+  const fetcher = useFetcher({key: 'add-to-cart-' + variantId});
 
   useEffect(() => {
-    if (wasAdding.current && fetcher.state === 'idle') {
+    if (fetcher.state === 'idle' && fetcher.data && !fetcher.data?.errors?.length) {
       onDone?.();
     }
-    wasAdding.current = fetcher.state === 'submitting';
-  }, [fetcher.state, onDone]);
+  }, [fetcher.state, fetcher.data]);
 
   if (!available) {
     return <button disabled style={{...style, background:'#d1d5db', cursor:'not-allowed'}}>Sold Out</button>;
@@ -326,15 +324,13 @@ function AddBtn({variantId, qty, available, label, style, onDone}) {
 
 
 function BundleAddButton({lines, count, onDone}) {
-  const fetcher = useFetcher();
-  const wasAdding = useRef(false);
+  const fetcher = useFetcher({key: 'add-bundle'});
 
   useEffect(() => {
-    if (wasAdding.current && fetcher.state === 'idle') {
+    if (fetcher.state === 'idle' && fetcher.data && !fetcher.data?.errors?.length) {
       onDone?.();
     }
-    wasAdding.current = fetcher.state === 'submitting';
-  }, [fetcher.state, onDone]);
+  }, [fetcher.state, fetcher.data]);
 
   return (
     <fetcher.Form method="post" action="/cart">

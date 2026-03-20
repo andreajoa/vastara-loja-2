@@ -1,14 +1,18 @@
 import {createContext, useContext, useState} from 'react';
+import {useRouteLoaderData} from 'react-router';
 import Header from './Header';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
 
-// Keep CartContext for backwards compatibility
 export const CartContext = createContext(null);
 export const useCart = () => useContext(CartContext);
 
-export default function Layout({children, header, footer, cart}) {
+export default function Layout({children, header, footer}) {
   const [isCartOpen, setIsCartOpen] = useState(false);
+  
+  // Read cart reactively from root loader - this updates when root revalidates
+  const rootData = useRouteLoaderData('root');
+  const cart = rootData?.cart ?? null;
   const totalQuantity = cart?.totalQuantity || 0;
 
   return (
@@ -28,5 +32,4 @@ export default function Layout({children, header, footer, cart}) {
   );
 }
 
-// Re-export Aside for compatibility
 export {Aside, useAside} from './Aside';

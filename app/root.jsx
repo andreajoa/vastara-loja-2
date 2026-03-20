@@ -30,10 +30,8 @@ export async function loader({context}) {
   };
 }
 
-export const shouldRevalidate = ({formMethod, defaultShouldRevalidate}) => {
-  if (formMethod && formMethod !== 'GET') return true;
-  return defaultShouldRevalidate;
-};
+// CRITICAL: Always revalidate - fetchers and form submissions
+export const shouldRevalidate = () => true;
 
 export const handle = {id: 'root'};
 
@@ -49,7 +47,7 @@ export default function App() {
       </head>
       <body>
         <Analytics.Provider cart={data.cart} shop={data.shop} consent={data.consent}>
-          <Layout header={data.header} footer={data.footer} cart={data.cart}>
+          <Layout header={data.header} footer={data.footer}>
             <Outlet />
           </Layout>
         </Analytics.Provider>
