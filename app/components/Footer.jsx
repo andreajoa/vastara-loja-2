@@ -202,7 +202,7 @@ export default function Footer({footer}) {
 
   return (
     <footer style={{background:'#0a0a0a',color:'#fff',fontFamily:'system-ui,sans-serif'}}>
-      <style>{`
+      <style suppressHydrationWarning>{`
         .vf-cities-row{display:flex;align-items:center;justify-content:space-between;padding:20px 40px;border-bottom:1px solid #1a1a1a;flex-wrap:wrap;gap:12px;}
         .vf-city-item{display:flex;align-items:center;gap:10px;cursor:default;}
         .vf-city-name{font-size:12px;color:#9ca3af;letter-spacing:0.5px;white-space:nowrap;}

@@ -172,7 +172,8 @@ function generateReviewsForProduct(productId) {
   const names = [...REVIEWER_NAMES].sort(() => rng() - 0.5);
   const titles = [...REVIEW_TITLES].sort(() => rng() - 0.5);
   const bodies = [...REVIEW_BODIES].sort(() => rng() - 0.5);
-  const now = new Date();
+  // Use fixed reference date to avoid hydration mismatch (server vs client time diff)
+  const now = new Date('2025-03-15T12:00:00Z');
   const reviews = [];
 
   for (let i = 0; i < count; i++) {

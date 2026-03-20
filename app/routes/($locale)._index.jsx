@@ -260,7 +260,7 @@ export default function Homepage() {
 
   return (
     <div className="hp">
-      <style>{`
+      <style suppressHydrationWarning>{`
         /* font loaded in root.jsx */
         *{box-sizing:border-box;margin:0;padding:0}
         .hp{font-family:'Inter',-apple-system,sans-serif;background:#fff;color:#000;overflow-x:hidden}
