@@ -1,4 +1,4 @@
-import {useLoaderData, Link, useNavigate} from 'react-router';
+import {useLoaderData, Link, useNavigate, useFetcher} from 'react-router';
 import {useState, useEffect, useRef, useMemo, useCallback} from 'react';
 import {
   getSelectedProductOptions,
