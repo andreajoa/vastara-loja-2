@@ -11,7 +11,6 @@ import {
   CartForm,
   Image,
 } from '@shopify/hydrogen';
-import {useCart} from '~/components/Layout';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta = ({data}) => [
