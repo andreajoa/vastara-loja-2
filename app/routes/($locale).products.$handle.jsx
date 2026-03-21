@@ -1,4 +1,4 @@
-import {useLoaderData, Link, useNavigate, useFetcher, useEffect} from 'react-router';
+import {useLoaderData, Link, useNavigate, useFetcher} from 'react-router';
 import {useCart} from '~/components/Layout';
 import {useState, useEffect, useRef, useMemo, useCallback} from 'react';
 import {
