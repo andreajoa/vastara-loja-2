@@ -24,7 +24,7 @@ export default function CartDrawer({isOpen, onClose, cart: cartProp}) {
 
   useEffect(() => {
     if (isOpen) {
-      loader.load('/cart');
+      loader.load('/api/cart');
     }
   }, [isOpen]);
 
