@@ -1,4 +1,5 @@
-import {useFetcher, Link} from 'react-router';
+import {useFetcher, Link, useRouteLoaderData} from 'react-router';
+import {useEffect} from 'react';
 
 function fmt(amount, currency = 'USD') {
   return new Intl.NumberFormat('en-US', {style:'currency', currency}).format(Number(amount));
@@ -17,15 +18,25 @@ function RemoveButton({lineId}) {
   );
 }
 
-export default function CartDrawer({isOpen, onClose, cart}) {
+export default function CartDrawer({isOpen, onClose, cart: cartProp}) {
+  const loader = useFetcher();
+  const rootData = useRouteLoaderData('root');
+
+  useEffect(() => {
+    if (isOpen) {
+      loader.load('/cart');
+    }
+  }, [isOpen]);
+
+  const cart = loader.data?.cart ?? cartProp ?? rootData?.cart;
   const lines = cart?.lines?.nodes || [];
   const subtotal = cart?.cost?.subtotalAmount;
   const checkoutUrl = cart?.checkoutUrl;
 
   return (
     <>
-      <div 
-        onClick={onClose} 
+      <div
+        onClick={onClose}
         style={{
           position:'fixed',inset:0,
           background:'rgba(0,0,0,0.5)',
@@ -33,7 +44,7 @@ export default function CartDrawer({isOpen, onClose, cart}) {
           opacity:isOpen?1:0,
           pointerEvents:isOpen?'auto':'none',
           transition:'opacity 0.3s ease'
-        }} 
+        }}
       />
       <div style={{
         position:'fixed',top:0,right:0,height:'100%',width:'100%',maxWidth:'420px',
@@ -50,7 +61,11 @@ export default function CartDrawer({isOpen, onClose, cart}) {
           <button onClick={onClose} style={{width:'32px',height:'32px',borderRadius:'50%',background:'#f5f5f5',border:'none',cursor:'pointer',fontSize:'16px',display:'flex',alignItems:'center',justifyContent:'center',color:'#666'}}>✕</button>
         </div>
         <div style={{flex:1,overflowY:'auto',padding:'0 24px'}}>
-          {lines.length === 0 ? (
+          {loader.state !== 'idle' && lines.length === 0 ? (
+            <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100%'}}>
+              <p style={{color:'#9ca3af',fontSize:'14px'}}>Loading...</p>
+            </div>
+          ) : lines.length === 0 ? (
             <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',height:'100%',textAlign:'center',padding:'60px 0'}}>
               <p style={{color:'#9ca3af',fontSize:'14px',margin:'0 0 16px'}}>Your bag is empty</p>
               <button onClick={onClose} style={{fontSize:'13px',textDecoration:'underline',color:'#c9a84c',background:'none',border:'none',cursor:'pointer'}}>Continue Shopping</button>
