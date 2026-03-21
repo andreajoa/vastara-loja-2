@@ -48,7 +48,7 @@ export default function Layout({children, header, footer}) {
     <CartContext.Provider value={{
       cart,
       totalQuantity,
-      openCart: () => setIsCartOpen(true),
+      openCart: (cartData) => openCartWithData(cartData),
       closeCart: () => setIsCartOpen(false),
     }}>
       <div style={{minHeight:'100vh',display:'flex',flexDirection:'column'}}>

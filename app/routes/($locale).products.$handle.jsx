@@ -305,7 +305,7 @@ function AddBtn({variantId, qty, available, label, style}) {
 
   useEffect(() => {
     if (fetcher.state === 'idle' && fetcher.data?.cart) {
-      openCart();
+      openCart(fetcher.data.cart);
     }
   }, [fetcher.state, fetcher.data]);
 
@@ -341,7 +341,7 @@ function BundleAddButton({lines, count}) {
 
   useEffect(() => {
     if (fetcher.state === 'idle' && fetcher.data?.cart) {
-      openCart();
+      openCart(fetcher.data.cart);
     }
   }, [fetcher.state, fetcher.data]);
 
