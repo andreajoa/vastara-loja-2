@@ -1,4 +1,4 @@
-import {useLoaderData, Link, useNavigate, useFetcher} from 'react-router';
+import {useLoaderData, Link, useNavigate} from 'react-router';
 import {useState, useEffect, useRef, useMemo, useCallback} from 'react';
 import {
   getSelectedProductOptions,
@@ -300,8 +300,8 @@ const CSS = `
 // ADD TO CART BUTTON
 // ============================================
 function AddBtn({variantId, qty, available, label, style}) {
-  const fetcher = useFetcher();
   const [returnTo, setReturnTo] = useState('');
+  const [adding, setAdding] = useState(false);
 
   useEffect(() => {
     setReturnTo(window.location.pathname);
@@ -312,36 +312,36 @@ function AddBtn({variantId, qty, available, label, style}) {
   }
 
   return (
-    <fetcher.Form method="post" action="/cart">
+    <form method="post" action="/cart" onSubmit={() => setAdding(true)}>
       <input type="hidden" name="cartAction" value="ADD_TO_CART" />
       <input type="hidden" name="lines" value={JSON.stringify([{merchandiseId: variantId, quantity: qty}])} />
       <input type="hidden" name="returnTo" value={returnTo} />
-      <button type="submit" disabled={fetcher.state !== 'idle'} style={style}>
-        {fetcher.state !== 'idle' ? 'Adding...' : label}
+      <button type="submit" disabled={adding} style={style}>
+        {adding ? 'Adding...' : label}
       </button>
-    </fetcher.Form>
+    </form>
   );
 }
 
 
 function BundleAddButton({lines, count}) {
-  const fetcher = useFetcher();
   const [returnTo, setReturnTo] = useState('');
+  const [adding, setAdding] = useState(false);
 
   useEffect(() => {
     setReturnTo(window.location.pathname);
   }, []);
 
   return (
-    <fetcher.Form method="post" action="/cart">
+    <form method="post" action="/cart" onSubmit={() => setAdding(true)}>
       <input type="hidden" name="cartAction" value="ADD_TO_CART" />
       <input type="hidden" name="lines" value={JSON.stringify(lines)} />
       <input type="hidden" name="returnTo" value={returnTo} />
-      <button type="submit" disabled={fetcher.state !== 'idle'}
+      <button type="submit" disabled={adding}
         style={{display:'inline-block',padding:'14px 40px',background:'#0a0a0a',color:'#fff',fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',cursor:'pointer',border:'none'}}>
-        {fetcher.state !== 'idle' ? 'Adding...' : `Add All ${count} Items to Bag`}
+        {adding ? 'Adding...' : `Add All ${count} Items to Bag`}
       </button>
-    </fetcher.Form>
+    </form>
   );
 }
 
