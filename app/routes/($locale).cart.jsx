@@ -70,12 +70,7 @@ export async function action({request, context}) {
     headers.append('Set-Cookie', await session.commit());
   }
 
-  // AQUI ESTÁ A CORREÇÃO: Redirecionar SEMPRE para a página do carrinho após a ação
-  const url = new URL(request.url);
-  const localeMatch = url.pathname.match(/^\/([a-zA-Z]{2}-[a-zA-Z]{2})(\/|$)/);
-  const cartPagePath = localeMatch ? `/${localeMatch[1]}/cart` : '/cart'; // Pega o path /pt-br/cart ou /cart
-
-  return redirect(cartPagePath, {headers});
+  return data({cart: result.cart}, {headers});
 }
 
 export default function Cart() {
@@ -84,16 +79,16 @@ export default function Cart() {
   if (!cart || !cart.lines?.nodes?.length) {
     return (
       <div style={{padding: '40px', textAlign: 'center'}}>
-        <h1>Carrinho</h1>
-        <p>Seu carrinho está vazio</p>
-        <Link to="/collections/all">Continuar Comprando</Link>
+        <h1>Your Bag</h1>
+        <p>Your bag is empty</p>
+        <Link to="/collections/all">Continue Shopping</Link>
       </div>
     );
   }
 
   return (
     <div style={{padding: '40px', maxWidth: '900px', margin: '0 auto'}}>
-      <h1>Carrinho ({cart.totalQuantity})</h1>
+      <h1>Your Bag ({cart.totalQuantity})</h1>
 
       {cart.lines.nodes.map((line) => (
         <div
@@ -117,7 +112,7 @@ export default function Cart() {
           <div style={{flex: 1}}>
             <p style={{fontWeight: 'bold'}}>{line.merchandise?.product?.title}</p>
             <p>{line.merchandise?.title}</p>
-            <p>Qtd: {line.quantity}</p>
+            <p>Qty: {line.quantity}</p>
             <Money data={line.cost.totalAmount} />
             {/* Adicionei o botão de remover aqui para teste */}
             <CartForm

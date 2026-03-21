@@ -27,14 +27,15 @@ export default function Layout({children, header, footer}) {
     }
   }, [location.search]);
 
-  // Watch fetchers - auto open cart when add-to-cart completes
+  // Watch fetchers - open drawer when add-to-cart completes (idle + has cart data)
   const fetchers = useFetchers();
   useEffect(() => {
-    const addingFetcher = fetchers.find(
+    const doneFetcher = fetchers.find(
       f => f.formAction?.includes('/cart') &&
-           f.state === 'loading'
+           f.state === 'idle' &&
+           f.data?.cart
     );
-    if (addingFetcher) {
+    if (doneFetcher) {
       setIsCartOpen(true);
     }
   }, [fetchers]);
