@@ -12,7 +12,12 @@ export default function Layout({children, header, footer}) {
   const location = useLocation();
 
   const rootData = useRouteLoaderData('root');
-  const cart = rootData?.cart ?? null;
+  const rootCart = rootData?.cart ?? null;
+
+  // Use fetcher cart data immediately (before root revalidates)
+  const fetchers = useFetchers();
+  const cartFetcher = fetchers.find(f => f.formAction?.includes('/cart') && f.data?.cart);
+  const cart = cartFetcher?.data?.cart ?? rootCart;
   const totalQuantity = cart?.totalQuantity || 0;
 
   // Open cart when ?cart=open is in URL (fallback for non-JS)
@@ -27,18 +32,12 @@ export default function Layout({children, header, footer}) {
     }
   }, [location.search]);
 
-  // Watch fetchers - open drawer when add-to-cart completes
-  const fetchers = useFetchers();
+  // Open drawer when add-to-cart fetcher completes
   useEffect(() => {
-    const doneFetcher = fetchers.find(
-      f => f.key === 'add-to-cart' &&
-           f.state === 'idle' &&
-           f.data
-    );
-    if (doneFetcher) {
+    if (cartFetcher) {
       setIsCartOpen(true);
     }
-  }, [fetchers]);
+  }, [cartFetcher]);
 
   return (
     <CartContext.Provider value={{
