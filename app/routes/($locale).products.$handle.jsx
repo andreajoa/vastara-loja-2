@@ -301,6 +301,11 @@ const CSS = `
 // ============================================
 function AddBtn({variantId, qty, available, label, style}) {
   const fetcher = useFetcher();
+  const [returnTo, setReturnTo] = useState('');
+
+  useEffect(() => {
+    setReturnTo(window.location.pathname);
+  }, []);
 
   if (!available) {
     return <button disabled style={{...style, background:'#d1d5db', cursor:'not-allowed'}}>Sold Out</button>;
@@ -310,6 +315,7 @@ function AddBtn({variantId, qty, available, label, style}) {
     <fetcher.Form method="post" action="/cart">
       <input type="hidden" name="cartAction" value="ADD_TO_CART" />
       <input type="hidden" name="lines" value={JSON.stringify([{merchandiseId: variantId, quantity: qty}])} />
+      <input type="hidden" name="returnTo" value={returnTo} />
       <button type="submit" disabled={fetcher.state !== 'idle'} style={style}>
         {fetcher.state !== 'idle' ? 'Adding...' : label}
       </button>
@@ -320,11 +326,17 @@ function AddBtn({variantId, qty, available, label, style}) {
 
 function BundleAddButton({lines, count}) {
   const fetcher = useFetcher();
+  const [returnTo, setReturnTo] = useState('');
+
+  useEffect(() => {
+    setReturnTo(window.location.pathname);
+  }, []);
 
   return (
     <fetcher.Form method="post" action="/cart">
       <input type="hidden" name="cartAction" value="ADD_TO_CART" />
       <input type="hidden" name="lines" value={JSON.stringify(lines)} />
+      <input type="hidden" name="returnTo" value={returnTo} />
       <button type="submit" disabled={fetcher.state !== 'idle'}
         style={{display:'inline-block',padding:'14px 40px',background:'#0a0a0a',color:'#fff',fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',cursor:'pointer',border:'none'}}>
         {fetcher.state !== 'idle' ? 'Adding...' : `Add All ${count} Items to Bag`}

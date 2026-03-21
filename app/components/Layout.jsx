@@ -1,5 +1,5 @@
 import {createContext, useContext, useState, useEffect} from 'react';
-import {useRouteLoaderData, useFetchers} from 'react-router';
+import {useRouteLoaderData, useLocation, useFetchers} from 'react-router';
 import Header from './Header';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
@@ -9,28 +9,36 @@ export const useCart = () => useContext(CartContext);
 
 export default function Layout({children, header, footer}) {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  
+  const location = useLocation();
+
   const rootData = useRouteLoaderData('root');
   const cart = rootData?.cart ?? null;
   const totalQuantity = cart?.totalQuantity || 0;
 
-  // Watch all fetchers for cart actions - when they complete, the root
-  // will have already revalidated (React Router does this automatically
-  // for fetcher submissions). We just need to open the cart drawer.
-  const fetchers = useFetchers();
-  const cartFetchers = fetchers.filter(
-    f => f.formAction === '/cart' && f.formData?.get('cartAction') === 'ADD_TO_CART'
-  );
-  
-  // Auto-open cart when an add-to-cart fetcher completes
+  // Open cart when ?cart=open is in URL (fallback for non-JS)
   useEffect(() => {
-    const justFinished = cartFetchers.some(
-      f => f.state === 'loading' && f.data?.cart
+    const params = new URLSearchParams(location.search);
+    if (params.get('cart') === 'open') {
+      setIsCartOpen(true);
+      // Clean up URL
+      const url = new URL(window.location.href);
+      url.searchParams.delete('cart');
+      window.history.replaceState({}, '', url.pathname + url.search);
+    }
+  }, [location.search]);
+
+  // Watch fetchers - auto open cart when add-to-cart completes
+  const fetchers = useFetchers();
+  useEffect(() => {
+    const addingFetcher = fetchers.find(
+      f => f.formAction === '/cart' &&
+           f.state === 'loading' &&
+           f.formData?.get('cartAction') === 'ADD_TO_CART'
     );
-    if (justFinished) {
+    if (addingFetcher) {
       setIsCartOpen(true);
     }
-  }, [cartFetchers]);
+  }, [fetchers]);
 
   return (
     <CartContext.Provider value={{
