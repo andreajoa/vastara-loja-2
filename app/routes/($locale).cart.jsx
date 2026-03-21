@@ -1,4 +1,4 @@
-import {useLoaderData, Link, data, redirect} from 'react-router';
+import {useLoaderData, Link, redirect} from 'react-router';
 import {CartForm, Image, Money} from '@shopify/hydrogen';
 
 export async function loader({context}) {
@@ -10,19 +10,19 @@ export async function action({request, context}) {
   const {cart, session} = context;
   const formData = await request.formData();
 
-  let action;
+  let cartAction;
   let inputs;
 
   if (formData.has(CartForm.INPUT_NAME)) {
     const parsed = CartForm.getFormInput(formData);
-    action = parsed.action;
+    cartAction = parsed.action;
     inputs = parsed.inputs;
   } else {
-    const cartAction = String(formData.get('cartAction') || '');
+    const legacyAction = String(formData.get('cartAction') || '');
     const linesRaw = String(formData.get('lines') || '[]');
 
-    if (cartAction === 'ADD_TO_CART') {
-      action = CartForm.ACTIONS.LinesAdd;
+    if (legacyAction === 'ADD_TO_CART') {
+      cartAction = CartForm.ACTIONS.LinesAdd;
       inputs = {lines: JSON.parse(linesRaw)};
     } else {
       throw new Error('Unsupported cart payload');
@@ -31,7 +31,7 @@ export async function action({request, context}) {
 
   let result;
 
-  switch (action) {
+  switch (cartAction) {
     case CartForm.ACTIONS.LinesAdd:
       result = await cart.addLines(inputs.lines);
       break;
@@ -45,7 +45,7 @@ export async function action({request, context}) {
       result = await cart.updateDiscountCodes(inputs.discountCodes);
       break;
     default:
-      throw new Error(`Unknown cart action: ${action}`);
+      throw new Error(`Unknown cart action: ${cartAction}`);
   }
 
   const headers = new Headers();
@@ -61,7 +61,8 @@ export async function action({request, context}) {
     headers.append('Set-Cookie', await session.commit());
   }
 
-  return redirect(request.url, {headers});
+  const url = new URL(request.url);
+  return redirect(url.pathname, {headers});
 }
 
 export default function Cart() {
