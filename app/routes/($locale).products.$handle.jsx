@@ -1,4 +1,5 @@
-import {useLoaderData, Link, useNavigate, useFetcher} from 'react-router';
+import {useLoaderData, Link, useNavigate, useFetcher, useEffect} from 'react-router';
+import {useCart} from '~/components/Layout';
 import {useState, useEffect, useRef, useMemo, useCallback} from 'react';
 import {
   getSelectedProductOptions,
@@ -300,7 +301,14 @@ const CSS = `
 // ADD TO CART BUTTON
 // ============================================
 function AddBtn({variantId, qty, available, label, style}) {
-  const fetcher = useFetcher({key: 'add-to-cart'});
+  const fetcher = useFetcher();
+  const {openCart} = useCart();
+
+  useEffect(() => {
+    if (fetcher.state === 'idle' && fetcher.data?.cart) {
+      openCart();
+    }
+  }, [fetcher.state, fetcher.data]);
 
   if (!available) {
     return (
@@ -329,7 +337,14 @@ function AddBtn({variantId, qty, available, label, style}) {
 }
 
 function BundleAddButton({lines, count}) {
-  const fetcher = useFetcher({key: 'add-to-cart'});
+  const fetcher = useFetcher();
+  const {openCart} = useCart();
+
+  useEffect(() => {
+    if (fetcher.state === 'idle' && fetcher.data?.cart) {
+      openCart();
+    }
+  }, [fetcher.state, fetcher.data]);
 
   return (
     <fetcher.Form method="post" action="/cart">
