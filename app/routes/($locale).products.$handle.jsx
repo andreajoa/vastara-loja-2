@@ -329,39 +329,30 @@ function AddBtn({variantId, qty, available, label, style}) {
 }
 
 function BundleAddButton({lines, count}) {
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
-  const localeMatch = currentPath.match(/^\/([a-zA-Z]{2}-[a-zA-Z]{2})(\/|$)/);
-  const cartRoute = localeMatch ? `/${localeMatch[1]}/cart` : '/cart';
+  const fetcher = useFetcher({key: 'add-to-cart'});
 
   return (
-    <CartForm
-      route={cartRoute}
-      action={CartForm.ACTIONS.LinesAdd}
-      inputs={{lines}}
-    >
-      {(fetcher) => (
-        <>
-          <button
-            type="submit"
-            disabled={fetcher.state !== 'idle'}
-            style={{
-              display:'inline-block',
-              padding:'14px 40px',
-              background:'#0a0a0a',
-              color:'#fff',
-              fontSize:'11px',
-              letterSpacing:'2px',
-              textTransform:'uppercase',
-              cursor:'pointer',
-              border:'none'
-            }}
-          >
-            {'Add All ' + count + ' Items to Bag'}
-          </button>
-          <RedirectToCartOnSuccess fetcher={fetcher} to={cartRoute} />
-        </>
-      )}
-    </CartForm>
+    <fetcher.Form method="post" action="/cart">
+      <input type="hidden" name="cartAction" value="ADD_TO_CART" />
+      <input type="hidden" name="lines" value={JSON.stringify(lines)} />
+      <button
+        type="submit"
+        disabled={fetcher.state !== 'idle'}
+        style={{
+          display:'inline-block',
+          padding:'14px 40px',
+          background:'#0a0a0a',
+          color:'#fff',
+          fontSize:'11px',
+          letterSpacing:'2px',
+          textTransform:'uppercase',
+          cursor:'pointer',
+          border:'none'
+        }}
+      >
+        {fetcher.state !== 'idle' ? '...' : ('Add All ' + count + ' Items to Bag')}
+      </button>
+    </fetcher.Form>
   );
 }
 
