@@ -299,21 +299,8 @@ const CSS = `
 // ============================================
 // ADD TO CART BUTTON
 // ============================================
-function RedirectToCartOnSuccess({fetcher, to}) {
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (fetcher.state === 'idle' && fetcher.data?.cart) {
-      window.location.href = to;
-    }
-  }, [fetcher.state, fetcher.data, to]);
-
-  return null;
-}
-
 function AddBtn({variantId, qty, available, label, style}) {
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
-  const localeMatch = currentPath.match(/^\/([a-zA-Z]{2}-[a-zA-Z]{2})(\/|$)/);
-  const cartRoute = localeMatch ? `/${localeMatch[1]}/cart` : '/cart';
+  const fetcher = useFetcher({key: 'add-to-cart'});
 
   if (!available) {
     return (
@@ -327,24 +314,17 @@ function AddBtn({variantId, qty, available, label, style}) {
   }
 
   return (
-    <CartForm
-      route={cartRoute}
-      action={CartForm.ACTIONS.LinesAdd}
-      inputs={{lines: [{merchandiseId: variantId, quantity: qty || 1}]}}
-    >
-      {(fetcher) => (
-        <>
-          <button
-            type="submit"
-            disabled={fetcher.state !== 'idle'}
-            style={style}
-          >
-            {label || 'Add to Bag'}
-          </button>
-          <RedirectToCartOnSuccess fetcher={fetcher} to={cartRoute} />
-        </>
-      )}
-    </CartForm>
+    <fetcher.Form method="post" action="/cart">
+      <input type="hidden" name="cartAction" value="ADD_TO_CART" />
+      <input type="hidden" name="lines" value={JSON.stringify([{merchandiseId: variantId, quantity: qty || 1}])} />
+      <button
+        type="submit"
+        disabled={fetcher.state !== 'idle'}
+        style={style}
+      >
+        {fetcher.state !== 'idle' ? '...' : (label || 'Add to Bag')}
+      </button>
+    </fetcher.Form>
   );
 }
 
