@@ -300,21 +300,40 @@ const CSS = `
 // ADD TO CART BUTTON
 // ============================================
 function AddBtn({variantId, qty, available, label, style}) {
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+  const localeMatch = currentPath.match(/^\/([a-zA-Z]{2}-[a-zA-Z]{2})(\/|$)/);
+  const cartRoute = localeMatch ? `/${localeMatch[1]}/cart` : '/cart';
+
   if (!available) {
     return <button disabled style={{...style, background:'#d1d5db', cursor:'not-allowed'}}>Sold Out</button>;
   }
+
   return (
-    <CartForm route="" action={CartForm.ACTIONS.LinesAdd} inputs={{lines: [{merchandiseId: variantId, quantity: qty || 1}]}}>
+    <CartForm
+      route={cartRoute}
+      action={CartForm.ACTIONS.LinesAdd}
+      inputs={{lines: [{merchandiseId: variantId, quantity: qty || 1}]}}
+    >
       <button type="submit" style={style}>{label || 'Add to Bag'}</button>
     </CartForm>
   );
 }
 
 function BundleAddButton({lines, count}) {
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+  const localeMatch = currentPath.match(/^\/([a-zA-Z]{2}-[a-zA-Z]{2})(\/|$)/);
+  const cartRoute = localeMatch ? `/${localeMatch[1]}/cart` : '/cart';
+
   return (
-    <CartForm route="" action={CartForm.ACTIONS.LinesAdd} inputs={{lines}}>
-      <button type="submit"
-        style={{display:'inline-block',padding:'14px 40px',background:'#0a0a0a',color:'#fff',fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',cursor:'pointer',border:'none'}}>
+    <CartForm
+      route={cartRoute}
+      action={CartForm.ACTIONS.LinesAdd}
+      inputs={{lines}}
+    >
+      <button
+        type="submit"
+        style={{display:'inline-block',padding:'14px 40px',background:'#0a0a0a',color:'#fff',fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',cursor:'pointer',border:'none'}}
+      >
         {'Add All ' + count + ' Items to Bag'}
       </button>
     </CartForm>
