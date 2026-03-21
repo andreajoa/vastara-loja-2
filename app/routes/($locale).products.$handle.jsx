@@ -304,6 +304,9 @@ function AddBtn({variantId, qty, available, label, style}) {
   const {openCart} = useCart();
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.__fetcherDebug = {state: fetcher.state, data: fetcher.data};
+    }
     if (fetcher.state === 'idle' && fetcher.data?.cart) {
       openCart(fetcher.data.cart);
     }
@@ -340,6 +343,9 @@ function BundleAddButton({lines, count}) {
   const {openCart} = useCart();
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.__fetcherDebug = {state: fetcher.state, data: fetcher.data};
+    }
     if (fetcher.state === 'idle' && fetcher.data?.cart) {
       openCart(fetcher.data.cart);
     }
