@@ -1,3 +1,4 @@
+import {data} from 'react-router';
 import {useLoaderData, Link} from 'react-router';
 import {CartForm, Image, Money} from '@shopify/hydrogen';
 
@@ -44,13 +45,11 @@ export async function action({request, context}) {
     headers.append('Set-Cookie', await session.commit());
   }
 
-  headers.append('Content-Type', 'application/json');
-
-  return new Response(
-    JSON.stringify({
+  return data(
+    {
       cart: result?.cart,
       errors: result?.errors || result?.userErrors,
-    }),
+    },
     {headers}
   );
 }
