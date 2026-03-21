@@ -12,7 +12,6 @@ import {
 } from '@shopify/hydrogen';
 import {useCart} from '~/components/Layout';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
-import {useAside} from '~/components/Aside';
 
 export const meta = ({data}) => [
   {title: `${data?.product?.title ?? ''} | Vastara`},
@@ -300,8 +299,18 @@ const CSS = `
 // ============================================
 // ADD TO CART BUTTON
 // ============================================
+function RedirectToCartOnSuccess({fetcher, to}) {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (fetcher.state === 'idle' && fetcher.data?.cart) {
+      window.location.href = to;
+    }
+  }, [fetcher.state, fetcher.data, to]);
+
+  return null;
+}
+
 function AddBtn({variantId, qty, available, label, style}) {
-  const {open} = useAside();
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
   const localeMatch = currentPath.match(/^\/([a-zA-Z]{2}-[a-zA-Z]{2})(\/|$)/);
   const cartRoute = localeMatch ? `/${localeMatch[1]}/cart` : '/cart';
@@ -324,21 +333,22 @@ function AddBtn({variantId, qty, available, label, style}) {
       inputs={{lines: [{merchandiseId: variantId, quantity: qty || 1}]}}
     >
       {(fetcher) => (
-        <button
-          type="submit"
-          onClick={() => open('cart')}
-          disabled={fetcher.state !== 'idle'}
-          style={style}
-        >
-          {label || 'Add to Bag'}
-        </button>
+        <>
+          <button
+            type="submit"
+            disabled={fetcher.state !== 'idle'}
+            style={style}
+          >
+            {label || 'Add to Bag'}
+          </button>
+          <RedirectToCartOnSuccess fetcher={fetcher} to={cartRoute} />
+        </>
       )}
     </CartForm>
   );
 }
 
 function BundleAddButton({lines, count}) {
-  const {open} = useAside();
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
   const localeMatch = currentPath.match(/^\/([a-zA-Z]{2}-[a-zA-Z]{2})(\/|$)/);
   const cartRoute = localeMatch ? `/${localeMatch[1]}/cart` : '/cart';
@@ -350,24 +360,26 @@ function BundleAddButton({lines, count}) {
       inputs={{lines}}
     >
       {(fetcher) => (
-        <button
-          type="submit"
-          onClick={() => open('cart')}
-          disabled={fetcher.state !== 'idle'}
-          style={{
-            display:'inline-block',
-            padding:'14px 40px',
-            background:'#0a0a0a',
-            color:'#fff',
-            fontSize:'11px',
-            letterSpacing:'2px',
-            textTransform:'uppercase',
-            cursor:'pointer',
-            border:'none'
-          }}
-        >
-          {'Add All ' + count + ' Items to Bag'}
-        </button>
+        <>
+          <button
+            type="submit"
+            disabled={fetcher.state !== 'idle'}
+            style={{
+              display:'inline-block',
+              padding:'14px 40px',
+              background:'#0a0a0a',
+              color:'#fff',
+              fontSize:'11px',
+              letterSpacing:'2px',
+              textTransform:'uppercase',
+              cursor:'pointer',
+              border:'none'
+            }}
+          >
+            {'Add All ' + count + ' Items to Bag'}
+          </button>
+          <RedirectToCartOnSuccess fetcher={fetcher} to={cartRoute} />
+        </>
       )}
     </CartForm>
   );
