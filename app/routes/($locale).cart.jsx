@@ -10,7 +10,6 @@ export async function action({request, context}) {
   const {cart, session} = context;
   const formData = await request.formData();
 
-  // 1) Suporta o formato do Hydrogen CartForm (cartFormInput)
   let action;
   let inputs;
 
@@ -19,21 +18,14 @@ export async function action({request, context}) {
     action = parsed.action;
     inputs = parsed.inputs;
   } else {
-    // 2) Suporta o seu formato antigo: cartAction + lines (JSON)
     const cartAction = String(formData.get('cartAction') || '');
     const linesRaw = String(formData.get('lines') || '[]');
 
     if (cartAction === 'ADD_TO_CART') {
       action = CartForm.ACTIONS.LinesAdd;
-      try {
-        inputs = {lines: JSON.parse(linesRaw)};
-      } catch {
-        throw new Error('Invalid "lines" JSON in cart action');
-      }
+      inputs = {lines: JSON.parse(linesRaw)};
     } else {
-      throw new Error(
-        `Unsupported cart payload. Expected "${CartForm.INPUT_NAME}" or cartAction=ADD_TO_CART.`,
-      );
+      throw new Error('Unsupported cart payload');
     }
   }
 
@@ -56,7 +48,6 @@ export async function action({request, context}) {
       throw new Error(`Unknown cart action: ${action}`);
   }
 
-  // IMPORTANTÍSSIMO: persistir o cartId no cookie
   const headers = new Headers();
 
   if (result?.cart?.id) {
@@ -70,19 +61,7 @@ export async function action({request, context}) {
     headers.append('Set-Cookie', await session.commit());
   }
 
-  const errors = result?.errors || result?.userErrors;
-
-  // Se for navegação de documento (form normal), redireciona para /cart
-  const accept = request.headers.get('accept') || '';
-  const isDocumentRequest =
-    accept.includes('text/html') && !new URL(request.url).searchParams.has('_data');
-
-  if (isDocumentRequest) {
-    return redirect('/cart', {headers});
-  }
-
-  // Se for fetcher (CartForm), devolve data JSON
-  return data({cart: result?.cart, errors}, {headers});
+  return redirect(request.url, {headers});
 }
 
 export default function Cart() {
@@ -99,7 +78,7 @@ export default function Cart() {
   }
 
   return (
-    <div style={{padding: '40px', maxWidth: '800px', margin: '0 auto'}}>
+    <div style={{padding: '40px', maxWidth: '900px', margin: '0 auto'}}>
       <h1>Carrinho ({cart.totalQuantity})</h1>
 
       {cart.lines.nodes.map((line) => (
@@ -108,7 +87,7 @@ export default function Cart() {
           style={{
             display: 'flex',
             gap: '16px',
-            padding: '16px',
+            padding: '16px 0',
             borderBottom: '1px solid #eee',
           }}
         >
@@ -120,10 +99,9 @@ export default function Cart() {
               style={{objectFit: 'cover'}}
             />
           )}
+
           <div style={{flex: 1}}>
-            <p style={{fontWeight: 'bold'}}>
-              {line.merchandise?.product?.title}
-            </p>
+            <p style={{fontWeight: 'bold'}}>{line.merchandise?.product?.title}</p>
             <p>{line.merchandise?.title}</p>
             <p>Qtd: {line.quantity}</p>
             <Money data={line.cost.totalAmount} />

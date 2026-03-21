@@ -300,17 +300,13 @@ const CSS = `
 // ADD TO CART BUTTON
 // ============================================
 function AddBtn({variantId, qty, available, label, style}) {
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
-  const localeMatch = currentPath.match(/^\/([a-zA-Z]{2}-[a-zA-Z]{2})(\/|$)/);
-  const cartRoute = localeMatch ? `/${localeMatch[1]}/cart` : '/cart';
-
   if (!available) {
     return <button disabled style={{...style, background:'#d1d5db', cursor:'not-allowed'}}>Sold Out</button>;
   }
 
   return (
     <CartForm
-      route={cartRoute}
+      route="/cart"
       action={CartForm.ACTIONS.LinesAdd}
       inputs={{lines: [{merchandiseId: variantId, quantity: qty || 1}]}}
     >
@@ -320,13 +316,9 @@ function AddBtn({variantId, qty, available, label, style}) {
 }
 
 function BundleAddButton({lines, count}) {
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
-  const localeMatch = currentPath.match(/^\/([a-zA-Z]{2}-[a-zA-Z]{2})(\/|$)/);
-  const cartRoute = localeMatch ? `/${localeMatch[1]}/cart` : '/cart';
-
   return (
     <CartForm
-      route={cartRoute}
+      route="/cart"
       action={CartForm.ACTIONS.LinesAdd}
       inputs={{lines}}
     >
