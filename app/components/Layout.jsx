@@ -9,46 +9,51 @@ export const useCart = () => useContext(CartContext);
 
 export default function Layout({children, header, footer}) {
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [fetcherCart, setFetcherCart] = useState(null);
   const location = useLocation();
 
   const rootData = useRouteLoaderData('root');
   const rootCart = rootData?.cart ?? null;
-
-  // Use fetcher cart data immediately (before root revalidates)
-  const fetchers = useFetchers();
-  const cartFetcher = fetchers.find(f => f.formAction?.includes('/cart') && f.data?.cart);
-  const cart = cartFetcher?.data?.cart ?? rootCart;
-
-  // DEBUG - remover depois
-  if (typeof window !== 'undefined') {
-    window.__debugCart = {cartFetcher, cart, rootCart, fetchers: fetchers.map(f => ({key: f.key, state: f.state, formAction: f.formAction, hasData: !!f.data, dataKeys: f.data ? Object.keys(f.data) : []}))};
-  }
+  const cart = fetcherCart ?? rootCart;
   const totalQuantity = cart?.totalQuantity || 0;
 
-  // Open cart when ?cart=open is in URL (fallback for non-JS)
+  // Clear fetcherCart when root revalidates with fresh data
+  useEffect(() => {
+    if (rootCart) setFetcherCart(null);
+  }, [rootCart]);
+
+  // Open cart when ?cart=open is in URL
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (params.get('cart') === 'open') {
       setIsCartOpen(true);
-      // Clean up URL
       const url = new URL(window.location.href);
       url.searchParams.delete('cart');
       window.history.replaceState({}, '', url.pathname + url.search);
     }
   }, [location.search]);
 
-  // Open drawer when add-to-cart fetcher completes
+  const fetchers = useFetchers();
   useEffect(() => {
-    if (cartFetcher) {
+    const done = fetchers.find(
+      f => f.formAction?.includes('/cart') && f.state === 'idle' && f.data?.cart
+    );
+    if (done) {
+      setFetcherCart(done.data.cart);
       setIsCartOpen(true);
     }
-  }, [cartFetcher]);
+  }, [fetchers]);
+
+  function openCart(cartData) {
+    if (cartData?.lines) setFetcherCart(cartData);
+    setIsCartOpen(true);
+  }
 
   return (
     <CartContext.Provider value={{
       cart,
       totalQuantity,
-      openCart: (cartData) => openCartWithData(cartData),
+      openCart,
       closeCart: () => setIsCartOpen(false),
     }}>
       <div style={{minHeight:'100vh',display:'flex',flexDirection:'column'}}>
