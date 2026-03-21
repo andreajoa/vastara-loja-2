@@ -18,6 +18,11 @@ export default function Layout({children, header, footer}) {
   const fetchers = useFetchers();
   const cartFetcher = fetchers.find(f => f.formAction?.includes('/cart') && f.data?.cart);
   const cart = cartFetcher?.data?.cart ?? rootCart;
+
+  // DEBUG - remover depois
+  if (typeof window !== 'undefined') {
+    window.__debugCart = {cartFetcher, cart, rootCart, fetchers: fetchers.map(f => ({key: f.key, state: f.state, formAction: f.formAction, hasData: !!f.data, dataKeys: f.data ? Object.keys(f.data) : []}))};
+  }
   const totalQuantity = cart?.totalQuantity || 0;
 
   // Open cart when ?cart=open is in URL (fallback for non-JS)
