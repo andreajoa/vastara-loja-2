@@ -1,4 +1,4 @@
-import {useLoaderData, data, redirect} from 'react-router';
+import {useLoaderData, data} from 'react-router';
 import {CartForm} from '@shopify/hydrogen';
 
 export const meta = () => [{title: 'Cart | Vastara'}];
@@ -21,7 +21,6 @@ export async function action({request, context}) {
     const lines = JSON.parse(formData.get('lines') || '[]');
     result = await cart.updateLines(lines);
   } else {
-    // CartForm format fallback
     const {action: formAction, inputs} = CartForm.getFormInput(formData);
     switch (formAction) {
       case CartForm.ACTIONS.LinesAdd:
@@ -43,16 +42,24 @@ export async function action({request, context}) {
     }
   }
 
-  const headers = result?.cart?.id ? cart.setCartId(result.cart.id) : new Headers();
+  // CRITICAL: Set the cart ID cookie
+  const cartSetHeaders = result?.cart?.id ? cart.setCartId(result.cart.id) : new Headers();
 
-  // If returnTo is set, redirect back (for non-JS form submissions)
   if (returnTo) {
-    return redirect(returnTo + '?cart=open', {headers});
+    // Manual redirect to preserve Set-Cookie headers
+    const redirectUrl = returnTo + '?cart=open';
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: redirectUrl,
+        'Set-Cookie': cartSetHeaders.get('Set-Cookie') || '',
+      },
+    });
   }
 
   return data(
     {cart: result?.cart, errors: result?.errors || []},
-    {headers}
+    {headers: cartSetHeaders}
   );
 }
 
