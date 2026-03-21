@@ -31,9 +31,8 @@ export default function Layout({children, header, footer}) {
   const fetchers = useFetchers();
   useEffect(() => {
     const addingFetcher = fetchers.find(
-      f => f.formAction === '/cart' &&
-           f.state === 'loading' &&
-           f.formData?.get('cartAction') === 'ADD_TO_CART'
+      f => f.formAction?.includes('/cart') &&
+           f.state === 'loading'
     );
     if (addingFetcher) {
       setIsCartOpen(true);
