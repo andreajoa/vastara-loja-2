@@ -1,4 +1,3 @@
-import {data} from '@shopify/remix-oxygen';
 import {useLoaderData, Link} from 'react-router';
 import {CartForm, Image, Money} from '@shopify/hydrogen';
 
@@ -45,11 +44,13 @@ export async function action({request, context}) {
     headers.append('Set-Cookie', await session.commit());
   }
 
-  return data(
-    {
+  headers.append('Content-Type', 'application/json');
+
+  return new Response(
+    JSON.stringify({
       cart: result?.cart,
       errors: result?.errors || result?.userErrors,
-    },
+    }),
     {headers}
   );
 }
