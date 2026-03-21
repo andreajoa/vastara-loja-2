@@ -1,11 +1,10 @@
-import {json} from '@remix-run/server-runtime';
-import {useLoaderData, Link, useFetcher} from '@remix-run/react';
+import {useLoaderData, Link, data} from 'react-router';
 import {CartForm, Image, Money} from '@shopify/hydrogen';
 
 export async function loader({context}) {
   const {cart} = context;
   const cartData = await cart.get();
-  return json({cart: cartData});
+  return {cart: cartData};
 }
 
 export async function action({request, context}) {
@@ -15,23 +14,21 @@ export async function action({request, context}) {
 
   let result;
 
-  try {
-    switch (action) {
-      case CartForm.ACTIONS.LinesAdd:
-        result = await cart.addLines(inputs.lines);
-        break;
-      case CartForm.ACTIONS.LinesUpdate:
-        result = await cart.updateLines(inputs.lines);
-        break;
-      case CartForm.ACTIONS.LinesRemove:
-        result = await cart.removeLines(inputs.lineIds);
-        break;
-      default:
-        throw new Error(`Unknown action: ${action}`);
-    }
-  } catch (error) {
-    console.error('Cart action error:', error);
-    return json({error: 'Failed to update cart'}, {status: 500});
+  switch (action) {
+    case CartForm.ACTIONS.LinesAdd:
+      result = await cart.addLines(inputs.lines);
+      break;
+    case CartForm.ACTIONS.LinesUpdate:
+      result = await cart.updateLines(inputs.lines);
+      break;
+    case CartForm.ACTIONS.LinesRemove:
+      result = await cart.removeLines(inputs.lineIds);
+      break;
+    case CartForm.ACTIONS.DiscountCodesUpdate:
+      result = await cart.updateDiscountCodes(inputs.discountCodes);
+      break;
+    default:
+      throw new Error(`Unknown action: ${action}`);
   }
 
   const headers = new Headers();
@@ -47,7 +44,7 @@ export async function action({request, context}) {
     headers.append('Set-Cookie', await session.commit());
   }
 
-  return json(
+  return data(
     {
       cart: result?.cart,
       errors: result?.errors || result?.userErrors,
@@ -58,16 +55,13 @@ export async function action({request, context}) {
 
 export default function Cart() {
   const {cart} = useLoaderData();
-  const fetcher = useFetcher();
 
   if (!cart || !cart.lines?.nodes?.length) {
     return (
       <div style={{padding: '40px', textAlign: 'center'}}>
         <h1>Carrinho</h1>
-        <p>Seu carrinho está vazio</p>
-        <Link to="/collections/all" style={{color: '#000', textDecoration: 'underline'}}>
-          Continuar Comprando
-        </Link>
+        <p>Seu carrinho esta vazio</p>
+        <Link to="/collections/all">Continuar Comprando</Link>
       </div>
     );
   }
@@ -79,37 +73,22 @@ export default function Cart() {
       {cart.lines.nodes.map((line) => (
         <div key={line.id} style={{display: 'flex', gap: '16px', padding: '16px', borderBottom: '1px solid #eee'}}>
           {line.merchandise?.image && (
-            <Image
-              data={line.merchandise.image}
-              width={100}
-              height={100}
-              style={{objectFit: 'cover'}}
-            />
+            <Image data={line.merchandise.image} width={100} height={100} style={{objectFit: 'cover'}} />
           )}
           <div style={{flex: 1}}>
-            <h3 style={{margin: '0 0 8px'}}>{line.merchandise?.product?.title}</h3>
-            <p style={{color: '#666', margin: '0 0 8px'}}>{line.merchandise?.title}</p>
-            <p style={{margin: '0 0 8px'}}>Qtd: {line.quantity}</p>
+            <p style={{fontWeight: 'bold'}}>{line.merchandise?.product?.title}</p>
+            <p>{line.merchandise?.title}</p>
+            <p>Qtd: {line.quantity}</p>
             <Money data={line.cost.totalAmount} />
-
-            <fetcher.Form method="post">
-              <input type="hidden" name="lineIds[]" value={line.id} />
-              <button
-                type="submit"
-                name="action"
-                value={CartForm.ACTIONS.LinesRemove}
-                style={{
-                  marginTop: '8px',
-                  background: 'none',
-                  border: 'none',
-                  color: 'red',
-                  cursor: 'pointer',
-                  textDecoration: 'underline',
-                }}
-              >
+            <CartForm
+              route="/cart"
+              action={CartForm.ACTIONS.LinesRemove}
+              inputs={{lineIds: [line.id]}}
+            >
+              <button type="submit" style={{color: 'red', background: 'none', border: 'none', cursor: 'pointer', marginTop: '8px'}}>
                 Remover
               </button>
-            </fetcher.Form>
+            </CartForm>
           </div>
         </div>
       ))}
