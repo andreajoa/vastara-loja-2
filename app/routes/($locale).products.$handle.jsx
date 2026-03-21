@@ -301,56 +301,23 @@ const CSS = `
 // ============================================
 function AddBtn({variantId, qty, available, label, style}) {
   if (!available) {
-    return <button disabled style={{...style, background:"#d1d5db", cursor:"not-allowed"}}>Sold Out</button>;
+    return <button disabled style={{...style, background:'#d1d5db', cursor:'not-allowed'}}>Sold Out</button>;
   }
   return (
     <CartForm route="/cart" action={CartForm.ACTIONS.LinesAdd} inputs={{lines: [{merchandiseId: variantId, quantity: qty || 1}]}}>
-      <button type="submit" style={style}>{label || "Add to Bag"}</button>
+      <button type="submit" style={style}>{label || 'Add to Bag'}</button>
     </CartForm>
   );
 }
-  const [returnTo, setReturnTo] = useState('');
-  const [adding, setAdding] = useState(false);
-
-  useEffect(() => {
-    setReturnTo(window.location.pathname);
-  }, []);
-
-  if (!available) {
-    return <button disabled style={{...style, background:'#d1d5db', cursor:'not-allowed'}}>Sold Out</button>;
-  }
-
-  return (
-    <form method="post" action="/cart" onSubmit={() => setAdding(true)}>
-      <input type="hidden" name="cartAction" value="ADD_TO_CART" />
-      <input type="hidden" name="lines" value={JSON.stringify([{merchandiseId: variantId, quantity: qty}])} />
-      <input type="hidden" name="returnTo" value={returnTo} />
-      <button type="submit" disabled={adding} style={style}>
-        {adding ? 'Adding...' : label}
-      </button>
-    </form>
-  );
-}
-
 
 function BundleAddButton({lines, count}) {
-  const [returnTo, setReturnTo] = useState('');
-  const [adding, setAdding] = useState(false);
-
-  useEffect(() => {
-    setReturnTo(window.location.pathname);
-  }, []);
-
   return (
-    <form method="post" action="/cart" onSubmit={() => setAdding(true)}>
-      <input type="hidden" name="cartAction" value="ADD_TO_CART" />
-      <input type="hidden" name="lines" value={JSON.stringify(lines)} />
-      <input type="hidden" name="returnTo" value={returnTo} />
-      <button type="submit" disabled={adding}
+    <CartForm route="/cart" action={CartForm.ACTIONS.LinesAdd} inputs={{lines}}>
+      <button type="submit"
         style={{display:'inline-block',padding:'14px 40px',background:'#0a0a0a',color:'#fff',fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',cursor:'pointer',border:'none'}}>
-        {adding ? 'Adding...' : `Add All ${count} Items to Bag`}
+        {'Add All ' + count + ' Items to Bag'}
       </button>
-    </form>
+    </CartForm>
   );
 }
 
