@@ -1,5 +1,4 @@
-import {useFetcher, Link, useRouteLoaderData} from 'react-router';
-import {useEffect} from 'react';
+import {useFetcher, Link} from 'react-router';
 
 function fmt(amount, currency = 'USD') {
   return new Intl.NumberFormat('en-US', {style:'currency', currency}).format(Number(amount));
@@ -18,17 +17,7 @@ function RemoveButton({lineId}) {
   );
 }
 
-export default function CartDrawer({isOpen, onClose, cart: cartProp}) {
-  const loader = useFetcher();
-  const rootData = useRouteLoaderData('root');
-
-  useEffect(() => {
-    if (isOpen) {
-      loader.load('/api/cart');
-    }
-  }, [isOpen]);
-
-  const cart = loader.data?.cart ?? cartProp ?? rootData?.cart;
+export default function CartDrawer({isOpen, onClose, cart}) {
   const lines = cart?.lines?.nodes || [];
   const subtotal = cart?.cost?.subtotalAmount;
   const checkoutUrl = cart?.checkoutUrl;
@@ -61,11 +50,7 @@ export default function CartDrawer({isOpen, onClose, cart: cartProp}) {
           <button onClick={onClose} style={{width:'32px',height:'32px',borderRadius:'50%',background:'#f5f5f5',border:'none',cursor:'pointer',fontSize:'16px',display:'flex',alignItems:'center',justifyContent:'center',color:'#666'}}>✕</button>
         </div>
         <div style={{flex:1,overflowY:'auto',padding:'0 24px'}}>
-          {loader.state !== 'idle' && lines.length === 0 ? (
-            <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100%'}}>
-              <p style={{color:'#9ca3af',fontSize:'14px'}}>Loading...</p>
-            </div>
-          ) : lines.length === 0 ? (
+          {lines.length === 0 ? (
             <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',height:'100%',textAlign:'center',padding:'60px 0'}}>
               <p style={{color:'#9ca3af',fontSize:'14px',margin:'0 0 16px'}}>Your bag is empty</p>
               <button onClick={onClose} style={{fontSize:'13px',textDecoration:'underline',color:'#c9a84c',background:'none',border:'none',cursor:'pointer'}}>Continue Shopping</button>
