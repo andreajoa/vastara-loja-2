@@ -300,6 +300,15 @@ const CSS = `
 // ADD TO CART BUTTON
 // ============================================
 function AddBtn({variantId, qty, available, label, style}) {
+  if (!available) {
+    return <button disabled style={{...style, background:"#d1d5db", cursor:"not-allowed"}}>Sold Out</button>;
+  }
+  return (
+    <CartForm route="/cart" action={CartForm.ACTIONS.LinesAdd} inputs={{lines: [{merchandiseId: variantId, quantity: qty || 1}]}}>
+      <button type="submit" style={style}>{label || "Add to Bag"}</button>
+    </CartForm>
+  );
+}
   const [returnTo, setReturnTo] = useState('');
   const [adding, setAdding] = useState(false);
 

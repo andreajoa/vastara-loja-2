@@ -1,16 +1,41 @@
-import {useLoaderData, Link, data} from 'react-router';
+import {useLoaderData, Link, data, redirect} from 'react-router';
 import {CartForm, Image, Money} from '@shopify/hydrogen';
 
 export async function loader({context}) {
-  const {cart} = context;
-  const cartData = await cart.get();
+  const cartData = await context.cart.get();
   return {cart: cartData};
 }
 
 export async function action({request, context}) {
   const {cart, session} = context;
   const formData = await request.formData();
-  const {action, inputs} = CartForm.getFormInput(formData);
+
+  // 1) Suporta o formato do Hydrogen CartForm (cartFormInput)
+  let action;
+  let inputs;
+
+  if (formData.has(CartForm.INPUT_NAME)) {
+    const parsed = CartForm.getFormInput(formData);
+    action = parsed.action;
+    inputs = parsed.inputs;
+  } else {
+    // 2) Suporta o seu formato antigo: cartAction + lines (JSON)
+    const cartAction = String(formData.get('cartAction') || '');
+    const linesRaw = String(formData.get('lines') || '[]');
+
+    if (cartAction === 'ADD_TO_CART') {
+      action = CartForm.ACTIONS.LinesAdd;
+      try {
+        inputs = {lines: JSON.parse(linesRaw)};
+      } catch {
+        throw new Error('Invalid "lines" JSON in cart action');
+      }
+    } else {
+      throw new Error(
+        `Unsupported cart payload. Expected "${CartForm.INPUT_NAME}" or cartAction=ADD_TO_CART.`,
+      );
+    }
+  }
 
   let result;
 
@@ -28,14 +53,15 @@ export async function action({request, context}) {
       result = await cart.updateDiscountCodes(inputs.discountCodes);
       break;
     default:
-      throw new Error(`Unknown action: ${action}`);
+      throw new Error(`Unknown cart action: ${action}`);
   }
 
+  // IMPORTANTÍSSIMO: persistir o cartId no cookie
   const headers = new Headers();
 
   if (result?.cart?.id) {
-    const cartIdHeaders = cart.setCartId(result.cart.id);
-    for (const [key, value] of cartIdHeaders.entries()) {
+    const cartHeaders = cart.setCartId(result.cart.id);
+    for (const [key, value] of cartHeaders.entries()) {
       headers.append(key, value);
     }
   }
@@ -44,13 +70,19 @@ export async function action({request, context}) {
     headers.append('Set-Cookie', await session.commit());
   }
 
-  return data(
-    {
-      cart: result?.cart,
-      errors: result?.errors || result?.userErrors,
-    },
-    {headers}
-  );
+  const errors = result?.errors || result?.userErrors;
+
+  // Se for navegação de documento (form normal), redireciona para /cart
+  const accept = request.headers.get('accept') || '';
+  const isDocumentRequest =
+    accept.includes('text/html') && !new URL(request.url).searchParams.has('_data');
+
+  if (isDocumentRequest) {
+    return redirect('/cart', {headers});
+  }
+
+  // Se for fetcher (CartForm), devolve data JSON
+  return data({cart: result?.cart, errors}, {headers});
 }
 
 export default function Cart() {
@@ -60,7 +92,7 @@ export default function Cart() {
     return (
       <div style={{padding: '40px', textAlign: 'center'}}>
         <h1>Carrinho</h1>
-        <p>Seu carrinho esta vazio</p>
+        <p>Seu carrinho está vazio</p>
         <Link to="/collections/all">Continuar Comprando</Link>
       </div>
     );
@@ -71,24 +103,30 @@ export default function Cart() {
       <h1>Carrinho ({cart.totalQuantity})</h1>
 
       {cart.lines.nodes.map((line) => (
-        <div key={line.id} style={{display: 'flex', gap: '16px', padding: '16px', borderBottom: '1px solid #eee'}}>
+        <div
+          key={line.id}
+          style={{
+            display: 'flex',
+            gap: '16px',
+            padding: '16px',
+            borderBottom: '1px solid #eee',
+          }}
+        >
           {line.merchandise?.image && (
-            <Image data={line.merchandise.image} width={100} height={100} style={{objectFit: 'cover'}} />
+            <Image
+              data={line.merchandise.image}
+              width={100}
+              height={100}
+              style={{objectFit: 'cover'}}
+            />
           )}
           <div style={{flex: 1}}>
-            <p style={{fontWeight: 'bold'}}>{line.merchandise?.product?.title}</p>
+            <p style={{fontWeight: 'bold'}}>
+              {line.merchandise?.product?.title}
+            </p>
             <p>{line.merchandise?.title}</p>
             <p>Qtd: {line.quantity}</p>
             <Money data={line.cost.totalAmount} />
-            <CartForm
-              route="/cart"
-              action={CartForm.ACTIONS.LinesRemove}
-              inputs={{lineIds: [line.id]}}
-            >
-              <button type="submit" style={{color: 'red', background: 'none', border: 'none', cursor: 'pointer', marginTop: '8px'}}>
-                Remover
-              </button>
-            </CartForm>
           </div>
         </div>
       ))}
