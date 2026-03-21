@@ -1,4 +1,4 @@
-import {useLoaderData, Link, redirect} from 'react-router';
+import {useLoaderData, Link, redirect, data} from 'react-router';
 import {CartForm, Image, Money} from '@shopify/hydrogen';
 
 export async function loader({context}) {
@@ -14,18 +14,25 @@ export async function action({request, context}) {
   let inputs;
 
   if (formData.has(CartForm.INPUT_NAME)) {
+    // É um submit do CartForm do Hydrogen
     const parsed = CartForm.getFormInput(formData);
     cartAction = parsed.action;
     inputs = parsed.inputs;
   } else {
+    // É o seu submit antigo (sem o CartForm) do botão "Add to Bag"
     const legacyAction = String(formData.get('cartAction') || '');
     const linesRaw = String(formData.get('lines') || '[]');
 
     if (legacyAction === 'ADD_TO_CART') {
       cartAction = CartForm.ACTIONS.LinesAdd;
-      inputs = {lines: JSON.parse(linesRaw)};
+      try {
+        inputs = {lines: JSON.parse(linesRaw)};
+      } catch (e) {
+        console.error("Error parsing lines JSON:", e);
+        throw new Error('Invalid "lines" JSON in cart action');
+      }
     } else {
-      throw new Error('Unsupported cart payload');
+      throw new Error('Unsupported cart payload. Expected Hydrogen CartForm format or cartAction=ADD_TO_CART.');
     }
   }
 
@@ -50,19 +57,25 @@ export async function action({request, context}) {
 
   const headers = new Headers();
 
+  // Salvar o ID do carrinho no cookie, se houver um novo ou atualizado
   if (result?.cart?.id) {
-    const cartHeaders = cart.setCartId(result.cart.id);
-    for (const [key, value] of cartHeaders.entries()) {
+    const cartIdHeaders = cart.setCartId(result.cart.id);
+    for (const [key, value] of cartIdHeaders.entries()) {
       headers.append(key, value);
     }
   }
 
+  // Commit da sessão se ela foi modificada
   if (session?.isPending) {
     headers.append('Set-Cookie', await session.commit());
   }
 
+  // AQUI ESTÁ A CORREÇÃO: Redirecionar SEMPRE para a página do carrinho após a ação
   const url = new URL(request.url);
-  return redirect(url.pathname, {headers});
+  const localeMatch = url.pathname.match(/^\/([a-zA-Z]{2}-[a-zA-Z]{2})(\/|$)/);
+  const cartPagePath = localeMatch ? `/${localeMatch[1]}/cart` : '/cart'; // Pega o path /pt-br/cart ou /cart
+
+  return redirect(cartPagePath, {headers});
 }
 
 export default function Cart() {
@@ -106,6 +119,16 @@ export default function Cart() {
             <p>{line.merchandise?.title}</p>
             <p>Qtd: {line.quantity}</p>
             <Money data={line.cost.totalAmount} />
+            {/* Adicionei o botão de remover aqui para teste */}
+            <CartForm
+              route="/cart"
+              action={CartForm.ACTIONS.LinesRemove}
+              inputs={{lineIds: [line.id]}}
+            >
+              <button type="submit" style={{color: 'red', background: 'none', border: 'none', cursor: 'pointer', marginTop: '8px'}}>
+                Remover
+              </button>
+            </CartForm>
           </div>
         </div>
       ))}
