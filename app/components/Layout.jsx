@@ -39,10 +39,23 @@ export default function Layout({children, header, footer}) {
     }
   }, [fetchers]);
 
+  const cartLoader = useFetcher();
+
   function openCart(cartData) {
-    if (cartData && cartData.lines) setFetcherCart(cartData);
+    if (cartData && cartData.lines) {
+      setFetcherCart(cartData);
+    } else {
+      // Opened via icon - fetch fresh cart
+      cartLoader.load('/api/cart');
+    }
     setIsCartOpen(true);
   }
+
+  useEffect(() => {
+    if (cartLoader.data?.cart) {
+      setFetcherCart(cartLoader.data.cart);
+    }
+  }, [cartLoader.data]);
 
   return (
     <CartContext.Provider value={{
