@@ -1,12 +1,19 @@
 import {useFetcher, Link} from 'react-router';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 
 function fmt(amount, currency = 'USD') {
   return new Intl.NumberFormat('en-US', {style:'currency', currency}).format(Number(amount));
 }
 
-function RemoveButton({lineId}) {
+function RemoveButton({lineId, onRemoved}) {
   const fetcher = useFetcher();
+
+  useEffect(() => {
+    if (fetcher.state === 'idle' && fetcher.data?.cart) {
+      if (onRemoved) onRemoved(fetcher.data.cart);
+    }
+  }, [fetcher.state, fetcher.data]);
+
   return (
     <fetcher.Form method="post" action="/cart">
       <input type="hidden" name="cartAction" value="REMOVE" />
@@ -20,6 +27,7 @@ function RemoveButton({lineId}) {
 
 export default function CartDrawer({isOpen, onClose, cart: cartProp}) {
   const loader = useFetcher();
+  const [localCart, setLocalCart] = useState(null);
 
   useEffect(() => {
     if (isOpen && !cartProp?.lines?.nodes?.length) {
@@ -27,7 +35,11 @@ export default function CartDrawer({isOpen, onClose, cart: cartProp}) {
     }
   }, [isOpen]);
 
-  const cart = loader.data?.cart ?? cartProp;
+  useEffect(() => {
+    if (loader.data?.cart) setLocalCart(loader.data.cart);
+  }, [loader.data]);
+
+  const cart = localCart ?? cartProp;
   const lines = cart?.lines?.nodes || [];
   const subtotal = cart?.cost?.subtotalAmount;
   const checkoutUrl = cart?.checkoutUrl;
@@ -81,7 +93,7 @@ export default function CartDrawer({isOpen, onClose, cart: cartProp}) {
                   <p style={{fontSize:'13px',fontWeight:'700',color:'#0a0a0a',margin:'0 0 10px'}}>{total ? fmt(total.amount, total.currencyCode) : ''}</p>
                   <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
                     <span style={{fontSize:'13px',color:'#666'}}>Qty: {line.quantity}</span>
-                    <RemoveButton lineId={line.id} />
+                    <RemoveButton lineId={line.id} onRemoved={setLocalCart} />
                   </div>
                 </div>
               </div>
