@@ -95,11 +95,7 @@ export default function CartDrawer({isOpen, onClose, cart: cartProp}) {
               <span style={{fontSize:'16px',fontWeight:'700',color:'#0a0a0a'}}>{subtotal ? fmt(subtotal.amount, subtotal.currencyCode) : ''}</span>
             </div>
             <p style={{fontSize:'11px',color:'#bbb',margin:'0 0 16px'}}>Taxes and shipping calculated at checkout</p>
-            {checkoutUrl ? (
-              <a href={checkoutUrl} style={{display:'block',width:'100%',background:'#0a0a0a',color:'#fff',textAlign:'center',padding:'16px',fontSize:'12px',letterSpacing:'2px',textTransform:'uppercase',textDecoration:'none',borderRadius:'10px',boxSizing:'border-box',fontWeight:'600'}}>Checkout</a>
-            ) : (
-              <Link to="/cart" onClick={onClose} style={{display:'block',width:'100%',background:'#0a0a0a',color:'#fff',textAlign:'center',padding:'16px',fontSize:'12px',letterSpacing:'2px',textTransform:'uppercase',textDecoration:'none',borderRadius:'10px',boxSizing:'border-box',fontWeight:'600'}}>View Cart</Link>
-            )}
+            <Link to="/checkout" onClick={onClose} style={{display:'block',width:'100%',background:'#0a0a0a',color:'#fff',textAlign:'center',padding:'16px',fontSize:'12px',letterSpacing:'2px',textTransform:'uppercase',textDecoration:'none',borderRadius:'10px',boxSizing:'border-box',fontWeight:'600'}}>Checkout</Link>
           </div>
         )}
       </div>
