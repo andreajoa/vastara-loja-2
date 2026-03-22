@@ -10,7 +10,7 @@ function RemoveButton({lineId, onRemoved}) {
 
   useEffect(() => {
     if (fetcher.state === 'idle' && fetcher.data?.cart) {
-      if (onRemoved) onRemoved(fetcher.data.cart);
+      onRemoved(fetcher.data.cart);
     }
   }, [fetcher.state, fetcher.data]);
 
@@ -26,20 +26,13 @@ function RemoveButton({lineId, onRemoved}) {
 }
 
 export default function CartDrawer({isOpen, onClose, cart: cartProp}) {
-  const loader = useFetcher();
-  const [localCart, setLocalCart] = useState(null);
+  const [cart, setCart] = useState(null);
 
+  // Sync with cartProp whenever it changes
   useEffect(() => {
-    if (isOpen && !cartProp?.lines?.nodes?.length) {
-      loader.load('/api/cart');
-    }
-  }, [isOpen]);
+    if (cartProp) setCart(cartProp);
+  }, [cartProp]);
 
-  useEffect(() => {
-    if (loader.data?.cart) setLocalCart(loader.data.cart);
-  }, [loader.data]);
-
-  const cart = localCart ?? cartProp;
   const lines = cart?.lines?.nodes || [];
   const subtotal = cart?.cost?.subtotalAmount;
   const checkoutUrl = cart?.checkoutUrl;
@@ -93,7 +86,7 @@ export default function CartDrawer({isOpen, onClose, cart: cartProp}) {
                   <p style={{fontSize:'13px',fontWeight:'700',color:'#0a0a0a',margin:'0 0 10px'}}>{total ? fmt(total.amount, total.currencyCode) : ''}</p>
                   <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
                     <span style={{fontSize:'13px',color:'#666'}}>Qty: {line.quantity}</span>
-                    <RemoveButton lineId={line.id} onRemoved={setLocalCart} />
+                    <RemoveButton lineId={line.id} onRemoved={setCart} />
                   </div>
                 </div>
               </div>
