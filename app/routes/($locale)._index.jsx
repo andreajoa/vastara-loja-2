@@ -473,7 +473,7 @@ export default function Homepage() {
         .hp-spotlight-tag{font-size:10px;color:rgba(255,255,255,0.8);margin-bottom:5px;text-transform:uppercase;letter-spacing:1.5px}
         .hp-spotlight h3{font-size:20px;font-weight:500;color:#fff}
         .hp-spotlight-card{position:absolute;top:50%;right:48px;transform:translateY(-50%);background:#fff;padding:20px;width:250px;box-shadow:0 8px 32px rgba(0,0,0,0.15)}
-        .hp-spotlight-card img{width:100%;aspect-ratio:1;object-contain;margin-bottom:14px;background:#f5f5f0}
+        .hp-spotlight-card img{width:100%;aspect-ratio:1;object-fit:contain;margin-bottom:14px;background:#f5f5f0;display:block;margin-left:auto;margin-right:auto;}
         .hp-spotlight-card h4{font-size:13px;font-weight:500;margin-bottom:5px;line-height:1.4}
         .hp-spotlight-card .specs{font-size:11px;color:#666;margin-bottom:6px}
         .hp-spotlight-card p{font-size:14px;font-weight:600}
@@ -661,7 +661,13 @@ export default function Homepage() {
         <div className="show-on-mobile" style={{position:'relative',width:'100%',height:'240px'}}><MobileFade images={['https://cdn.shopify.com/s/files/1/0778/2921/0327/files/1_d6e9dd92-29ed-4ea1-bd70-3954e2e35b9b.jpg?v=1774215573','https://cdn.shopify.com/s/files/1/0778/2921/0327/files/2_d0d75584-e7bd-4547-9e9c-59038db9146e.jpg?v=1774215589']} style={{width:'100%',height:'100%'}} /></div>
         <div className="hp-spotlight-overlay" />
         <div className="hp-spotlight-content"><p className="hp-spotlight-tag">Watchmakers Spotlight</p><h3>Marlin® Chronograph Tachymeter</h3></div>
-        <div className="hp-spotlight-card"><img src={spotlightProduct?.featuredImage?.url || img.quad10} alt={spotlightProduct?.title || "Watch"} /><h4>{spotlightProduct?.title || "Marlin® Chronograph Tachymeter 40mm"}</h4><p className="specs">{spotlightProduct?.variants?.nodes?.[0]?.selectedOptions?.map(o => o.value).join(" | ") || "40 mm | 3 Colors"}</p><p>${parseFloat(spotlightProduct?.priceRange?.minVariantPrice?.amount || 209).toFixed(2)}</p></div>
+        <Link to={spotlightProduct ? `/products/${spotlightProduct.handle}` : '/collections'} className="hp-spotlight-card" style={{textDecoration:'none',color:'inherit',display:'block'}}>
+          <img className="hide-on-mobile" src={spotlightProduct?.featuredImage?.url || img.quad10} alt={spotlightProduct?.title || "Watch"} />
+          <img className="show-on-mobile" src="https://cdn.shopify.com/s/files/1/0778/2921/0327/files/3_6737b1bb-d696-4062-8fee-ee78d12bb1cc.jpg?v=1774216753" alt={spotlightProduct?.title || "Watch"} style={{width:'100%',aspectRatio:'1',objectFit:'cover',marginBottom:'14px',background:'#f0f0f0',display:'block'}} />
+          <h4>{spotlightProduct?.title || "Marlin® Chronograph Tachymeter 40mm"}</h4>
+          <p className="specs">{spotlightProduct?.variants?.nodes?.[0]?.selectedOptions?.map(o => o.value).join(" | ") || "40 mm | 3 Colors"}</p>
+          <p>${parseFloat(spotlightProduct?.priceRange?.minVariantPrice?.amount || 209).toFixed(2)}</p>
+        </Link>
         <div className="hp-spotlight-controls"><button>▶</button><button>🔊</button></div>
       </section>
 
