@@ -70,7 +70,9 @@ export async function action({request, context}) {
     headers.append('Set-Cookie', await session.commit());
   }
 
-  return data({cart: result.cart}, {headers});
+  // result.cart may not have full lines - fetch complete cart
+  const fullCart = await context.cart.get();
+  return data({cart: fullCart}, {headers});
 }
 
 export default function Cart() {
