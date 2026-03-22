@@ -1,6 +1,6 @@
-import {useRouteLoaderData, useLoaderData, Link} from 'react-router';
+import {useLoaderData, Link, useFetcher} from 'react-router';
 import {CartForm} from '@shopify/hydrogen';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 
 export async function loader({context, request}) {
   const cartId = await context.cart.getCartId();
@@ -98,8 +98,21 @@ export async function loader({context, request}) {
 export async function action({request, context}) {
   const {cart, session} = context;
   const formData = await request.formData();
-  const parsed = CartForm.getFormInput(formData);
-  const {action: cartAction, inputs} = parsed;
+
+  let cartAction, inputs;
+  if (formData.has(CartForm.INPUT_NAME)) {
+    const parsed = CartForm.getFormInput(formData);
+    cartAction = parsed.action;
+    inputs = parsed.inputs;
+  } else {
+    const legacyAction = String(formData.get('cartAction') || '');
+    if (legacyAction === 'ADD_TO_CART') {
+      cartAction = CartForm.ACTIONS.LinesAdd;
+      inputs = {lines: JSON.parse(String(formData.get('lines') || '[]'))};
+    } else {
+      throw new Error('Unsupported action');
+    }
+  }
 
   let result;
   switch (cartAction) {
@@ -168,43 +181,47 @@ function fmt(amount, currency = 'BRL') {
 
 // Upsell products and order bump are now loaded dynamically from the store
 
-// Componente Order Bump — adiciona automaticamente ao carrinho quando selecionado
-function OrderBumpSection({bump, cartLines}) {
-  const [bumpAdded, setBumpAdded] = useState(false);
+// Componente Order Bump
+function OrderBumpSection({bump, cartLines, onAdded}) {
+  const fetcher = useFetcher();
+  const isInCart = cartLines.some(line => line.merchandise?.id === bump.variantId);
+  const isAdded = isInCart || (fetcher.state === 'idle' && fetcher.data?.cart);
 
-  // Verifica se o bump já está no carrinho
-  const isInCart = cartLines.some(line =>
-    line.merchandise?.id === bump.variantId
-  );
+  useEffect(() => {
+    if (fetcher.state === 'idle' && fetcher.data?.cart) {
+      if (onAdded) onAdded(fetcher.data.cart);
+    }
+  }, [fetcher.state, fetcher.data]);
+
+  if (isAdded) {
+    return (
+      <div style={{background:'#fffbeb',border:'2px dashed #c9a84c',borderRadius:'12px',padding:'20px 24px',marginBottom:'24px',display:'flex',gap:'16px',alignItems:'center'}}>
+        <div style={{width:'20px',height:'20px',background:'#c9a84c',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:'12px',flexShrink:0}}>✓</div>
+        <div style={{flex:1}}>
+          <div style={{fontSize:'10px',letterSpacing:'2px',textTransform:'uppercase',color:'#c9a84c',marginBottom:'3px',fontWeight:'700'}}>⚡ Added to Order</div>
+          <div style={{fontSize:'13px',fontWeight:'600',color:'#0a0a0a'}}>{bump.title}</div>
+        </div>
+        <span style={{fontSize:'16px',fontWeight:'700',color:'#0a0a0a',flexShrink:0}}>{fmt(bump.price, bump.currency)}</span>
+      </div>
+    );
+  }
 
   return (
-    <div style={{background:'#fffbeb',border:'2px dashed #c9a84c',borderRadius:'12px',padding:'20px 24px',marginBottom:'24px',display:'flex',gap:'16px',alignItems:'center'}}>
-      {isInCart || bumpAdded ? (
-        <>
-          <div style={{width:'20px',height:'20px',background:'#c9a84c',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:'12px',flexShrink:0}}>✓</div>
-          <div style={{flex:1}}>
-            <div style={{fontSize:'10px',letterSpacing:'2px',textTransform:'uppercase',color:'#c9a84c',marginBottom:'3px',fontWeight:'700'}}>⚡ Added to Order</div>
+    <div style={{background:'#fffbeb',border:'2px dashed #c9a84c',borderRadius:'12px',padding:'20px 24px',marginBottom:'24px'}}>
+      <fetcher.Form method="post" action="/checkout">
+        <input type="hidden" name="cartAction" value="ADD_TO_CART" />
+        <input type="hidden" name="lines" value={JSON.stringify([{merchandiseId: bump.variantId, quantity: 1}])} />
+        <div style={{display:'flex',gap:'16px',alignItems:'center',width:'100%'}}>
+          <input type="checkbox" id="order-bump"
+            onChange={(e) => { if (e.target.checked) e.target.form.requestSubmit(); }}
+            style={{width:'18px',height:'18px',accentColor:'#c9a84c',flexShrink:0,cursor:'pointer'}} />
+          <label htmlFor="order-bump" style={{cursor:'pointer',flex:1}}>
+            <div style={{fontSize:'10px',letterSpacing:'2px',textTransform:'uppercase',color:'#c9a84c',marginBottom:'3px',fontWeight:'700'}}>⚡ Special Offer — Add to Order</div>
             <div style={{fontSize:'13px',fontWeight:'600',color:'#0a0a0a'}}>{bump.title}</div>
-          </div>
+          </label>
           <span style={{fontSize:'16px',fontWeight:'700',color:'#0a0a0a',flexShrink:0}}>{fmt(bump.price, bump.currency)}</span>
-        </>
-      ) : (
-        <CartForm route="/checkout" action={CartForm.ACTIONS.LinesAdd} inputs={{lines:[{merchandiseId:bump.variantId,quantity:1}]}}>
-          {(fetcher) => (
-            <div style={{display:'flex',gap:'16px',alignItems:'center',width:'100%'}}>
-              <input type="checkbox" id="order-bump" defaultChecked={false}
-                onChange={(e) => { if (e.target.checked) setBumpAdded(true); }}
-                style={{width:'18px',height:'18px',accentColor:'#c9a84c',flexShrink:0,cursor:'pointer'}} />
-              <label htmlFor="order-bump" style={{cursor:'pointer',flex:1}}>
-                <div style={{fontSize:'10px',letterSpacing:'2px',textTransform:'uppercase',color:'#c9a84c',marginBottom:'3px',fontWeight:'700'}}>⚡ Special Offer — Add to Order</div>
-                <div style={{fontSize:'13px',fontWeight:'600',color:'#0a0a0a'}}>{bump.title}</div>
-                <div style={{fontSize:'12px',color:'#6b7280',marginTop:'2px'}}>{bump.subtitle}</div>
-              </label>
-              <span style={{fontSize:'16px',fontWeight:'700',color:'#0a0a0a',flexShrink:0}}>{fmt(bump.price, bump.currency)}</span>
-            </div>
-          )}
-        </CartForm>
-      )}
+        </div>
+      </fetcher.Form>
     </div>
   );
 }
