@@ -1,6 +1,11 @@
-import {useRouteLoaderData, Link} from 'react-router';
+import {useRouteLoaderData, useLoaderData, Link} from 'react-router';
 import {CartForm} from '@shopify/hydrogen';
 import {useState} from 'react';
+
+export async function loader({context}) {
+  const cart = await context.cart.get();
+  return {cart};
+}
 
 function fmt(amount, currency = 'BRL') {
   return new Intl.NumberFormat('pt-BR', {style:'currency', currency}).format(Number(amount));
@@ -141,9 +146,7 @@ function UpsellCard({product, onAdded}) {
 }
 
 export default function CheckoutPage() {
-  // Pega o cart do loader do root
-  const rootData = useRouteLoaderData('root');
-  const cart = rootData?.cart; // Use cart directly without optimistic wrapper
+  const {cart} = useLoaderData();
   const lines = cart?.lines?.nodes ?? [];
   const subtotal = cart?.cost?.subtotalAmount;
   const total = cart?.cost?.totalAmount;
