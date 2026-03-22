@@ -590,7 +590,7 @@ export default function Homepage() {
           .hp-spotlight{min-height:auto;display:flex;flex-direction:column}
           .hp-spotlight>video{position:relative!important;height:240px;width:100%}
           .hp-spotlight{display:flex!important;flex-direction:column!important;min-height:auto!important;}
-          .hp-spotlight-card{position:relative!important;top:auto!important;right:auto!important;transform:none!important;width:auto!important;margin:16px!important;box-shadow:0 4px 16px rgba(0,0,0,0.1)!important;}
+          .hp-spotlight-card{position:relative!important;top:auto!important;right:auto!important;transform:none!important;width:calc(100% - 32px)!important;margin:16px auto!important;box-shadow:0 4px 16px rgba(0,0,0,0.1)!important;text-align:center!important;}
           .hp-spotlight-content{position:relative!important;bottom:auto!important;left:auto!important;padding:16px!important;background:#111;}
           .hp-spotlight-overlay{display:none!important;}
           .hp-spotlight-controls{position:relative!important;bottom:auto!important;right:auto!important;padding:0 16px 16px;background:#111;}
@@ -600,7 +600,7 @@ export default function Homepage() {
           .hp-spotlight h3{color:#000;font-size:16px}
           .hp-spotlight-tag{color:#999}
           .hp-spotlight-card{position:relative;right:auto;top:auto;transform:none;margin:12px auto;width:calc(100% - 32px);box-shadow:0 4px 16px rgba(0,0,0,0.08)}
-          .hp-spotlight-card img{width:60%;margin:0 auto 14px;display:block}
+          .hp-spotlight-card img{width:70%!important;margin:0 auto 14px!important;display:block!important;}
           .hp-spotlight-controls{display:none}
           .hp-banner{height:260px;margin:10px 12px}
           .hp-banner h3{font-size:18px}
