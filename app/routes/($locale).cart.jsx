@@ -31,8 +31,15 @@ export async function action({request, context}) {
         console.error("Error parsing lines JSON:", e);
         throw new Error('Invalid "lines" JSON in cart action');
       }
+    } else if (legacyAction === 'REMOVE') {
+      cartAction = CartForm.ACTIONS.LinesRemove;
+      try {
+        inputs = {lineIds: JSON.parse(String(formData.get('lineIds') || '[]'))};
+      } catch(e) {
+        throw new Error('Invalid lineIds JSON');
+      }
     } else {
-      throw new Error('Unsupported cart payload. Expected Hydrogen CartForm format or cartAction=ADD_TO_CART.');
+      throw new Error('Unsupported cart payload.');
     }
   }
 
