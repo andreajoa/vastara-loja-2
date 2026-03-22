@@ -353,9 +353,7 @@ export default function CheckoutPage() {
             </div>
 
             {/* Order Bump */}
-            {ORDER_BUMP.variantId && !ORDER_BUMP.variantId.includes('PLACEHOLDER') && (
-              {orderBump && <OrderBumpSection bump={orderBump} cartLines={lines} />}
-            )}
+            {orderBump && <OrderBumpSection bump={orderBump} cartLines={lines} />}
 
             {/* Upsell / Cross-sell */}
             <div style={{marginBottom:'24px'}}>
