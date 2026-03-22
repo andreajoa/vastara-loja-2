@@ -53,7 +53,7 @@ export default function Layout({children, header, footer}) {
     }}>
       <div style={{minHeight:'100vh',display:'flex',flexDirection:'column'}}>
         <Header header={header} cartCount={totalQuantity} onCartOpen={() => setIsCartOpen(true)} />
-        <main style={{flex:1}}>{children}</main>
+        <main style={{flex:1,paddingTop:'64px'}}>{children}</main>
         <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} cart={cart} />
         <Footer footer={footer} />
       </div>

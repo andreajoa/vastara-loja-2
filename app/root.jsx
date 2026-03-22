@@ -8,8 +8,7 @@ export const links = () => [
   {rel:'stylesheet', href:appStyles},
   {rel:'preconnect', href:'https://fonts.googleapis.com'},
   {rel:'preconnect', href:'https://fonts.gstatic.com', crossOrigin:'anonymous'},
-  {rel:'preload', href:'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap', as:'style'},
-  {rel:'stylesheet', href:'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap'},
+  {rel:'preload', href:'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap', as:'style', onLoad:"this.onload=null;this.rel='stylesheet'"},
 ];
 
 export const meta = () => [

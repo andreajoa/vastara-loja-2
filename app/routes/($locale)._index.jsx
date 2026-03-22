@@ -232,6 +232,16 @@ function BeforeAfterSlider({leftImg, rightImg, leftLabel, rightLabel}) {
   );
 }
 
+
+function shopifyImg(url, width) {
+  if (!url) return url;
+  try {
+    const u = new URL(url);
+    u.searchParams.set('width', String(width));
+    u.searchParams.set('crop', 'center');
+    return u.toString();
+  } catch { return url; }
+}
 export default function Homepage() {
   const {collections, products, bulovaProducts, bulovaTitle, spotlightProduct} = useLoaderData();
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -294,7 +304,7 @@ export default function Homepage() {
 
         /* HERO */
         .hp-hero{position:relative;height:560px;overflow:hidden}
-        .hp-hero-slide{position:absolute;inset:0;opacity:0;transition:opacity 1s ease}
+        .hp-hero-slide{position:absolute;inset:0;contain:layout;opacity:0;transition:opacity 1s ease}
         .hp-hero-slide.active{opacity:1}
         .hp-hero-slide img{width:100%;height:100%;object-fit:cover}
         .hp-hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,0.5) 0%,rgba(0,0,0,0.2) 50%,transparent 100%)}

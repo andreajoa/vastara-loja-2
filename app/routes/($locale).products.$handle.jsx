@@ -777,7 +777,7 @@ export default function Product() {
         <div>
           <div style={{width:'100%',background:'#f5f5f0'}}>
             {heroImage
-              ? <img src={heroImage.url} alt={heroImage.altText || product.title} fetchPriority='high' loading='eager' decoding='async' style={{width:'100%',minHeight:'70vh',maxHeight:'95vh',objectFit:'contain',display:'block',background:'#f9f9f7'}} />
+              ? <img src={heroImage.url} alt={heroImage.altText || product.title} fetchPriority='high' loading='eager' decoding='async' width='800' height='800' style={{width:'100%',minHeight:'70vh',maxHeight:'95vh',objectFit:'contain',display:'block',background:'#f9f9f7'}} />
               : <div style={{width:'100%',height:'85vh',background:'#f8f8f6',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'80px'}}>⌚</div>
             }
           </div>

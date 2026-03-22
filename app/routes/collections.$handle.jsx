@@ -83,6 +83,16 @@ function Sidebar({allTags, activeTags, onTagToggle, priceRange, onPriceRange, on
   );
 }
 
+
+function shopifyImg(url, width) {
+  if (!url) return url;
+  try {
+    const u = new URL(url);
+    u.searchParams.set('width', String(width));
+    u.searchParams.set('crop', 'center');
+    return u.toString();
+  } catch { return url; }
+}
 export default function CollectionPage() {
   const {collection} = useLoaderData();
   const cart = useContext(CartContext);
@@ -225,7 +235,7 @@ export default function CollectionPage() {
                     <Link to={'/products/' + product.handle} style={{display:'block',textDecoration:'none',color:'inherit'}}>
                       <div style={{aspectRatio:'1/1',background:'#f5f5f0',overflow:'hidden'}}>
                         {imgNode
-                          ? <img src={imgNode.url} alt={imgNode.altText || product.title} loading='lazy' decoding='async' style={{width:'100%',height:'100%',objectFit:'contain',background:'#f7f7f7',transition:'transform 0.6s ease'}} onMouseEnter={e => e.currentTarget.style.transform='scale(1.04)'} onMouseLeave={e => e.currentTarget.style.transform='scale(1)'} />
+                          ? <img src={shopifyImg(imgNode.url, 600)} alt={imgNode.altText || product.title} loading='lazy' decoding='async' style={{width:'100%',height:'100%',objectFit:'contain',background:'#f7f7f7',transition:'transform 0.6s ease'}} onMouseEnter={e => e.currentTarget.style.transform='scale(1.04)'} onMouseLeave={e => e.currentTarget.style.transform='scale(1)'} />
                           : <div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'48px'}}>⌚</div>
                         }
                       </div>
