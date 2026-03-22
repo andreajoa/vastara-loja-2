@@ -246,6 +246,8 @@ const CSS = `
   .pdp-shopify-desc td:last-child{font-weight:500;color:#0a0a0a;}
   .pdp-bit-section{background:#fafafa;padding:64px 40px;}
   .pdp-bit-inner{max-width:1000px;margin:0 auto;}
+  .pdp-bit-grid{display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;align-items:center;}
+  .pdp-bit-plus{text-align:center;font-size:24px;color:#ccc;font-weight:200;}
   .pdp-ymal-section{max-width:1200px;margin:0 auto;padding:64px 24px;}
   .pdp-ymal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
   .pdp-ymal-card{text-decoration:none;color:inherit;transition:transform 0.3s;}
@@ -292,7 +294,9 @@ const CSS = `
     .pdp-specs{grid-template-columns:1fr;gap:32px;padding:48px 24px;}
     .pdp-reviews-header{grid-template-columns:1fr;}
     .pdp-ymal-grid{grid-template-columns:repeat(2,1fr);}
-    .pdp-bit-section{padding:40px 16px;}
+    .pdp-bit-section{padding:32px 16px;}
+    .pdp-bit-grid{grid-template-columns:1fr!important;gap:0;}
+    .pdp-bit-plus{font-size:20px;padding:8px 0;transform:rotate(90deg);}
   }
 `;
 
@@ -902,9 +906,8 @@ export default function Product() {
       {buyTogetherProducts.length > 0 && (
         <div className="pdp-bit-section">
           <div className="pdp-bit-inner">
-            <div style={{fontSize:'10px',letterSpacing:'2px',textTransform:'uppercase',color:'#999',marginBottom:'6px'}}>Complete the Look</div>
             <h2 style={{fontFamily:'Georgia,serif',fontSize:'26px',fontWeight:'400',marginBottom:'36px'}}>Buy It Together</h2>
-            <div style={{display:'grid',gridTemplateColumns: buyTogetherProducts.length === 2 ? '1fr 40px 1fr 40px 1fr' : '1fr 40px 1fr',gap:'0',alignItems:'center'}}>
+            <div className="pdp-bit-grid">
               {/* Current product */}
               <div style={{background:'#fff',border:'1px solid #f0f0f0',padding:'20px'}}>
                 {heroImage && <img src={heroImage.url} alt={product.title} style={{width:'100%',aspectRatio:'1/1',objectFit:'contain',display:'block',marginBottom:'12px',background:'#f9f9f7'}} />}
@@ -916,7 +919,7 @@ export default function Product() {
 
               {buyTogetherProducts.map((bp, i) => (
                 <div key={bp.id} style={{display:'contents'}}>
-                  <div style={{textAlign:'center',fontSize:'24px',color:'#ccc',fontWeight:'200'}}>+</div>
+                  <div className="pdp-bit-plus">+</div>
                   <div style={{background:'#fff',border:'1px solid #f0f0f0',padding:'20px',position:'relative'}}>
                     <div style={{position:'absolute',top:'12px',left:'12px',zIndex:2}}>
                       <input type="checkbox" checked={!!bitChecked[bp.id]}
@@ -925,9 +928,9 @@ export default function Product() {
                     </div>
                     <Link to={`/products/${bp.handle}`}>
                       {bp.images?.nodes?.[0]
-                        ? <img src={bp.images.nodes[0].url} alt={bp.title} style={{width:'100%',aspectRatio:'1/1',objectFit:'cover',display:'block',marginBottom:'12px',opacity:bitChecked[bp.id]?1:0.4}} />
+                        ? <img src={bp.images.nodes[0].url} alt={bp.title} style={{width:'100%',aspectRatio:'1/1',objectFit:'contain',display:'block',marginBottom:'12px',background:'#f9f9f7',opacity:bitChecked[bp.id]?1:0.4}} />
                         : bp.featuredImage
-                          ? <img src={bp.featuredImage.url} alt={bp.title} style={{width:'100%',aspectRatio:'1/1',objectFit:'cover',display:'block',marginBottom:'12px',opacity:bitChecked[bp.id]?1:0.4}} />
+                          ? <img src={bp.featuredImage.url} alt={bp.title} style={{width:'100%',aspectRatio:'1/1',objectFit:'contain',display:'block',marginBottom:'12px',background:'#f9f9f7',opacity:bitChecked[bp.id]?1:0.4}} />
                           : <div style={{width:'100%',aspectRatio:'1/1',background:'#f0f0f0',marginBottom:'12px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'40px'}}>⌚</div>
                       }
                     </Link>
