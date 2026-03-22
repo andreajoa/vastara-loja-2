@@ -289,7 +289,7 @@ export default function Homepage() {
 
       {/* HERO */}
       <div className="hp-hero">
-        <img src={images.hero} alt="Hero" />
+        <img src={images.hero} alt="Vastara Premium Watches" fetchPriority="high" loading="eager" decoding="async" style={{width:"100%",height:"100%",objectFit:"cover"}} />
         <div className="hp-hero-overlay" />
         <div className="hp-hero-text">
           <p style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '4px', textTransform: 'uppercase', color: '#c9a84c', marginBottom: '16px' }}>
@@ -309,7 +309,7 @@ export default function Homepage() {
       <div className="hp-2col">
         {[collections[1], collections[2]].map((col) => (
           <a key={col.id} href="#" className="hp-ccard">
-            <img src={col.image} alt={col.title} />
+            <img src={col.image} alt={col.title} loading="lazy" decoding="async" style={{width:"100%",height:"100%",objectFit:"cover"}} />
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.6), transparent 50%)' }} />
             <div style={{ position: 'absolute', bottom: 0, left: 0, padding: '32px', color: '#fff' }}>
               <p style={{ fontSize: '10px', fontFamily: 'monospace', letterSpacing: '3px', textTransform: 'uppercase', color: '#e8d5a3', marginBottom: '8px' }}>
@@ -339,7 +339,7 @@ export default function Homepage() {
           {p.slice(0, 4).map((prod) => (
             <a key={prod.id} href="#" className="hp-pcard">
               <div className="hp-pcard-img">
-                <img src={prod.image} alt={prod.title} />
+                <img src={prod.image} alt={prod.title} loading="lazy" decoding="async" style={{width:"100%",height:"100%",objectFit:"cover"}} />
               </div>
               <p className="hp-pcard-title">{prod.title}</p>
               <p className="hp-pcard-price">{prod.price}</p>
@@ -361,7 +361,7 @@ export default function Homepage() {
         <div className="hp-edit-r">
           {p.slice(1, 5).map((prod, i) => (
             <a key={prod.id} href="#" className="hp-ecell" style={{ background: i % 2 === 0 ? '#ede9e0' : '#f5f2eb' }}>
-              <img src={prod.image} alt={prod.title} />
+              <img src={prod.image} alt={prod.title} loading="lazy" decoding="async" style={{width:"100%",height:"100%",objectFit:"cover"}} />
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '16px', background: 'linear-gradient(to top, rgba(0,0,0,0.5), transparent)' }}>
                 <p style={{ color: '#fff', fontSize: '12px', fontWeight: '500' }}>{prod.title}</p>
               </div>
@@ -427,7 +427,7 @@ export default function Homepage() {
       <div className="hp-cgrid">
         {collections.slice(0, 3).map((col) => (
           <a key={col.id} href="#" className="hp-citem">
-            <img src={col.image} alt={col.title} />
+            <img src={col.image} alt={col.title} loading="lazy" decoding="async" style={{width:"100%",height:"100%",objectFit:"cover"}} />
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent 50%)' }} />
             <div style={{ position: 'absolute', bottom: 0, left: 0, padding: '32px', color: '#fff' }}>
               <p style={{ fontSize: '10px', fontFamily: 'monospace', letterSpacing: '3px', textTransform: 'uppercase', color: '#c9a84c', marginBottom: '8px' }}>

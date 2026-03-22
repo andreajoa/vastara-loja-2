@@ -78,7 +78,7 @@ export default function CartDrawer({isOpen, onClose, cart: cartProp}) {
             return (
               <div key={line.id} style={{display:'flex',gap:'14px',padding:'16px 0',borderBottom:'1px solid #f5f5f5'}}>
                 <div style={{width:'80px',height:'80px',background:'#f5f5f0',flexShrink:0,overflow:'hidden',borderRadius:'8px'}}>
-                  {img ? <img src={img.url} alt={title||''} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} /> : null}
+                  {img ? <img src={img.url} alt={title||'Product image'} loading='lazy' decoding='async' style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} /> : null}
                 </div>
                 <div style={{flex:1,minWidth:0}}>
                   <p style={{fontSize:'13px',fontWeight:'600',color:'#0a0a0a',margin:'0 0 3px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{title}</p>

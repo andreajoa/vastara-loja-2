@@ -1,6 +1,11 @@
 import {useLoaderData, Link, redirect, data} from 'react-router';
 import {CartForm, Image, Money} from '@shopify/hydrogen';
 
+export const meta = () => [
+  {title: 'Your Bag | Vastara'},
+  {name: 'robots', content: 'noindex, nofollow'},
+];
+
 export async function loader({context}) {
   const cartData = await context.cart.get();
   return {cart: cartData};

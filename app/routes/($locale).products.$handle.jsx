@@ -777,14 +777,14 @@ export default function Product() {
         <div>
           <div style={{width:'100%',background:'#f5f5f0'}}>
             {heroImage
-              ? <img src={heroImage.url} alt={heroImage.altText || product.title} style={{width:'100%',minHeight:'70vh',maxHeight:'95vh',objectFit:'contain',display:'block',background:'#f9f9f7'}} />
+              ? <img src={heroImage.url} alt={heroImage.altText || product.title} fetchPriority='high' loading='eager' decoding='async' style={{width:'100%',minHeight:'70vh',maxHeight:'95vh',objectFit:'contain',display:'block',background:'#f9f9f7'}} />
               : <div style={{width:'100%',height:'85vh',background:'#f8f8f6',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'80px'}}>⌚</div>
             }
           </div>
           {images.length > 1 && (
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'4px',margin:'40px 0'}}>
               {images.slice(1,3).map((im,i) => (
-                <img key={im.id||i} src={im.url} alt={im.altText||''} style={{width:'100%',aspectRatio:'1/1',objectFit:'contain',display:'block',background:'#f9f9f7'}} />
+                <img key={im.id||i} src={im.url} alt={im.altText||''} loading='lazy' decoding='async' style={{width:'100%',aspectRatio:'1/1',objectFit:'contain',display:'block',background:'#f9f9f7'}} />
               ))}
             </div>
           )}
@@ -1020,7 +1020,7 @@ export default function Product() {
               return (
                 <Link key={yp.id} to={`/products/${yp.handle}`} className="pdp-ymal-card" prefetch="intent">
                   {ypImg
-                    ? <img src={ypImg.url} alt={yp.title} />
+                    ? <img src={ypImg.url} alt={yp.title} loading='lazy' decoding='async' style={{width:'100%',aspectRatio:'1/1',objectFit:'contain',background:'#f9f9f7'}} />
                     : <div style={{width:'100%',aspectRatio:'1/1',background:'#f0f0f0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'40px'}}>⌚</div>
                   }
                   <div style={{padding:'12px 0'}}>

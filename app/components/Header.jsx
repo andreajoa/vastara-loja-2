@@ -236,7 +236,7 @@ export default function Header({header, cartCount, onCartOpen}) {
 
             {/* RIGHT — image */}
             <div className="vst-mega-right">
-              <img src={megaImage} alt={hoveredSub?.title || activeItem.title} />
+              <img src={megaImage} alt={hoveredSub?.title || activeItem.title} loading="lazy" decoding="async" style={{width:"100%",height:"100%",objectFit:"cover"}} />
               <div className="vst-mega-right-overlay"/>
               <div className="vst-mega-right-tag">{hoveredSub?.title || activeItem.title}</div>
             </div>

@@ -8,6 +8,7 @@ export const links = () => [
   {rel:'stylesheet', href:appStyles},
   {rel:'preconnect', href:'https://fonts.googleapis.com'},
   {rel:'preconnect', href:'https://fonts.gstatic.com', crossOrigin:'anonymous'},
+  {rel:'preload', href:'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap', as:'style'},
   {rel:'stylesheet', href:'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap'},
 ];
 
@@ -52,6 +53,8 @@ export default function App() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="theme-color" content="#0a0a0a" />
+        <meta name="color-scheme" content="light" />
         <Meta /><Links />
         <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify({
           "@context": "https://schema.org",

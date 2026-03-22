@@ -225,7 +225,7 @@ export default function CollectionPage() {
                     <Link to={'/products/' + product.handle} style={{display:'block',textDecoration:'none',color:'inherit'}}>
                       <div style={{aspectRatio:'1/1',background:'#f5f5f0',overflow:'hidden'}}>
                         {imgNode
-                          ? <img src={imgNode.url} alt={imgNode.altText || product.title} style={{width:'100%',height:'100%',objectFit:'cover',transition:'transform 0.6s ease'}} onMouseEnter={e => e.currentTarget.style.transform='scale(1.04)'} onMouseLeave={e => e.currentTarget.style.transform='scale(1)'} />
+                          ? <img src={imgNode.url} alt={imgNode.altText || product.title} loading='lazy' decoding='async' style={{width:'100%',height:'100%',objectFit:'contain',background:'#f7f7f7',transition:'transform 0.6s ease'}} onMouseEnter={e => e.currentTarget.style.transform='scale(1.04)'} onMouseLeave={e => e.currentTarget.style.transform='scale(1)'} />
                           : <div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'48px'}}>⌚</div>
                         }
                       </div>
