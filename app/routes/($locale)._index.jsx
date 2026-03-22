@@ -663,7 +663,7 @@ export default function Homepage() {
         <div className="hp-spotlight-content"><p className="hp-spotlight-tag">Watchmakers Spotlight</p><h3>Marlin® Chronograph Tachymeter</h3></div>
         <Link to={spotlightProduct ? `/products/${spotlightProduct.handle}` : '/collections'} className="hp-spotlight-card" style={{textDecoration:'none',color:'inherit',display:'block'}}>
           <img className="hide-on-mobile" src={spotlightProduct?.featuredImage?.url || img.quad10} alt={spotlightProduct?.title || "Watch"} />
-          <img className="show-on-mobile" src="https://cdn.shopify.com/s/files/1/0778/2921/0327/files/3_6737b1bb-d696-4062-8fee-ee78d12bb1cc.jpg?v=1774216753" alt={spotlightProduct?.title || "Watch"} style={{width:'100%',aspectRatio:'1',objectFit:'cover',marginBottom:'14px',background:'#f0f0f0',display:'block'}} />
+
           <h4>{spotlightProduct?.title || "Marlin® Chronograph Tachymeter 40mm"}</h4>
           <p className="specs">{spotlightProduct?.variants?.nodes?.[0]?.selectedOptions?.map(o => o.value).join(" | ") || "40 mm | 3 Colors"}</p>
           <p>${parseFloat(spotlightProduct?.priceRange?.minVariantPrice?.amount || 209).toFixed(2)}</p>
