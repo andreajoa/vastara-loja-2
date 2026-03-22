@@ -473,7 +473,7 @@ export default function Homepage() {
         .hp-spotlight-tag{font-size:10px;color:rgba(255,255,255,0.8);margin-bottom:5px;text-transform:uppercase;letter-spacing:1.5px}
         .hp-spotlight h3{font-size:20px;font-weight:500;color:#fff}
         .hp-spotlight-card{position:absolute;top:50%;right:48px;transform:translateY(-50%);background:#fff;padding:20px;width:250px;box-shadow:0 8px 32px rgba(0,0,0,0.15)}
-        .hp-spotlight-card img{width:100%;aspect-ratio:1;object-fit:cover;margin-bottom:14px;background:#f0f0f0}
+        .hp-spotlight-card img{width:100%;aspect-ratio:1;object-contain;margin-bottom:14px;background:#f5f5f0}
         .hp-spotlight-card h4{font-size:13px;font-weight:500;margin-bottom:5px;line-height:1.4}
         .hp-spotlight-card .specs{font-size:11px;color:#666;margin-bottom:6px}
         .hp-spotlight-card p{font-size:14px;font-weight:600}
@@ -536,7 +536,9 @@ export default function Homepage() {
           .hp-nav{display:none}
           .hp-2col,.hp-highlights{grid-template-columns:1fr}
           .hp-editorial{flex-direction:column;height:auto;margin-top:16px}
-          .hp-editorial-main{width:100%!important;min-width:100%!important;height:320px;opacity:1!important}
+          .hp-editorial-main{width:100%!important;min-width:100%!important;height:220px;opacity:1!important;border-radius:12px;overflow:hidden;margin-bottom:16px;}
+          .hp-editorial-main-content{padding:20px!important;bottom:0!important;left:0!important;right:0!important;}
+          .hp-editorial-main-content h3{font-size:16px!important;}
           .hp-editorial-right{min-height:400px}
           .hp-product{min-width:calc(33.333% - 14px)}
           .hp-spotlight{min-height:auto;display:flex;flex-direction:column}
@@ -587,6 +589,12 @@ export default function Homepage() {
           .hp-highlights-img{padding:20px;min-height:240px}
           .hp-spotlight{min-height:auto;display:flex;flex-direction:column}
           .hp-spotlight>video{position:relative!important;height:240px;width:100%}
+          .hp-spotlight{display:flex!important;flex-direction:column!important;min-height:auto!important;}
+          .hp-spotlight-card{position:relative!important;top:auto!important;right:auto!important;transform:none!important;width:auto!important;margin:16px!important;box-shadow:0 4px 16px rgba(0,0,0,0.1)!important;}
+          .hp-spotlight-content{position:relative!important;bottom:auto!important;left:auto!important;padding:16px!important;background:#111;}
+          .hp-spotlight-overlay{display:none!important;}
+          .hp-spotlight-controls{position:relative!important;bottom:auto!important;right:auto!important;padding:0 16px 16px;background:#111;}
+          .hp-spotlight-controls button{background:rgba(255,255,255,0.15)!important;}
           .hp-spotlight-overlay{display:none}
           .hp-spotlight-content{position:relative;bottom:auto;left:auto;padding:16px 16px 0}
           .hp-spotlight h3{color:#000;font-size:16px}
@@ -650,7 +658,7 @@ export default function Homepage() {
 
       <section className="hp-spotlight">
         <div className="hide-on-mobile" style={{position:'absolute',inset:0}}><AutoPlayVideo src="https://cdn.shopify.com/videos/c/o/v/b63d7cc54c244acfad0aa19665dde9f7.mp4" style={{width:'100%',height:'100%',objectFit:'cover',position:'absolute',inset:0}} /></div>
-        <div className="show-on-mobile" style={{position:'absolute',inset:0}}><MobileFade images={['https://cdn.shopify.com/s/files/1/0778/2921/0327/files/1_d6e9dd92-29ed-4ea1-bd70-3954e2e35b9b.jpg?v=1774215573','https://cdn.shopify.com/s/files/1/0778/2921/0327/files/2_d0d75584-e7bd-4547-9e9c-59038db9146e.jpg?v=1774215589']} style={{width:'100%',height:'100%'}} /></div>
+        <div className="show-on-mobile" style={{position:'relative',width:'100%',height:'240px'}}><MobileFade images={['https://cdn.shopify.com/s/files/1/0778/2921/0327/files/1_d6e9dd92-29ed-4ea1-bd70-3954e2e35b9b.jpg?v=1774215573','https://cdn.shopify.com/s/files/1/0778/2921/0327/files/2_d0d75584-e7bd-4547-9e9c-59038db9146e.jpg?v=1774215589']} style={{width:'100%',height:'100%'}} /></div>
         <div className="hp-spotlight-overlay" />
         <div className="hp-spotlight-content"><p className="hp-spotlight-tag">Watchmakers Spotlight</p><h3>Marlin® Chronograph Tachymeter</h3></div>
         <div className="hp-spotlight-card"><img src={spotlightProduct?.featuredImage?.url || img.quad10} alt={spotlightProduct?.title || "Watch"} /><h4>{spotlightProduct?.title || "Marlin® Chronograph Tachymeter 40mm"}</h4><p className="specs">{spotlightProduct?.variants?.nodes?.[0]?.selectedOptions?.map(o => o.value).join(" | ") || "40 mm | 3 Colors"}</p><p>${parseFloat(spotlightProduct?.priceRange?.minVariantPrice?.amount || 209).toFixed(2)}</p></div>
