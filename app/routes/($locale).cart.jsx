@@ -70,7 +70,49 @@ export async function action({request, context}) {
     headers.append('Set-Cookie', await session.commit());
   }
 
-  return data({cart: result.cart}, {headers});
+  // Set cart cookie first so cart.get() finds it
+  const cartId = result.cart?.id;
+  let fullCart = result.cart;
+  if (cartId) {
+    try {
+      const cartHandler = context.cart;
+      // Temporarily override getCartId to return our new cart id
+      const originalGet = cartHandler.get.bind(cartHandler);
+      const fetched = await context.storefront.query(
+        `#graphql
+          query GetCart($id: ID!) {
+            cart(id: $id) {
+              id checkoutUrl totalQuantity
+              cost {
+                subtotalAmount { amount currencyCode }
+                totalAmount { amount currencyCode }
+              }
+              lines(first: 100) {
+                nodes {
+                  id quantity
+                  cost { totalAmount { amount currencyCode } }
+                  merchandise {
+                    ... on ProductVariant {
+                      id title
+                      price { amount currencyCode }
+                      image { url altText }
+                      product { title handle }
+                      selectedOptions { name value }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        `,
+        {variables: {id: cartId}, cache: context.storefront.CacheNone()}
+      );
+      if (fetched?.cart) fullCart = fetched.cart;
+    } catch(e) {
+      console.error('Cart fetch error:', e);
+    }
+  }
+  return data({cart: fullCart}, {headers});
 }
 
 export default function Cart() {
