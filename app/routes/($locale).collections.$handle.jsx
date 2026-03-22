@@ -81,10 +81,11 @@ function ProductCard({product}) {
   return (
     <Link to={`/products/${product.handle}`} style={{textDecoration:'none',color:'inherit',display:'block'}}>
       <div style={{background:'#f7f7f7',aspectRatio:'1',overflow:'hidden',marginBottom:'10px',transition:'transform 0.4s ease'}} onMouseEnter={e=>e.currentTarget.style.transform='scale(1.03)'} onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}>
-        {image?<img src={image.url} alt={image.altText||product.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} />:<div style={{width:'100%',height:'100%',background:'#e8e8e8'}} />}
+        {image?<img src={image.url} alt={image.altText||product.title} style={{width:'100%',height:'100%',objectFit:'contain',display:'block',background:'#f7f7f7'}} />:<div style={{width:'100%',height:'100%',background:'#e8e8e8'}} />}
       </div>
       <h4 style={{fontSize:'12px',fontWeight:400,margin:'0 0 4px',color:'#111',lineHeight:1.4}}>{product.title}</h4>
-      <p style={{fontSize:'13px',fontWeight:600,margin:0,color:'#000'}}>${price.toFixed(2)}</p>
+      <p style={{fontSize:'13px',fontWeight:600,margin:'0 0 10px',color:'#000'}}>${price.toFixed(2)}</p>
+      <div style={{display:'inline-block',padding:'8px 16px',background:'#0a0a0a',color:'#fff',fontSize:'10px',letterSpacing:'2px',textTransform:'uppercase',fontWeight:600}}>View Product</div>
     </Link>
   );
 }
