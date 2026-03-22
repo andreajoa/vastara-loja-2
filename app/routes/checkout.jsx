@@ -2,9 +2,76 @@ import {useRouteLoaderData, useLoaderData, Link} from 'react-router';
 import {CartForm} from '@shopify/hydrogen';
 import {useState} from 'react';
 
-export async function loader({context}) {
+export async function loader({context, request}) {
   const cart = await context.cart.get();
   return {cart};
+}
+
+export async function action({request, context}) {
+  const {cart, session} = context;
+  const formData = await request.formData();
+  const parsed = CartForm.getFormInput(formData);
+  const {action: cartAction, inputs} = parsed;
+
+  let result;
+  switch (cartAction) {
+    case CartForm.ACTIONS.LinesAdd:
+      result = await cart.addLines(inputs.lines);
+      break;
+    case CartForm.ACTIONS.LinesUpdate:
+      result = await cart.updateLines(inputs.lines);
+      break;
+    case CartForm.ACTIONS.LinesRemove:
+      result = await cart.removeLines(inputs.lineIds);
+      break;
+    default:
+      throw new Error(`Unknown cart action: ${cartAction}`);
+  }
+
+  const headers = new Headers();
+  if (result?.cart?.id) {
+    const cartIdHeaders = cart.setCartId(result.cart.id);
+    for (const [k, v] of cartIdHeaders.entries()) headers.append(k, v);
+  }
+  if (session?.isPending) headers.append('Set-Cookie', await session.commit());
+
+  const cartId = result.cart?.id;
+  let fullCart = result.cart;
+  if (cartId) {
+    try {
+      const fetched = await context.storefront.query(
+        `#graphql
+          query GetCart($id: ID!) {
+            cart(id: $id) {
+              id checkoutUrl totalQuantity
+              cost {
+                subtotalAmount { amount currencyCode }
+                totalAmount { amount currencyCode }
+              }
+              lines(first: 100) {
+                nodes {
+                  id quantity
+                  cost { totalAmount { amount currencyCode } }
+                  merchandise {
+                    ... on ProductVariant {
+                      id title
+                      price { amount currencyCode }
+                      image { url altText }
+                      product { title handle }
+                      selectedOptions { name value }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        `,
+        {variables: {id: cartId}, cache: context.storefront.CacheNone()}
+      );
+      if (fetched?.cart) fullCart = fetched.cart;
+    } catch(e) { console.error(e); }
+  }
+  return {cart: fullCart, headers};
 }
 
 function fmt(amount, currency = 'BRL') {
@@ -69,7 +136,7 @@ function OrderBumpSection({bump, cartLines}) {
           <span style={{fontSize:'16px',fontWeight:'700',color:'#0a0a0a',flexShrink:0}}>{fmt(bump.price, bump.currency)}</span>
         </>
       ) : (
-        <CartForm route="/cart" action={CartForm.ACTIONS.LinesAdd} inputs={{lines:[{merchandiseId:bump.variantId,quantity:1}]}}>
+        <CartForm route="/checkout" action={CartForm.ACTIONS.LinesAdd} inputs={{lines:[{merchandiseId:bump.variantId,quantity:1}]}}>
           {(fetcher) => (
             <div style={{display:'flex',gap:'16px',alignItems:'center',width:'100%'}}>
               <input type="checkbox" id="order-bump" defaultChecked={false}
@@ -131,7 +198,7 @@ function UpsellCard({product, onAdded}) {
         <p style={{fontSize:'11px',color:'#9ca3af',margin:'0 0 12px'}}>{product.subtitle}</p>
         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <span style={{fontSize:'15px',fontWeight:'700',color:'#0a0a0a'}}>{fmt(product.price, product.currency)}</span>
-          <CartForm route="/cart" action={CartForm.ACTIONS.LinesAdd} inputs={{lines:[{merchandiseId:product.variantId,quantity:1}]}}>
+          <CartForm route="/checkout" action={CartForm.ACTIONS.LinesAdd} inputs={{lines:[{merchandiseId:product.variantId,quantity:1}]}}>
             {(fetcher) => (
               <button type="submit" disabled={fetcher.state!=='idle'}
                 style={{padding:'8px 16px',background:'#0a0a0a',color:'#fff',border:'none',borderRadius:'8px',fontSize:'11px',letterSpacing:'1px',cursor:'pointer',textTransform:'uppercase'}}>
@@ -208,11 +275,11 @@ export default function CheckoutPage() {
                     <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
                       {/* Qty controls */}
                       <div style={{display:'flex',alignItems:'center',border:'1px solid #e5e7eb',borderRadius:'8px',overflow:'hidden'}}>
-                        <CartForm route="/cart" action={CartForm.ACTIONS.LinesUpdate} inputs={{lines:[{id:line.id,quantity:Math.max(0,line.quantity-1)}]}}>
+                        <CartForm route="/checkout" action={CartForm.ACTIONS.LinesUpdate} inputs={{lines:[{id:line.id,quantity:Math.max(0,line.quantity-1)}]}}>
                           <button type="submit" style={{width:'28px',height:'28px',background:'none',border:'none',cursor:'pointer',fontSize:'14px',color:'#666'}}>−</button>
                         </CartForm>
                         <span style={{width:'24px',textAlign:'center',fontSize:'13px',fontWeight:'500'}}>{line.quantity}</span>
-                        <CartForm route="/cart" action={CartForm.ACTIONS.LinesUpdate} inputs={{lines:[{id:line.id,quantity:line.quantity+1}]}}>
+                        <CartForm route="/checkout" action={CartForm.ACTIONS.LinesUpdate} inputs={{lines:[{id:line.id,quantity:line.quantity+1}]}}>
                           <button type="submit" style={{width:'28px',height:'28px',background:'none',border:'none',cursor:'pointer',fontSize:'14px',color:'#666'}}>+</button>
                         </CartForm>
                       </div>
@@ -224,7 +291,7 @@ export default function CheckoutPage() {
                     </div>
                   </div>
                   <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',justifyContent:'flex-start'}}>
-                    <CartForm route="/cart" action={CartForm.ACTIONS.LinesRemove} inputs={{lineIds:[line.id]}}>
+                    <CartForm route="/checkout" action={CartForm.ACTIONS.LinesRemove} inputs={{lineIds:[line.id]}}>
                       <button type="submit" style={{background:'none',border:'none',cursor:'pointer',color:'#ddd',fontSize:'16px',padding:'0'}}>✕</button>
                     </CartForm>
                   </div>
