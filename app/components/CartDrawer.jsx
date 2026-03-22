@@ -1,4 +1,5 @@
 import {useFetcher, Link} from 'react-router';
+import {useEffect} from 'react';
 
 function fmt(amount, currency = 'USD') {
   return new Intl.NumberFormat('en-US', {style:'currency', currency}).format(Number(amount));
@@ -17,7 +18,16 @@ function RemoveButton({lineId}) {
   );
 }
 
-export default function CartDrawer({isOpen, onClose, cart}) {
+export default function CartDrawer({isOpen, onClose, cart: cartProp}) {
+  const loader = useFetcher();
+
+  useEffect(() => {
+    if (isOpen && !cartProp?.lines?.nodes?.length) {
+      loader.load('/api/cart');
+    }
+  }, [isOpen]);
+
+  const cart = loader.data?.cart ?? cartProp;
   const lines = cart?.lines?.nodes || [];
   const subtotal = cart?.cost?.subtotalAmount;
   const checkoutUrl = cart?.checkoutUrl;
