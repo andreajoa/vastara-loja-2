@@ -3,8 +3,44 @@ import {CartForm} from '@shopify/hydrogen';
 import {useState} from 'react';
 
 export async function loader({context, request}) {
-  const cart = await context.cart.get();
-  return {cart};
+  const cartId = await context.cart.getCartId();
+  if (!cartId) return {cart: null};
+
+  try {
+    const {cart} = await context.storefront.query(
+      `#graphql
+        query CheckoutCart($id: ID!) {
+          cart(id: $id) {
+            id checkoutUrl totalQuantity
+            cost {
+              subtotalAmount { amount currencyCode }
+              totalAmount { amount currencyCode }
+            }
+            lines(first: 100) {
+              nodes {
+                id quantity
+                cost { totalAmount { amount currencyCode } }
+                merchandise {
+                  ... on ProductVariant {
+                    id title
+                    price { amount currencyCode }
+                    image { url altText }
+                    product { title handle }
+                    selectedOptions { name value }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      {variables: {id: cartId}, cache: context.storefront.CacheNone()}
+    );
+    return {cart};
+  } catch(e) {
+    console.error('Checkout loader error:', e);
+    return {cart: null};
+  }
 }
 
 export async function action({request, context}) {
