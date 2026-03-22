@@ -45,6 +45,7 @@ export default function Layout({children, header, footer}) {
   }, [fetchers]);
 
   function openCart(cartData) {
+    console.log('openCart called, lines:', cartData?.lines?.nodes?.length, cartData);
     if (cartData?.lines) setFetcherCart(cartData);
     setIsCartOpen(true);
   }
