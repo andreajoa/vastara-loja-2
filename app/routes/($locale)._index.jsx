@@ -1,3 +1,4 @@
+import React from 'react';
 import {useLoaderData, Link} from 'react-router';
 import {WatchQuiz} from '~/components/WatchQuiz';
 import {useState, useEffect, useRef} from 'react';
@@ -68,7 +69,10 @@ function EditorialSection({products, img, getProductImage, bulovaProducts, bulov
   return (
     <section className="hp-editorial">
       <div className="hp-editorial-main" style={{width: scrolled ? '0px' : '560px', minWidth: scrolled ? '0px' : '560px', opacity: scrolled ? 0 : 1}}>
-        <AutoPlayVideo src="https://cdn.shopify.com/videos/c/o/v/f027b635fb744591b3b550d87636de63.mp4" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} />
+        <>
+              <div className="hide-on-mobile"><AutoPlayVideo src="https://cdn.shopify.com/videos/c/o/v/f027b635fb744591b3b550d87636de63.mp4" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} /></div>
+              <div className="show-on-mobile" style={{width:'100%',height:'100%'}}><MobileFade images={['https://cdn.shopify.com/s/files/1/0778/2921/0327/files/1_ef7d86c9-66f8-4623-b34d-226d928023a0.jpg?v=1774215389','https://cdn.shopify.com/s/files/1/0778/2921/0327/files/2_7b7b4ad0-26b8-4a2e-b43a-cb572a0f8835.jpg?v=1774215389']} style={{width:'100%',height:'100%'}} /></div>
+            </>
         <div className="hp-editorial-main-overlay" />
         <div className="hp-editorial-main-content">
           <p className="hp-editorial-main-tag">Timeless. Cool. Blue.</p>
@@ -243,6 +247,27 @@ function shopifyImg(url, width) {
   } catch { return url; }
 }
 
+
+function MobileFade({images, style}) {
+  const [idx, setIdx] = React.useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setIdx(i => (i + 1) % images.length), 3000);
+    return () => clearInterval(t);
+  }, [images.length]);
+  return (
+    <div style={{position:'relative', width:'100%', height:'100%', ...style}}>
+      {images.map((src, i) => (
+        <img key={src} src={src} alt="" style={{
+          position:'absolute', inset:0, width:'100%', height:'100%',
+          objectFit:'cover', display:'block',
+          opacity: i === idx ? 1 : 0,
+          transition:'opacity 1s ease',
+        }} />
+      ))}
+    </div>
+  );
+}
+
 function AutoPlayVideo({src, style, className}) {
   const ref = useRef(null);
   useEffect(() => {
@@ -334,6 +359,12 @@ export default function Homepage() {
 
         /* HERO */
         .hp-hero{position:relative;height:560px;overflow:hidden;margin-top:96px;}
+        .hide-on-mobile{display:block;}
+        .show-on-mobile{display:none;}
+        @media(max-width:768px){
+          .hide-on-mobile{display:none!important;}
+          .show-on-mobile{display:block!important;}
+        }
         .hp-hero-slide{position:absolute;inset:0;contain:layout;opacity:0;transition:opacity 1s ease}
         .hp-hero-slide.active{opacity:1}
         .hp-hero-slide img{width:100%;height:100%;object-fit:cover}
@@ -618,7 +649,9 @@ export default function Homepage() {
       </section>
 
       <section className="hp-spotlight">
-        <AutoPlayVideo src="https://cdn.shopify.com/videos/c/o/v/b63d7cc54c244acfad0aa19665dde9f7.mp4" style={{width:'100%',height:'100%',objectFit:'cover',position:'absolute',inset:0}} /><div className="hp-spotlight-overlay" />
+        <div className="hide-on-mobile" style={{position:'absolute',inset:0}}><AutoPlayVideo src="https://cdn.shopify.com/videos/c/o/v/b63d7cc54c244acfad0aa19665dde9f7.mp4" style={{width:'100%',height:'100%',objectFit:'cover',position:'absolute',inset:0}} /></div>
+        <div className="show-on-mobile" style={{position:'absolute',inset:0}}><MobileFade images={['https://cdn.shopify.com/s/files/1/0778/2921/0327/files/1_d6e9dd92-29ed-4ea1-bd70-3954e2e35b9b.jpg?v=1774215573','https://cdn.shopify.com/s/files/1/0778/2921/0327/files/2_d0d75584-e7bd-4547-9e9c-59038db9146e.jpg?v=1774215589']} style={{width:'100%',height:'100%'}} /></div>
+        <div className="hp-spotlight-overlay" />
         <div className="hp-spotlight-content"><p className="hp-spotlight-tag">Watchmakers Spotlight</p><h3>Marlin® Chronograph Tachymeter</h3></div>
         <div className="hp-spotlight-card"><img src={spotlightProduct?.featuredImage?.url || img.quad10} alt={spotlightProduct?.title || "Watch"} /><h4>{spotlightProduct?.title || "Marlin® Chronograph Tachymeter 40mm"}</h4><p className="specs">{spotlightProduct?.variants?.nodes?.[0]?.selectedOptions?.map(o => o.value).join(" | ") || "40 mm | 3 Colors"}</p><p>${parseFloat(spotlightProduct?.priceRange?.minVariantPrice?.amount || 209).toFixed(2)}</p></div>
         <div className="hp-spotlight-controls"><button>▶</button><button>🔊</button></div>
