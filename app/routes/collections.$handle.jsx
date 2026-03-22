@@ -140,8 +140,7 @@ export default function CollectionPage() {
   return (
     <div style={{paddingTop:'104px',fontFamily:'sans-serif'}}>
       <style dangerouslySetInnerHTML={{__html: `
-        .add-to-cart-btn { display: none; }
-        div:hover > .add-to-cart-btn { display: block !important; }
+
         .col-sidebar-desktop { display: block; }
         .col-mobile-filter-btn { display: none; }
         @media(max-width: 900px) {
@@ -239,13 +238,9 @@ export default function CollectionPage() {
                         </div>
                       </div>
                     </Link>
-                    <button
-                      onClick={() => isAvailable && variantId && cart?.addToCart(variantId, 1)}
-                      disabled={!isAvailable}
-                      className="add-to-cart-btn"
-                      style={{width:'calc(100% - 24px)',margin:'0 12px 16px',padding:'10px',background:isAvailable?'#0a0a0a':'#d1d5db',color:'#fff',border:'none',fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',cursor:isAvailable?'pointer':'not-allowed'}}>
-                      {isAvailable ? 'Add to Cart' : 'Sold Out'}
-                    </button>
+                    <Link to={'/products/' + product.handle} style={{display:'block',width:'calc(100% - 24px)',margin:'0 12px 16px',padding:'10px',background:'#0a0a0a',color:'#fff',textAlign:'center',fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',textDecoration:'none',fontWeight:600}}>
+                      View Product
+                    </Link>
                   </div>
                 );
               })}
