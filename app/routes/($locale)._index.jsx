@@ -297,6 +297,20 @@ function AutoPlayVideo({src, style, className}) {
   );
 }
 
+
+function seededRng(seed) {
+  let s = seed;
+  return () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+}
+function getProductReviews(productId) {
+  const seed = productId ? productId.split('').reduce((a, c) => a + c.charCodeAt(0), 0) : 42;
+  const rng = seededRng(seed);
+  const count = Math.floor(rng() * 80) + 20; // 20-100
+  const rating = (rng() * 1.2 + 3.8).toFixed(1); // 3.8-5.0
+  const stars = Math.round(parseFloat(rating));
+  return {count, rating, stars};
+}
+
 export default function Homepage() {
   const {collections, products, bulovaProducts, bulovaTitle, spotlightProduct} = useLoaderData();
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -642,7 +656,7 @@ export default function Homepage() {
         <div className="hp-section-inner">
           <div className="hp-section-head"><h2>Our Most-Loved Styles</h2><div className="hp-section-arrows"><button onClick={scrollLeft}>&#8592;</button><button onClick={scrollRight}>&#8594;</button></div></div>
           <div className="hp-products" ref={sliderRef}>
-            {products.slice(0, 12).map((p, i) => (<Link key={p.id} to={`/products/${p.handle}`} className="hp-product"><div className="hp-product-img"><img src={getProductImage(p, i)} alt={p.title} /></div><h4>{p.title}</h4><div className="hp-product-rating"><span className="hp-product-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span><span className="hp-product-count">(124)</span></div><p>${parseFloat(p.priceRange?.minVariantPrice?.amount || 199).toFixed(2)}</p></Link>))}
+            {products.slice(0, 12).map((p, i) => (<Link key={p.id} to={`/products/${p.handle}`} className="hp-product"><div className="hp-product-img"><img src={getProductImage(p, i)} alt={p.title} /></div><h4>{p.title}</h4><div className="hp-product-rating">{(() => { const r = getProductReviews(p.id); return (<><span className="hp-product-stars">{'★'.repeat(r.stars)}{'☆'.repeat(5-r.stars)}</span><span className="hp-product-count">({r.count})</span></>); })()}</div><p>${parseFloat(p.priceRange?.minVariantPrice?.amount || 199).toFixed(2)}</p></Link>))}
           </div>
         </div>
       </section>
