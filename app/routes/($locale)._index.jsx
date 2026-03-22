@@ -68,7 +68,7 @@ function EditorialSection({products, img, getProductImage, bulovaProducts, bulov
   return (
     <section className="hp-editorial">
       <div className="hp-editorial-main" style={{width: scrolled ? '0px' : '560px', minWidth: scrolled ? '0px' : '560px', opacity: scrolled ? 0 : 1}}>
-        <video src="https://cdn.shopify.com/videos/c/o/v/f027b635fb744591b3b550d87636de63.mp4" autoPlay muted loop playsInline style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} />
+        <AutoPlayVideo src="https://cdn.shopify.com/videos/c/o/v/f027b635fb744591b3b550d87636de63.mp4" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} />
         <div className="hp-editorial-main-overlay" />
         <div className="hp-editorial-main-content">
           <p className="hp-editorial-main-tag">Timeless. Cool. Blue.</p>
@@ -242,6 +242,36 @@ function shopifyImg(url, width) {
     return u.toString();
   } catch { return url; }
 }
+
+function AutoPlayVideo({src, style, className}) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    // Try to play immediately
+    el.play().catch(() => {});
+    // Also play when visible (mobile)
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) el.play().catch(() => {}); },
+      {threshold: 0.2}
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return (
+    <video
+      ref={ref}
+      src={src}
+      muted
+      loop
+      playsInline
+      autoPlay
+      style={style}
+      className={className}
+    />
+  );
+}
+
 export default function Homepage() {
   const {collections, products, bulovaProducts, bulovaTitle, spotlightProduct} = useLoaderData();
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -588,7 +618,7 @@ export default function Homepage() {
       </section>
 
       <section className="hp-spotlight">
-        <video src="https://cdn.shopify.com/videos/c/o/v/b63d7cc54c244acfad0aa19665dde9f7.mp4" autoPlay muted loop playsInline style={{width:'100%',height:'100%',objectFit:'cover',position:'absolute',inset:0}} /><div className="hp-spotlight-overlay" />
+        <AutoPlayVideo src="https://cdn.shopify.com/videos/c/o/v/b63d7cc54c244acfad0aa19665dde9f7.mp4" style={{width:'100%',height:'100%',objectFit:'cover',position:'absolute',inset:0}} /><div className="hp-spotlight-overlay" />
         <div className="hp-spotlight-content"><p className="hp-spotlight-tag">Watchmakers Spotlight</p><h3>Marlin® Chronograph Tachymeter</h3></div>
         <div className="hp-spotlight-card"><img src={spotlightProduct?.featuredImage?.url || img.quad10} alt={spotlightProduct?.title || "Watch"} /><h4>{spotlightProduct?.title || "Marlin® Chronograph Tachymeter 40mm"}</h4><p className="specs">{spotlightProduct?.variants?.nodes?.[0]?.selectedOptions?.map(o => o.value).join(" | ") || "40 mm | 3 Colors"}</p><p>${parseFloat(spotlightProduct?.priceRange?.minVariantPrice?.amount || 209).toFixed(2)}</p></div>
         <div className="hp-spotlight-controls"><button>▶</button><button>🔊</button></div>
