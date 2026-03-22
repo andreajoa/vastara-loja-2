@@ -295,7 +295,15 @@ export default function CheckoutPage() {
 
   return (
     <div style={{minHeight:'100vh',background:'#fafafa',paddingTop:'96px',fontFamily:'sans-serif'}}>
-      <div style={{maxWidth:'1100px',margin:'0 auto',padding:'40px 24px'}}>
+      <style>{`
+        .co-grid{display:grid;grid-template-columns:1fr 360px;gap:32px;align-items:start;}
+        .co-summary{position:sticky;top:120px;}
+        @media(max-width:768px){
+          .co-grid{grid-template-columns:1fr!important;}
+          .co-summary{position:static!important;}
+        }
+      `}</style>
+      <div style={{maxWidth:'1100px',margin:'0 auto',padding:'40px 24px 40px'}}>
 
         {/* Header */}
         <div style={{marginBottom:'40px'}}>
@@ -313,7 +321,7 @@ export default function CheckoutPage() {
           </div>
         )}
 
-        <div style={{display:'grid',gridTemplateColumns:'1fr 360px',gap:'32px',alignItems:'start'}}>
+        <div className="co-grid">
 
           {/* LEFT — items + upsell */}
           <div>
