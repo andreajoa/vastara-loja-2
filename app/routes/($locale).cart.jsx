@@ -70,8 +70,16 @@ export async function action({request, context}) {
     headers.append('Set-Cookie', await session.commit());
   }
 
-  // result.cart may not have full lines - fetch complete cart
-  const fullCart = await context.cart.get();
+  // Fetch full cart with lines using storefront API
+  const cartId = result.cart?.id;
+  let fullCart = result.cart;
+  if (cartId) {
+    const {cart: fetched} = await context.storefront.query(FULL_CART_QUERY, {
+      variables: {cartId},
+      cache: context.storefront.CacheNone(),
+    });
+    if (fetched) fullCart = fetched;
+  }
   return data({cart: fullCart}, {headers});
 }
 
