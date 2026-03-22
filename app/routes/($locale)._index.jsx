@@ -71,7 +71,7 @@ function EditorialSection({products, img, getProductImage, bulovaProducts, bulov
       <div className="hp-editorial-main" style={{width: scrolled ? '0px' : '560px', minWidth: scrolled ? '0px' : '560px', opacity: scrolled ? 0 : 1}}>
         <>
               <div className="hide-on-mobile"><AutoPlayVideo src="https://cdn.shopify.com/videos/c/o/v/f027b635fb744591b3b550d87636de63.mp4" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} /></div>
-              <div className="show-on-mobile" style={{width:'100%',height:'100%'}}><MobileFade images={['https://cdn.shopify.com/s/files/1/0778/2921/0327/files/1_ef7d86c9-66f8-4623-b34d-226d928023a0.jpg?v=1774215389','https://cdn.shopify.com/s/files/1/0778/2921/0327/files/2_7b7b4ad0-26b8-4a2e-b43a-cb572a0f8835.jpg?v=1774215389']} style={{width:'100%',height:'100%'}} /></div>
+              <div className="show-on-mobile" style={{width:'100%',height:'100%'}}><MobileFade images={['https://cdn.shopify.com/s/files/1/0778/2921/0327/files/1_ef7d86c9-66f8-4623-b34d-226d928023a0.jpg?v=1774215389','https://cdn.shopify.com/s/files/1/0778/2921/0327/files/3_6737b1bb-d696-4062-8fee-ee78d12bb1cc.jpg?v=1774216753']} style={{width:'100%',height:'100%'}} /></div>
             </>
         <div className="hp-editorial-main-overlay" />
         <div className="hp-editorial-main-content">
