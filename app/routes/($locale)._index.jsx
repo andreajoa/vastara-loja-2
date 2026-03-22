@@ -174,7 +174,7 @@ function BeforeAfterSlider({leftImg, rightImg, leftLabel, rightLabel}) {
       ref={containerRef}
       onMouseMove={onMouseMove}
       onTouchMove={onTouchMove}
-      style={{position:'relative', width:'100%', height:'480px', overflow:'hidden', cursor:'col-resize', userSelect:'none'}}
+      style={{position:'relative', width:'100%', height:'min(480px, 60vw)', minHeight:'220px', overflow:'hidden', cursor:'col-resize', userSelect:'none'}}
     >
       {/* Imagem direita (fundo) */}
       <img src={rightImg} alt={rightLabel} style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}} />
