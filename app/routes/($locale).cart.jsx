@@ -70,17 +70,7 @@ export async function action({request, context}) {
     headers.append('Set-Cookie', await session.commit());
   }
 
-  // Fetch full cart with lines using storefront API
-  const cartId = result.cart?.id;
-  let fullCart = result.cart;
-  if (cartId) {
-    const {cart: fetched} = await context.storefront.query(FULL_CART_QUERY, {
-      variables: {cartId},
-      cache: context.storefront.CacheNone(),
-    });
-    if (fetched) fullCart = fetched;
-  }
-  return data({cart: fullCart}, {headers});
+  return data({cart: result.cart}, {headers});
 }
 
 export default function Cart() {
