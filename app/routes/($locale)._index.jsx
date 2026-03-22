@@ -303,7 +303,7 @@ export default function Homepage() {
         .hp-icon{width:19px;height:19px}
 
         /* HERO */
-        .hp-hero{position:relative;height:560px;overflow:hidden}
+        .hp-hero{position:relative;height:560px;overflow:hidden;margin-top:96px;}
         .hp-hero-slide{position:absolute;inset:0;contain:layout;opacity:0;transition:opacity 1s ease}
         .hp-hero-slide.active{opacity:1}
         .hp-hero-slide img{width:100%;height:100%;object-fit:cover}
@@ -490,7 +490,7 @@ export default function Homepage() {
           .hp-finder{flex-direction:column;gap:16px;text-align:center}
         }
         @media(max-width:600px){
-          .hp-hero{height:85vw;min-height:300px}
+          .hp-hero{height:85vw;min-height:300px;margin-top:88px;}
           .hp-hero h1{font-size:24px}
           .hp-hero-content{left:16px;right:16px;max-width:100%}
           .hp-hero-tag{font-size:10px}

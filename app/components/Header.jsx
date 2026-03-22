@@ -152,7 +152,7 @@ export default function Header({header, cartCount, onCartOpen}) {
 
       {/* HEADER BAR */}
       <div className="vst-header" suppressHydrationWarning style={{background: scrolled ? 'rgba(255,255,255,0.97)' : '#fff', boxShadow: scrolled ? '0 1px 20px rgba(0,0,0,0.07)' : 'none'}}>
-        <div className="vst-topbar">FREE SHIPPING ON ORDERS OVER $75 &nbsp;·&nbsp; USE CODE: VASTARA10</div>
+        <div className="vst-topbar">FREE SHIPPING ALL ORDERS &nbsp;·&nbsp; USE CODE: VASTARA10</div>
         <div className="vst-bar">
 
           <Link to="/" className="vst-logo">
