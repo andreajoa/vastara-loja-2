@@ -1,4 +1,5 @@
 import {Link} from 'react-router';
+import {useState} from 'react';
 import {useState, useEffect, useRef} from 'react';
 
 // Animated analog clock component
@@ -191,6 +192,59 @@ function FooterAccordion({groups, buildUrl}) {
   );
 }
 
+
+function NewsletterForm() {
+  const [email, setEmail] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!email || !email.includes('@')) { setError('Please enter a valid email address.'); return; }
+    setLoading(true); setError('');
+    try {
+      const res = await fetch('/api/newsletter', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email})});
+      const data = await res.json();
+      if (data.ok) { setShowPopup(true); setEmail(''); }
+      else { setError(data.error || 'Something went wrong. Please try again.'); }
+    } catch { setError('Something went wrong. Please try again.'); }
+    setLoading(false);
+  }
+
+  return (
+    <div className="vf-newsletter-col">
+      {showPopup && (
+        <div style={{position:'fixed',inset:0,zIndex:9999,background:'rgba(0,0,0,0.75)',display:'flex',alignItems:'center',justifyContent:'center',padding:'20px'}}>
+          <div style={{background:'#fff',borderRadius:'16px',padding:'40px 32px',maxWidth:'400px',width:'100%',textAlign:'center',position:'relative',boxShadow:'0 24px 80px rgba(0,0,0,0.3)'}}>
+            <button onClick={()=>setShowPopup(false)} style={{position:'absolute',top:'16px',right:'16px',background:'none',border:'none',fontSize:'20px',cursor:'pointer',color:'#999',lineHeight:1}}>✕</button>
+            <div style={{fontSize:'48px',marginBottom:'12px'}}>🎉</div>
+            <h3 style={{fontFamily:"Georgia,serif",fontSize:'22px',fontWeight:'400',marginBottom:'8px',color:'#0a0a0a'}}>Welcome to Vastara!</h3>
+            <p style={{fontSize:'13px',color:'#6b7280',marginBottom:'24px',lineHeight:'1.6'}}>Thank you for subscribing. Use the code below for 15% off your first order:</p>
+            <div style={{background:'#f9f9f7',border:'2px dashed #c9a84c',borderRadius:'12px',padding:'16px 24px',marginBottom:'20px'}}>
+              <p style={{fontSize:'10px',letterSpacing:'2px',textTransform:'uppercase',color:'#9ca3af',marginBottom:'6px'}}>Your discount code</p>
+              <p style={{fontSize:'28px',fontWeight:'700',letterSpacing:'4px',color:'#0a0a0a',fontFamily:'monospace',margin:0}}>VFIRST15</p>
+              <p style={{fontSize:'11px',color:'#c9a84c',marginTop:'6px',margin:'6px 0 0'}}>15% off your first order</p>
+            </div>
+            <button
+              onClick={()=>{navigator.clipboard?.writeText('VFIRST15');}}
+              style={{width:'100%',padding:'14px',background:'#0a0a0a',color:'#fff',border:'none',borderRadius:'10px',fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',cursor:'pointer',marginBottom:'12px',fontWeight:'600'}}
+            >Copy Code</button>
+            <Link to="/collections" onClick={()=>setShowPopup(false)} style={{fontSize:'12px',color:'#9ca3af',textDecoration:'underline',display:'block'}}>Start Shopping →</Link>
+          </div>
+        </div>
+      )}
+      <p className="vf-newsletter-label">Be the first to know and receive <strong>15% off</strong> your first order</p>
+      <form onSubmit={handleSubmit} className="vf-newsletter-form">
+        <input type="email" placeholder="Email Address" className="vf-newsletter-input" value={email} onChange={e=>setEmail(e.target.value)} disabled={loading} />
+        <button type="submit" className="vf-newsletter-btn" disabled={loading}>{loading ? '...' : 'Subscribe'}</button>
+      </form>
+      {error && <p style={{fontSize:'11px',color:'#ef4444',marginTop:'6px'}}>{error}</p>}
+      <p className="vf-newsletter-legal">By submitting your email address you are agreeing to the{' '}<Link to="/policies/privacy-policy">Privacy Policy</Link> and{' '}<Link to="/policies/terms-of-service">Terms &amp; Conditions</Link>.</p>
+    </div>
+  );
+}
+
 export default function Footer({footer}) {
   const {menu} = footer || {};
   const groups = FALLBACK_GROUPS;
@@ -280,20 +334,7 @@ export default function Footer({footer}) {
       <div className="vf-main">
 
         {/* Newsletter */}
-        <div className="vf-newsletter-col">
-          <p className="vf-newsletter-label">
-            Be the first to know and receive <strong>15% off</strong> an order
-          </p>
-          <div className="vf-newsletter-form">
-            <input type="email" placeholder="Email Address" className="vf-newsletter-input" />
-            <button className="vf-newsletter-btn">Subscribe</button>
-          </div>
-          <p className="vf-newsletter-legal">
-            By submitting your email address you are agreeing to the{' '}
-            <Link to="/policies/privacy-policy">Privacy Policy</Link> and{' '}
-            <Link to="/policies/terms-of-service">Terms &amp; Conditions</Link>.
-          </p>
-        </div>
+        <NewsletterForm />
 
         {/* Payment methods */}
         <div className="vf-payments-col">
