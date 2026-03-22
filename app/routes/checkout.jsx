@@ -4,11 +4,11 @@ import {useState} from 'react';
 
 export async function loader({context, request}) {
   const cartId = await context.cart.getCartId();
-  if (!cartId) return {cart: null};
+  if (!cartId) return {cart: null, upsellProducts: [], orderBump: null};
 
   try {
-    const {cart} = await context.storefront.query(
-      `#graphql
+    const [{cart}, {products}] = await Promise.all([
+      context.storefront.query(`#graphql
         query CheckoutCart($id: ID!) {
           cart(id: $id) {
             id checkoutUrl totalQuantity
@@ -25,7 +25,7 @@ export async function loader({context, request}) {
                     id title
                     price { amount currencyCode }
                     image { url altText }
-                    product { title handle }
+                    product { id title handle }
                     selectedOptions { name value }
                   }
                 }
@@ -33,13 +33,65 @@ export async function loader({context, request}) {
             }
           }
         }
-      `,
-      {variables: {id: cartId}, cache: context.storefront.CacheNone()}
+      `, {variables: {id: cartId}, cache: context.storefront.CacheNone()}),
+      context.storefront.query(`#graphql
+        query UpsellProducts {
+          products(first: 20, sortKey: BEST_SELLING) {
+            nodes {
+              id title handle
+              priceRange { minVariantPrice { amount currencyCode } }
+              images(first: 1) { nodes { url altText } }
+              variants(first: 1) { nodes { id availableForSale } }
+            }
+          }
+        }
+      `, {cache: context.storefront.CacheShort()}),
+    ]);
+
+    // Get product IDs already in cart
+    const cartProductIds = new Set(
+      (cart?.lines?.nodes || []).map(l => l.merchandise?.product?.id).filter(Boolean)
     );
-    return {cart};
+
+    // Filter out products already in cart and unavailable
+    const available = (products?.nodes || []).filter(p =>
+      !cartProductIds.has(p.id) &&
+      p.variants?.nodes?.[0]?.availableForSale
+    );
+
+    // Upsell: higher price products (top 2)
+    const sorted = [...available].sort((a, b) =>
+      parseFloat(b.priceRange.minVariantPrice.amount) - parseFloat(a.priceRange.minVariantPrice.amount)
+    );
+    const upsellProducts = sorted.slice(0, 2).map((p, i) => ({
+      id: p.id,
+      title: p.title,
+      handle: p.handle,
+      price: p.priceRange.minVariantPrice.amount,
+      currency: p.priceRange.minVariantPrice.currencyCode,
+      image: p.images?.nodes?.[0]?.url || '',
+      imageAlt: p.images?.nodes?.[0]?.altText || p.title,
+      variantId: p.variants.nodes[0].id,
+      badge: i === 0 ? 'BEST SELLER' : 'YOU MAY LIKE',
+      badgeColor: i === 0 ? '#c9a84c' : '#16a34a',
+    }));
+
+    // Order bump: lowest price available product not in cart
+    const cheapest = [...available].sort((a, b) =>
+      parseFloat(a.priceRange.minVariantPrice.amount) - parseFloat(b.priceRange.minVariantPrice.amount)
+    )[0];
+    const orderBump = cheapest ? {
+      id: cheapest.id,
+      title: cheapest.title,
+      price: cheapest.priceRange.minVariantPrice.amount,
+      currency: cheapest.priceRange.minVariantPrice.currencyCode,
+      variantId: cheapest.variants.nodes[0].id,
+    } : null;
+
+    return {cart, upsellProducts, orderBump};
   } catch(e) {
     console.error('Checkout loader error:', e);
-    return {cart: null};
+    return {cart: null, upsellProducts: [], orderBump: null};
   }
 }
 
@@ -114,42 +166,7 @@ function fmt(amount, currency = 'BRL') {
   return new Intl.NumberFormat('pt-BR', {style:'currency', currency}).format(Number(amount));
 }
 
-// Produtos de upsell/cross-sell — VARIANT_ID_PLACEHOLDER deve ser substituído pelo ID real do Shopify
-// Format: gid://shopify/ProductVariant/1234567890123456789
-const UPSELL_PRODUCTS = [
-  {
-    id: 'upsell-1',
-    title: 'Premium Leather Strap',
-    subtitle: 'Upgrade your look instantly',
-    price: '89.00',
-    currency: 'BRL',
-    image: 'https://cdn.shopify.com/s/files/1/0778/2921/0327/files/VERTICAL_1.jpg?v=1772467367',
-    variantId: 'VARIANT_ID_PLACEHOLDER_1', // Substituir pelo gid://shopify/ProductVariant/... real
-    badge: 'MOST POPULAR',
-    badgeColor: '#c9a84c',
-  },
-  {
-    id: 'upsell-2',
-    title: 'Watch Case Protector',
-    subtitle: 'Protect your investment',
-    price: '49.00',
-    currency: 'BRL',
-    image: 'https://cdn.shopify.com/s/files/1/0778/2921/0327/files/VERTICAL_2.jpg?v=1772467366',
-    variantId: 'VARIANT_ID_PLACEHOLDER_2', // Substituir pelo gid://shopify/ProductVariant/... real
-    badge: 'BUNDLE & SAVE',
-    badgeColor: '#16a34a',
-  },
-];
-
-// Order bump — produto de baixo ticket mostrado no checkout
-const ORDER_BUMP = {
-  id: 'bump-1',
-  title: 'Extended Warranty — 2 Years',
-  subtitle: 'Full coverage, zero worries',
-  price: '29.00',
-  currency: 'BRL',
-  variantId: 'VARIANT_ID_PLACEHOLDER_BUMP', // Substituir pelo gid://shopify/ProductVariant/... real
-};
+// Upsell products and order bump are now loaded dynamically from the store
 
 // Componente Order Bump — adiciona automaticamente ao carrinho quando selecionado
 function OrderBumpSection({bump, cartLines}) {
@@ -249,14 +266,14 @@ function UpsellCard({product, onAdded}) {
 }
 
 export default function CheckoutPage() {
-  const {cart} = useLoaderData();
+  const {cart, upsellProducts = [], orderBump} = useLoaderData();
   const lines = cart?.lines?.nodes ?? [];
   const subtotal = cart?.cost?.subtotalAmount;
   const total = cart?.cost?.totalAmount;
   const checkoutUrl = cart?.checkoutUrl;
 
   // Verifica se upsells estão configurados
-  const upsellsConfigured = !UPSELL_PRODUCTS.some(p => p.variantId?.includes('PLACEHOLDER') || !p.variantId);
+  const upsellsConfigured = upsellProducts.length > 0;
   const bumpConfigured = !ORDER_BUMP.variantId?.includes('PLACEHOLDER') && ORDER_BUMP.variantId;
 
   return (
@@ -337,18 +354,18 @@ export default function CheckoutPage() {
 
             {/* Order Bump */}
             {ORDER_BUMP.variantId && !ORDER_BUMP.variantId.includes('PLACEHOLDER') && (
-              <OrderBumpSection bump={ORDER_BUMP} cartLines={lines} />
+              {orderBump && <OrderBumpSection bump={orderBump} cartLines={lines} />}
             )}
 
             {/* Upsell / Cross-sell */}
             <div style={{marginBottom:'24px'}}>
               <div style={{display:'flex',alignItems:'center',gap:'12px',marginBottom:'16px'}}>
                 <div style={{flex:1,height:'1px',background:'#e5e7eb'}} />
-                <span style={{fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',color:'#9ca3af',whiteSpace:'nowrap'}}>Complete Your Look</span>
+                <span style={{fontSize:'11px',letterSpacing:'2px',textTransform:'uppercase',color:'#9ca3af',whiteSpace:'nowrap'}}>You Might Also Like</span>
                 <div style={{flex:1,height:'1px',background:'#e5e7eb'}} />
               </div>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px'}}>
-                {UPSELL_PRODUCTS.map(p => <UpsellCard key={p.id} product={p} />)}
+                {upsellProducts.map(p => <UpsellCard key={p.id} product={p} />)}
               </div>
             </div>
 
