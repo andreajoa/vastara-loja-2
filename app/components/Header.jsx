@@ -95,7 +95,7 @@ export default function Header({header, cartCount, onCartOpen}) {
       <style suppressHydrationWarning>{`
         
 
-        .vst-header{position:fixed;top:0;left:0;right:0;z-index:1000;transition:background 0.3s,box-shadow 0.3s;height:64px;contain:layout style;}
+        .vst-header{position:fixed;top:0;left:0;right:0;z-index:1000;transition:background 0.3s,box-shadow 0.3s;}
         .vst-topbar{background:#0a0a0a;color:#fff;text-align:center;padding:7px;font-size:10px;letter-spacing:3px;}
         .vst-bar{display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 40px;max-width:1600px;margin:0 auto;position:relative;}
 
