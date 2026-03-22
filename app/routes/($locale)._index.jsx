@@ -550,40 +550,7 @@ export default function Homepage() {
         }
       `}</style>
 
-      <div className="hp-top"><div className="hp-top-inner"><button>‹</button><span>Free standard shipping everyday</span><button>›</button></div></div>
 
-      <header className="hp-header">
-        <div className="hp-header-left">
-          <Link to="/" className="hp-logo">VASTARA</Link>
-          <nav className="hp-nav">
-            <div className="hp-nav-item">
-              <Link to="/collections">Watches</Link>
-              <div className="hp-mega">
-                <div className="hp-mega-col"><h6>By Style</h6><Link to="/collections/dress">Dress Watches</Link><Link to="/collections/sport">Sport</Link><Link to="/collections/casual">Casual</Link><Link to="/collections/digital">Digital</Link><Link to="/collections/automatic-watches">Automatic</Link></div>
-                <div className="hp-mega-col"><h6>By Collection</h6><Link to="/collections/waterbury">Waterbury</Link><Link to="/collections/marlin">Marlin®</Link><Link to="/collections/mk1">MK1</Link><Link to="/collections/deepwater">Deepwater</Link><Link to="/collections/q-timex">Q Timex</Link></div>
-                <div className="hp-mega-col"><h6>Shop By</h6><Link to="/collections/mens">Men</Link><Link to="/collections/womens">Women</Link><Link to="/collections/new-arrivals">New Arrivals</Link><Link to="/collections/best-sellers">Best Sellers</Link><Link to="/collections/sale">Sale</Link></div>
-                <div className="hp-mega-col hp-mega-col-img"><img src={img.quad1} alt="Featured" /><span>New Arrivals →</span></div>
-              </div>
-            </div>
-            <div className="hp-nav-item">
-              <Link to="/collections">Collections</Link>
-              <div className="hp-mega">
-                <div className="hp-mega-col"><h6>Featured</h6><Link to="/collections/ice-blue">Ice Blue</Link><Link to="/collections/co-labs">Co_Labs</Link><Link to="/collections/peanuts">Peanuts x Vastara</Link><Link to="/collections/nfl">NFL®</Link></div>
-                <div className="hp-mega-col"><h6>Collaborations</h6><Link to="/collections/atelier">Vastara Atelier</Link><Link to="/collections/limited">Limited Edition</Link><Link to="/collections/vintage">Vintage Inspired</Link></div>
-                <div className="hp-mega-col hp-mega-col-img"><img src={img.quad2} alt="Collection" /><span>View All →</span></div>
-              </div>
-            </div>
-            <div className="hp-nav-item"><Link to="/pages/explore">Explore</Link></div>
-            <div className="hp-nav-item"><Link to="/blog">Journal</Link></div>
-            <div className="hp-nav-item"><Link to="/pages/stores">Stores</Link></div>
-          </nav>
-        </div>
-        <div className="hp-icons">
-          <button aria-label="Search"><svg className="hp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
-          <Link to="/account" aria-label="Account"><svg className="hp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></Link>
-          <Link to="/cart" aria-label="Cart"><svg className="hp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></Link>
-        </div>
-      </header>
 
       <section className="hp-hero">
         {heroSlides.map((s, i) => (<div key={i} className={`hp-hero-slide ${i === currentSlide ? 'active' : ''}`}><img src={s.image} alt={s.title} /><div className="hp-hero-overlay" /></div>))}
