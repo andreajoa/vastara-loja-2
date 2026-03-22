@@ -274,7 +274,7 @@ export default function CheckoutPage() {
 
   // Verifica se upsells estão configurados
   const upsellsConfigured = upsellProducts.length > 0;
-  const bumpConfigured = !ORDER_BUMP.variantId?.includes('PLACEHOLDER') && ORDER_BUMP.variantId;
+  const bumpConfigured = !!orderBump;
 
   return (
     <div style={{minHeight:'100vh',background:'#fafafa',paddingTop:'96px',fontFamily:'sans-serif'}}>
