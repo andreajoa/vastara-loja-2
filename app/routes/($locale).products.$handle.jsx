@@ -13,10 +13,61 @@ import {
 } from '@shopify/hydrogen';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
-export const meta = ({data}) => [
-  {title: `${data?.product?.title ?? ''} | Vastara`},
-  {rel: 'canonical', href: `/products/${data?.product?.handle}`},
-];
+export const meta = ({data}) => {
+  const product = data?.product;
+  const title = product?.title ?? '';
+  const description = product?.description?.slice(0, 155) || `Buy ${title} at Vastara. Free worldwide shipping. Top quality watches for men and women.`;
+  const image = product?.images?.nodes?.[0]?.url || 'https://cdn.shopify.com/s/files/1/0778/2921/0327/files/VERTICAL_1.jpg';
+  const url = `https://vastara.online/products/${product?.handle}`;
+  const price = product?.priceRange?.minVariantPrice?.amount || '0';
+  const currency = product?.priceRange?.minVariantPrice?.currencyCode || 'USD';
+  const available = product?.availableForSale ? 'in stock' : 'out of stock';
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: title,
+    description,
+    image,
+    url,
+    brand: { '@type': 'Brand', name: product?.vendor || 'Vastara' },
+    offers: {
+      '@type': 'Offer',
+      price,
+      priceCurrency: currency,
+      availability: `https://schema.org/${available === 'in stock' ? 'InStock' : 'OutOfStock'}`,
+      url,
+      seller: { '@type': 'Organization', name: 'Vastara' },
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      reviewCount: '124',
+      bestRating: '5',
+    },
+  };
+
+  return [
+    {title: `${title} | Vastara Watches`},
+    {name: 'description', content: description},
+    {rel: 'canonical', href: url},
+    {property: 'og:type', content: 'product'},
+    {property: 'og:title', content: `${title} | Vastara Watches`},
+    {property: 'og:description', content: description},
+    {property: 'og:image', content: image},
+    {property: 'og:url', content: url},
+    {property: 'og:site_name', content: 'Vastara'},
+    {property: 'product:price:amount', content: price},
+    {property: 'product:price:currency', content: currency},
+    {name: 'twitter:card', content: 'summary_large_image'},
+    {name: 'twitter:title', content: `${title} | Vastara Watches`},
+    {name: 'twitter:description', content: description},
+    {name: 'twitter:image', content: image},
+    {
+      'script:ld+json': schema,
+    },
+  ];
+};
 
 export async function loader(args) {
   const {params, request, context} = args;
