@@ -303,14 +303,14 @@ function AddBtn({variantId, qty, available, label, style}) {
   const fetcher = useFetcher();
   const {openCart} = useCart();
 
+  const submitted = useRef(false);
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.__fetcherDebug = {state: fetcher.state, data: fetcher.data};
-    }
-    if (fetcher.state === 'idle' && fetcher.data?.cart) {
+    if (fetcher.state === 'submitting') submitted.current = true;
+    if (fetcher.state === 'idle' && submitted.current && fetcher.data?.cart) {
+      submitted.current = false;
       openCart(fetcher.data.cart);
     }
-  }, [fetcher.state, fetcher.data]);
+  }, [fetcher.state]);
 
   if (!available) {
     return (
@@ -342,14 +342,14 @@ function BundleAddButton({lines, count}) {
   const fetcher = useFetcher();
   const {openCart} = useCart();
 
+  const submitted = useRef(false);
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.__fetcherDebug = {state: fetcher.state, data: fetcher.data};
-    }
-    if (fetcher.state === 'idle' && fetcher.data?.cart) {
+    if (fetcher.state === 'submitting') submitted.current = true;
+    if (fetcher.state === 'idle' && submitted.current && fetcher.data?.cart) {
+      submitted.current = false;
       openCart(fetcher.data.cart);
     }
-  }, [fetcher.state, fetcher.data]);
+  }, [fetcher.state]);
 
   return (
     <fetcher.Form method="post" action="/cart">
