@@ -17,11 +17,6 @@ export default function Layout({children, header, footer}) {
   const cart = fetcherCart ?? rootCart;
   const totalQuantity = cart?.totalQuantity || 0;
 
-  // Clear fetcherCart when root revalidates with fresh data
-  useEffect(() => {
-    if (rootCart) setFetcherCart(null);
-  }, [rootCart]);
-
   // Open cart when ?cart=open is in URL
   useEffect(() => {
     const params = new URLSearchParams(location.search);
