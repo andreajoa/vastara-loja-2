@@ -1,5 +1,5 @@
 export async function action({request, context}) {
-  const {email} = await request.json();
+  const {email, phone} = await request.json();
   if (!email || !email.includes('@')) {
     return Response.json({ok: false, error: 'Invalid email'});
   }
@@ -15,6 +15,7 @@ export async function action({request, context}) {
       variables: {
         input: {
           email,
+          phone: phone || undefined,
           acceptsMarketing: true,
           password: Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2),
         }

@@ -3,6 +3,7 @@ import {useRouteLoaderData, useLocation, useFetchers} from 'react-router';
 import Header from './Header';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
+import WelcomePopup from './WelcomePopup';
 
 export const CartContext = createContext(null);
 export const useCart = () => useContext(CartContext);
@@ -55,6 +56,7 @@ export default function Layout({children, header, footer}) {
         <Header header={header} cartCount={totalQuantity} onCartOpen={() => setIsCartOpen(true)} />
         <main style={{flex:1}}>{children}</main>
         <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} cart={cart} />
+        <WelcomePopup />
         <Footer footer={footer} />
       </div>
     </CartContext.Provider>
