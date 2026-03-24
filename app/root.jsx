@@ -4,16 +4,31 @@ import appStyles from '~/styles/app.css?url';
 import {MENU_FRAGMENT} from '~/lib/fragments';
 import Layout from '~/components/Layout';
 
-export const links = () => [
-  {rel:'stylesheet', href:appStyles},
-  {rel:'preconnect', href:'https://fonts.googleapis.com'},
-  {rel:'preconnect', href:'https://fonts.gstatic.com', crossOrigin:'anonymous'},
-  {rel:'preload', href:'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap', as:'style', onLoad:"this.onload=null;this.rel='stylesheet'"},
-];
 
-export const meta = () => [
+
+export const meta = ({location}) => [
   {name: 'robots', content: 'index, follow'},
 ];
+
+export const links = ({location}) => {
+  const base = 'https://vastara.online';
+  const path = location?.pathname || '/';
+  // Strip locale prefix to get base path
+  const basePath = path.replace(/^\/(en-us|en-au|en-ca|en-gb|en-nz)/, '') || '/';
+  return [
+    {rel:'stylesheet', href:appStyles},
+    {rel:'preconnect', href:'https://fonts.googleapis.com'},
+    {rel:'preconnect', href:'https://fonts.gstatic.com', crossOrigin:'anonymous'},
+    {rel:'preload', href:'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap', as:'style', onLoad:"this.onload=null;this.rel='stylesheet'"},
+    {rel:'canonical', href:`${base}${path}`},
+    {rel:'alternate', hrefLang:'en-us', href:`${base}/en-us${basePath}`},
+    {rel:'alternate', hrefLang:'en-au', href:`${base}/en-au${basePath}`},
+    {rel:'alternate', hrefLang:'en-ca', href:`${base}/en-ca${basePath}`},
+    {rel:'alternate', hrefLang:'en-gb', href:`${base}/en-gb${basePath}`},
+    {rel:'alternate', hrefLang:'en-nz', href:`${base}/en-nz${basePath}`},
+    {rel:'alternate', hrefLang:'x-default', href:`${base}${basePath}`},
+  ];
+};
 
 export async function loader({context}) {
   const {storefront, env, cart} = context;

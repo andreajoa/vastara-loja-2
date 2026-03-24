@@ -63,9 +63,16 @@ export const meta = ({data}) => {
     {name: 'twitter:title', content: `${title} | Vastara Watches`},
     {name: 'twitter:description', content: description},
     {name: 'twitter:image', content: image},
-    {
-      'script:ld+json': schema,
-    },
+    {'script:ld+json': schema},
+    {'script:ld+json': {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        {'@type':'ListItem','position':1,'name':'Home','item':'https://vastara.online'},
+        {'@type':'ListItem','position':2,'name':'Watches','item':'https://vastara.online/collections'},
+        {'@type':'ListItem','position':3,'name': title,'item':`https://vastara.online/products/${product?.handle}`},
+      ]
+    }},
   ];
 };
 
