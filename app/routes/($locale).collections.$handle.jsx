@@ -134,6 +134,7 @@ export default function Collection() {
           <div>
             <p style={{fontSize:'10px',color:'#999',margin:'0 0 3px',letterSpacing:'1px',textTransform:'uppercase'}}>Collection</p>
             <h1 style={{fontSize:'26px',fontWeight:500,margin:0}}>{collection.title}</h1>
+            {collection.description && <p style={{fontSize:'13px',color:'#6b7280',marginTop:'6px',maxWidth:'600px',lineHeight:'1.6'}}>{collection.description}</p>}
           </div>
           <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
             <button className="col-mobile-filter-btn" onClick={()=>setSidebarOpen(true)} style={{padding:'8px 14px',border:'1px solid #000',background:'none',fontSize:'11px',fontWeight:600,letterSpacing:'1px',cursor:'pointer'}}>
