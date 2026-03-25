@@ -5,6 +5,8 @@ import {MENU_FRAGMENT} from '~/lib/fragments';
 import Layout from '~/components/Layout';
 
 export const links = () => [
+  {rel:'icon', type:'image/png', href:'/favicon.png'},
+  {rel:'apple-touch-icon', href:'/favicon.png'},
   {rel:'stylesheet', href:appStyles},
   {rel:'preconnect', href:'https://fonts.googleapis.com'},
   {rel:'preconnect', href:'https://fonts.gstatic.com', crossOrigin:'anonymous'},
