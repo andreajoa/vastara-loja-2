@@ -197,7 +197,7 @@ export default function Collection() {
 const COLLECTION_QUERY = `#graphql
   query Collection($handle:String!,$country:CountryCode,$language:LanguageCode,$first:Int,$last:Int,$startCursor:String,$endCursor:String) @inContext(country:$country,language:$language) {
     collection(handle:$handle) {
-      id handle title description
+      id handle title description descriptionHtml
       products(first:$first,last:$last,before:$startCursor,after:$endCursor) {
         nodes {
           id handle title tags
