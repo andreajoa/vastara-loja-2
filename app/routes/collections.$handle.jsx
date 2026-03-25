@@ -169,7 +169,13 @@ export default function CollectionPage() {
       <div style={{maxWidth:'1400px',margin:'0 auto',padding:'0 24px 24px',display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:'16px'}}>
         <div>
           <h1 style={{fontFamily:'Georgia,serif',fontSize:'clamp(1.5rem,3vw,2.5rem)',marginBottom:'4px'}}>{collection.title}</h1>
-          <p style={{fontSize:'13px',color:'#6b7280'}}>{products.length} Products</p>
+          <p style={{fontSize:'13px',color:'#6b7280',marginBottom:'4px'}}>{products.length} Products</p>
+          {collection.descriptionHtml
+            ? <div style={{fontSize:'13px',color:'#6b7280',marginTop:'6px',maxWidth:'600px',lineHeight:'1.6'}} dangerouslySetInnerHTML={{__html:collection.descriptionHtml}} />
+            : collection.description
+              ? <p style={{fontSize:'13px',color:'#6b7280',marginTop:'6px',maxWidth:'600px',lineHeight:'1.6'}}>{collection.description}</p>
+              : null
+          }
         </div>
         <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
           <button className="col-mobile-filter-btn" onClick={() => setSidebarOpen(true)} style={{padding:'8px 16px',border:'1px solid #0a0a0a',background:'none',fontSize:'11px',letterSpacing:'1px',textTransform:'uppercase',cursor:'pointer'}}>
