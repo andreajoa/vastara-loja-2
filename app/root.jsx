@@ -53,6 +53,13 @@ export default function App() {
         <meta name="theme-color" content="#0a0a0a" />
         <meta name="color-scheme" content="light" />
         <Meta /><Links />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-LW70Z8LP18"></script>
+        <script dangerouslySetInnerHTML={{__html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-LW70Z8LP18');
+        `}} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify({
           "@context": "https://schema.org",
           "@graph": [
