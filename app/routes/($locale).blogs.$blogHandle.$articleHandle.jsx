@@ -73,7 +73,6 @@ function loadDeferredData({context}) {
 }
 
 export default function Article() {
-  /** @type {LoaderReturnData} */
   const {article} = useLoaderData();
   const {title, image, contentHtml, author} = article;
 
@@ -84,20 +83,48 @@ export default function Article() {
   }).format(new Date(article.publishedAt));
 
   return (
-    <div className="article">
-      <h1>
-        {title}
-        <div>
-          <time dateTime={article.publishedAt}>{publishedDate}</time> &middot;{' '}
-          <address>{author?.name}</address>
-        </div>
-      </h1>
+    <div style={{paddingTop:'96px',minHeight:'100vh',background:'#fafafa'}}>
+      <style>{`
+        .article-hero{background:#0a0a0a;padding:60px 40px;text-align:center;}
+        .article-img-wrap{max-width:900px;margin:0 auto;padding:0 24px;}
+        .article-img-wrap img{width:100%;height:auto;display:block;border-radius:12px;margin-top:-40px;box-shadow:0 16px 60px rgba(0,0,0,0.15);}
+        .article-body{max-width:740px;margin:0 auto;padding:48px 24px 80px;}
+        .article-body h2{font-family:Georgia,serif;font-size:24px;font-weight:400;margin:36px 0 16px;color:#0a0a0a;}
+        .article-body h3{font-size:18px;font-weight:600;margin:28px 0 12px;color:#0a0a0a;}
+        .article-body p{font-size:15px;line-height:1.8;color:#374151;margin:0 0 20px;}
+        .article-body ul,.article-body ol{padding-left:24px;margin:0 0 20px;}
+        .article-body li{font-size:15px;line-height:1.8;color:#374151;margin-bottom:8px;}
+        .article-body img{width:100%;border-radius:8px;margin:24px 0;}
+        .article-body a{color:#c9a84c;text-decoration:underline;}
+        @media(max-width:600px){
+          .article-hero{padding:40px 20px;}
+          .article-body{padding:32px 16px 60px;}
+          .article-img-wrap img{margin-top:-20px;}
+        }
+      `}</style>
 
-      {image && <Image data={image} sizes="90vw" loading="eager" />}
-      <div
-        dangerouslySetInnerHTML={{__html: contentHtml}}
-        className="article"
-      />
+      <div className="article-hero">
+        <p style={{fontSize:'10px',letterSpacing:'3px',textTransform:'uppercase',color:'#c9a84c',marginBottom:'12px'}}>Vastara Editorial</p>
+        <h1 style={{fontFamily:'Georgia,serif',fontSize:'clamp(24px,4vw,42px)',fontWeight:'400',color:'#fff',margin:'0 0 16px',lineHeight:'1.3',maxWidth:'800px',marginLeft:'auto',marginRight:'auto'}}>{title}</h1>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'12px',flexWrap:'wrap'}}>
+          {author?.name && <span style={{fontSize:'12px',color:'rgba(255,255,255,0.6)'}}>{author.name}</span>}
+          {author?.name && <span style={{color:'rgba(255,255,255,0.3)'}}>·</span>}
+          <time dateTime={article.publishedAt} style={{fontSize:'12px',color:'rgba(255,255,255,0.6)'}}>{publishedDate}</time>
+        </div>
+      </div>
+
+      {image && (
+        <div className="article-img-wrap">
+          <Image
+            data={image}
+            sizes="(min-width: 900px) 860px, 100vw"
+            loading="eager"
+            fetchPriority="high"
+          />
+        </div>
+      )}
+
+      <div className="article-body" dangerouslySetInnerHTML={{__html: contentHtml}} />
     </div>
   );
 }

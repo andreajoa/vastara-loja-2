@@ -74,10 +74,10 @@ export default function Blog() {
     <div style={{paddingTop:'96px',minHeight:'100vh',background:'#fafafa'}}>
       <style>{`
         .blog-hero{background:#0a0a0a;padding:60px 40px;text-align:center;margin-bottom:48px;}
-        .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;max-width:1200px;margin:0 auto;padding:0 24px 80px;}
+        .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;max-width:1200px;margin:0 auto;padding:0 40px 80px;}
         .blog-card{background:#fff;border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;display:block;transition:transform 0.3s ease,box-shadow 0.3s ease;}
         .blog-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.1);}
-        .blog-card-img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block;}
+        .blog-card-img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block;background:#f5f5f0;}
         .blog-card-body{padding:20px;}
         .blog-card-date{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9ca3af;margin-bottom:8px;}
         .blog-card-title{font-family:Georgia,serif;font-size:17px;font-weight:400;color:#0a0a0a;line-height:1.4;margin:0;}
