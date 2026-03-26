@@ -67,21 +67,33 @@ function loadDeferredData({context}) {
 }
 
 export default function Blog() {
-  /** @type {LoaderReturnData} */
   const {blog} = useLoaderData();
   const {articles} = blog;
 
   return (
-    <div className="blog">
-      <h1>{blog.title}</h1>
+    <div style={{paddingTop:'96px',minHeight:'100vh',background:'#fafafa'}}>
+      <style>{`
+        .blog-hero{background:#0a0a0a;padding:60px 40px;text-align:center;margin-bottom:48px;}
+        .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;max-width:1200px;margin:0 auto;padding:0 24px 80px;}
+        .blog-card{background:#fff;border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;display:block;transition:transform 0.3s ease,box-shadow 0.3s ease;}
+        .blog-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.1);}
+        .blog-card-img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block;}
+        .blog-card-body{padding:20px;}
+        .blog-card-date{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9ca3af;margin-bottom:8px;}
+        .blog-card-title{font-family:Georgia,serif;font-size:17px;font-weight:400;color:#0a0a0a;line-height:1.4;margin:0;}
+        @media(max-width:900px){.blog-grid{grid-template-columns:repeat(2,1fr);}}
+        @media(max-width:600px){.blog-grid{grid-template-columns:1fr;padding:0 16px 60px;}.blog-hero{padding:40px 20px;}}
+      `}</style>
+
+      <div className="blog-hero">
+        <p style={{fontSize:'10px',letterSpacing:'3px',textTransform:'uppercase',color:'#c9a84c',marginBottom:'12px'}}>Vastara Editorial</p>
+        <h1 style={{fontFamily:'Georgia,serif',fontSize:'clamp(28px,4vw,48px)',fontWeight:'400',color:'#fff',margin:0}}>{blog.title}</h1>
+      </div>
+
       <div className="blog-grid">
         <PaginatedResourceSection connection={articles}>
           {({node: article, index}) => (
-            <ArticleItem
-              article={article}
-              key={article.id}
-              loading={index < 2 ? 'eager' : 'lazy'}
-            />
+            <ArticleItem article={article} key={article.id} loading={index < 3 ? 'eager' : 'lazy'} />
           )}
         </PaginatedResourceSection>
       </div>
@@ -89,36 +101,27 @@ export default function Blog() {
   );
 }
 
-/**
- * @param {{
- *   article: ArticleItemFragment;
- *   loading?: HTMLImageElement['loading'];
- * }}
- */
 function ArticleItem({article, loading}) {
   const publishedAt = new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+    year: 'numeric', month: 'long', day: 'numeric',
   }).format(new Date(article.publishedAt));
+
   return (
-    <div className="blog-article" key={article.id}>
-      <Link to={`/blogs/${article.blog.handle}/${article.handle}`}>
-        {article.image && (
-          <div className="blog-article-image">
-            <Image
-              alt={article.image.altText || article.title}
-              aspectRatio="3/2"
-              data={article.image}
-              loading={loading}
-              sizes="(min-width: 768px) 50vw, 100vw"
-            />
-          </div>
-        )}
-        <h3>{article.title}</h3>
-        <small>{publishedAt}</small>
-      </Link>
-    </div>
+    <Link to={`/blogs/${article.blog.handle}/${article.handle}`} className="blog-card">
+      {article.image && (
+        <Image
+          alt={article.image.altText || article.title}
+          data={article.image}
+          loading={loading}
+          sizes="(min-width: 900px) 33vw, (min-width: 600px) 50vw, 100vw"
+          className="blog-card-img"
+        />
+      )}
+      <div className="blog-card-body">
+        <p className="blog-card-date">{publishedAt}</p>
+        <h3 className="blog-card-title">{article.title}</h3>
+      </div>
+    </Link>
   );
 }
 
