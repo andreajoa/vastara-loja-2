@@ -45,7 +45,7 @@ export async function createHydrogenRouterContext(
       waitUntil,
       session,
       // Or detect from URL path based on locale subpath, cookies, or any other strategy
-      i18n: getLocaleFromRequest(request),
+      i18n: getLocaleFromRequest(request, context),
       cart: {
         queryFragment: CART_QUERY_FRAGMENT,
       },
