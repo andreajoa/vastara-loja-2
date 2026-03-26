@@ -6,12 +6,13 @@ import {useState, useEffect, useRef} from 'react';
 export const meta = () => [{title: 'VASTARA | Luxury Timepieces'}];
 
 export async function loader({context}) {
+  const {language, country} = context.storefront.i18n;
   const {storefront} = context;
   const [{collections}, {products}, bulovaData, spotlightData] = await Promise.all([
-    storefront.query(COLLECTIONS_QUERY),
-    storefront.query(PRODUCTS_QUERY),
-    storefront.query(BULOVA_QUERY).catch(() => ({collection: null})),
-    storefront.query(SPOTLIGHT_QUERY).catch(() => ({product: null})),
+    storefront.query(COLLECTIONS_QUERY, {variables: {country, language}}),
+    storefront.query(PRODUCTS_QUERY, {variables: {country, language}}),
+    storefront.query(BULOVA_QUERY, {variables: {country, language}}).catch(() => ({collection: null})),
+    storefront.query(SPOTLIGHT_QUERY, {variables: {country, language}}).catch(() => ({product: null})),
   ]);
   return {
     collections: collections.nodes,
@@ -97,8 +98,8 @@ function EditorialSection({products, img, getProductImage, bulovaProducts, bulov
               </div>
               <div className="hp-editorial-product-info">
                 <h4>{p.title}</h4>
-                <p className="specs">{parseFloat(p.priceRange?.minVariantPrice?.amount || 0) > 0 ? p.priceRange.minVariantPrice.currencyCode : ''}</p>
-                <p>${parseFloat(p.priceRange?.minVariantPrice?.amount || 299).toFixed(2)}</p>
+
+                <p>{p.priceRange?.minVariantPrice ? new Intl.NumberFormat("en-US", {style:"currency", currency: p.priceRange.minVariantPrice.currencyCode}).format(p.priceRange.minVariantPrice.amount) : "$299.00"}</p>
               </div>
             </Link>
           ))}
@@ -656,7 +657,7 @@ export default function Homepage() {
         <div className="hp-section-inner">
           <div className="hp-section-head"><h2>Our Most-Loved Styles</h2><div className="hp-section-arrows"><button onClick={scrollLeft}>&#8592;</button><button onClick={scrollRight}>&#8594;</button></div></div>
           <div className="hp-products" ref={sliderRef}>
-            {products.slice(0, 12).map((p, i) => (<Link key={p.id} to={`/products/${p.handle}`} className="hp-product"><div className="hp-product-img"><img src={getProductImage(p, i)} alt={p.title} /></div><h4>{p.title}</h4><div className="hp-product-rating">{(() => { const r = getProductReviews(p.id); return (<><span className="hp-product-stars">{'★'.repeat(r.stars)}{'☆'.repeat(5-r.stars)}</span><span className="hp-product-count">({r.count})</span></>); })()}</div><p>${parseFloat(p.priceRange?.minVariantPrice?.amount || 199).toFixed(2)}</p></Link>))}
+            {products.slice(0, 12).map((p, i) => (<Link key={p.id} to={`/products/${p.handle}`} className="hp-product"><div className="hp-product-img"><img src={getProductImage(p, i)} alt={p.title} /></div><h4>{p.title}</h4><div className="hp-product-rating">{(() => { const r = getProductReviews(p.id); return (<><span className="hp-product-stars">{'★'.repeat(r.stars)}{'☆'.repeat(5-r.stars)}</span><span className="hp-product-count">({r.count})</span></>); })()}</div><p>{p.priceRange?.minVariantPrice ? new Intl.NumberFormat('en-US', {style:'currency', currency: p.priceRange.minVariantPrice.currencyCode}).format(p.priceRange.minVariantPrice.amount) : '$199.00'}</p></Link>))}
           </div>
         </div>
       </section>
@@ -680,7 +681,7 @@ export default function Homepage() {
 
           <h4>{spotlightProduct?.title || "Marlin® Chronograph Tachymeter 40mm"}</h4>
           <p className="specs">{spotlightProduct?.variants?.nodes?.[0]?.selectedOptions?.map(o => o.value).join(" | ") || "40 mm | 3 Colors"}</p>
-          <p>${parseFloat(spotlightProduct?.priceRange?.minVariantPrice?.amount || 209).toFixed(2)}</p>
+          <p>{spotlightProduct?.priceRange?.minVariantPrice ? new Intl.NumberFormat('en-US', {style:'currency', currency: spotlightProduct.priceRange.minVariantPrice.currencyCode}).format(spotlightProduct.priceRange.minVariantPrice.amount) : '$209.00'}</p>
         </Link>
         <div className="hp-spotlight-controls"><button>▶</button><button>🔊</button></div>
       </section>
