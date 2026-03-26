@@ -39,6 +39,7 @@ export const meta = ({data}) => {
       url,
       seller: { '@type': 'Organization', name: 'Vastara' },
     },
+    sku: product?.selectedOrFirstAvailableVariant?.sku || product?.handle,
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: '4.8',

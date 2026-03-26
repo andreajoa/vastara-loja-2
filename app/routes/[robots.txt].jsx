@@ -57,6 +57,25 @@ ${generalDisallowRules({sitemapUrl, shopId})}
 User-agent: MJ12bot
 Crawl-Delay: 10
 
+# AI Search Crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
 User-agent: Pinterest
 Crawl-delay: 1
 `.trim();

@@ -7,6 +7,12 @@ import Layout from '~/components/Layout';
 export const links = () => [
   {rel:'icon', type:'image/png', href:'/favicon.png'},
   {rel:'apple-touch-icon', href:'/favicon.png'},
+  {rel:'alternate', hrefLang:'en-us', href:'https://vastara.online/'},
+  {rel:'alternate', hrefLang:'en-gb', href:'https://vastara.online/'},
+  {rel:'alternate', hrefLang:'en-ca', href:'https://vastara.online/'},
+  {rel:'alternate', hrefLang:'en-au', href:'https://vastara.online/'},
+  {rel:'alternate', hrefLang:'en-nz', href:'https://vastara.online/'},
+  {rel:'alternate', hrefLang:'x-default', href:'https://vastara.online/'},
   {rel:'stylesheet', href:appStyles},
   {rel:'preconnect', href:'https://fonts.googleapis.com'},
   {rel:'preconnect', href:'https://fonts.gstatic.com', crossOrigin:'anonymous'},
