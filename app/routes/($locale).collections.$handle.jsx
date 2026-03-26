@@ -129,7 +129,7 @@ export default function Collection() {
         @media(max-width:480px){.col-grid{grid-template-columns:repeat(2,1fr);gap:12px 8px}}
       `}</style>
 
-      <div style={{borderBottom:'1px solid #ebebeb',padding:'20px 40px 16px'}}>
+      <div style={{borderBottom:'1px solid #ebebeb',padding:'90px 40px 16px'}}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',flexWrap:'wrap',gap:'10px'}}>
           <div>
             <p style={{fontSize:'10px',color:'#999',margin:'0 0 3px',letterSpacing:'1px',textTransform:'uppercase'}}>Collection</p>
