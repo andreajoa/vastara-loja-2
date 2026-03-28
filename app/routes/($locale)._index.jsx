@@ -49,11 +49,9 @@ const img = {
 };
 
 
-function EditorialSection({products, img, getProductImage, bulovaProducts, bulovaTitle}) {
+function EditorialSection({products, getProductImage, bulovaProducts}) {
   const editorialProducts = bulovaProducts.length > 0 ? bulovaProducts : products.slice(4, 12);
   const scrollRef = useRef(null);
-  const [scrolled, setScrolled] = useState(false);
-  const [hoveredProduct, setHoveredProduct] = useState(null);
 
   const editorialNext = () => {
     if (scrollRef.current) {
@@ -64,9 +62,6 @@ function EditorialSection({products, img, getProductImage, bulovaProducts, bulov
     if (scrollRef.current) {
       scrollRef.current.scrollBy({left: -380, behavior: 'smooth'});
     }
-  };
-  const handleScroll = () => {
-    if (scrollRef.current) setScrolled(scrollRef.current.scrollLeft > 20);
   };
 
   return (
@@ -107,19 +102,17 @@ function EditorialSection({products, img, getProductImage, bulovaProducts, bulov
             </button>
           </div>
         </div>
-        <div className="hp-premium-scroll" ref={scrollRef} onScroll={handleScroll}>
+        <div className="hp-premium-scroll" ref={scrollRef}>
           {editorialProducts.map((p, i) => (
             <Link
               key={p.id}
               to={`/products/${p.handle}`}
               className="hp-premium-card"
-              onMouseEnter={() => setHoveredProduct(p.id)}
-              onMouseLeave={() => setHoveredProduct(null)}
             >
               <div className="hp-premium-card-img">
                 <img src={p.featuredImage?.url || getProductImage(p, i + 4)} alt={p.title} loading="lazy" />
                 <div className="hp-premium-card-overlay" />
-                <span className="hp-premium-badge">Exclusivo</span>
+                <span className="hp-premium-badge">Exclusive</span>
                 <div className="hp-premium-card-action">Quick View</div>
               </div>
               <div className="hp-premium-card-info">
@@ -727,7 +720,6 @@ export default function Homepage() {
           .hp-premium-price{font-size:15px;margin-bottom:6px}
           .hp-premium-specs{font-size:10px}
           .hp-premium-card-action{display:none}
-        }
           .hp-highlights{grid-template-columns:1fr}
           .hp-highlights-list{padding:28px 16px}
           .hp-highlights-list a{font-size:20px;padding:9px 0}
@@ -807,7 +799,7 @@ export default function Homepage() {
         </div>
       </section>
 
-      <EditorialSection products={products} img={img} getProductImage={getProductImage} bulovaProducts={bulovaProducts} bulovaTitle={bulovaTitle} />
+      <EditorialSection products={products} getProductImage={getProductImage} bulovaProducts={bulovaProducts} />
 
       <div className="hp-blue-link"><Link to="/collections/blue"><span className="hp-blue-dot"></span>Blue → Watches</Link></div>
 
