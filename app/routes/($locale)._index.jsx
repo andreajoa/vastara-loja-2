@@ -53,15 +53,16 @@ function EditorialSection({products, img, getProductImage, bulovaProducts, bulov
   const editorialProducts = bulovaProducts.length > 0 ? bulovaProducts : products.slice(4, 12);
   const scrollRef = useRef(null);
   const [scrolled, setScrolled] = useState(false);
+  const [hoveredProduct, setHoveredProduct] = useState(null);
 
   const editorialNext = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({left: scrollRef.current.offsetWidth, behavior: 'smooth'});
+      scrollRef.current.scrollBy({left: 380, behavior: 'smooth'});
     }
   };
   const editorialPrev = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({left: -scrollRef.current.offsetWidth, behavior: 'smooth'});
+      scrollRef.current.scrollBy({left: -380, behavior: 'smooth'});
     }
   };
   const handleScroll = () => {
@@ -69,41 +70,77 @@ function EditorialSection({products, img, getProductImage, bulovaProducts, bulov
   };
 
   return (
-    <section className="hp-editorial">
-      <div className="hp-editorial-main" style={{width: scrolled ? '0px' : '560px', minWidth: scrolled ? '0px' : '560px', opacity: scrolled ? 0 : 1}}>
-        <>
-              <div className="hide-on-mobile"><AutoPlayVideo src="https://cdn.shopify.com/videos/c/o/v/f027b635fb744591b3b550d87636de63.mp4" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} /></div>
-              <div className="show-on-mobile" style={{width:'100%',height:'100%'}}><MobileFade images={['https://cdn.shopify.com/s/files/1/0778/2921/0327/files/1_ef7d86c9-66f8-4623-b34d-226d928023a0.jpg?v=1774215389','https://cdn.shopify.com/s/files/1/0778/2921/0327/files/3_6737b1bb-d696-4062-8fee-ee78d12bb1cc.jpg?v=1774216753']} style={{width:'100%',height:'100%'}} /></div>
-            </>
-        <div className="hp-editorial-main-overlay" />
-        <div className="hp-editorial-main-content">
-          <p className="hp-editorial-main-tag">Timeless. Cool. Blue.</p>
-          <h3>The Ice Blue Collection pairs signature design with a cool new color story.</h3>
-          <Link to="/collections/ice-blue" className="hp-btn hp-btn-white">Shop Now &#8594;</Link>
+    <section className="hp-premium-editorial">
+      <div className="hp-premium-left">
+        <div className="hp-premium-media">
+          <div className="hide-on-mobile">
+            <AutoPlayVideo src="https://cdn.shopify.com/videos/c/o/v/f027b635fb744591b3b550d87636de63.mp4" />
+          </div>
+          <div className="show-on-mobile">
+            <MobileFade images={['https://cdn.shopify.com/s/files/1/0778/2921/0327/files/1_ef7d86c9-66f8-4623-b34d-226d928023a0.jpg?v=1774215389','https://cdn.shopify.com/s/files/1/0778/2921/0327/files/3_6737b1bb-d696-4062-8fee-ee78d12bb1cc.jpg?v=1774216753']} />
+          </div>
+          <div className="hp-premium-overlay" />
         </div>
-      </div>
-      <div className="hp-editorial-right">
-        <div className="hp-editorial-right-head">
-          <h3>Ice Blue Watches</h3>
-          <div className="hp-editorial-right-arrows">
-            <button onClick={editorialPrev}>&#8592;</button>
-            <button onClick={editorialNext}>&#8594;</button>
+        <div className="hp-premium-content">
+          <div className="hp-premium-top-line" />
+          <p className="hp-premium-tag">COLLECTION EXCLUSIVE</p>
+          <h2>Ice Blue <span className="italic">Timepieces</span></h2>
+          <p className="hp-premium-desc">A fusion of precision engineering and refined elegance. Each timepiece captures the essence of cool sophistication.</p>
+          <div className="hp-premium-cta">
+            <Link to="/collections/ice-blue" className="hp-premium-btn">Discover Collection</Link>
+            <span className="hp-premium-count">{editorialProducts.length} Timepieces</span>
           </div>
         </div>
-        <div className="hp-editorial-scroll" ref={scrollRef} onScroll={handleScroll} style={{overflowX:'auto',scrollbarWidth:'none'}}>
+      </div>
+      <div className="hp-premium-right">
+        <div className="hp-premium-header">
+          <div className="hp-premium-header-title">
+            <span className="hp-premium-line" />
+            <h3>Featured</h3>
+          </div>
+          <div className="hp-premium-arrows">
+            <button onClick={editorialPrev} aria-label="Previous">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12 4L6 10L12 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/></svg>
+            </button>
+            <button onClick={editorialNext} aria-label="Next">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M8 4L14 10L8 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/></svg>
+            </button>
+          </div>
+        </div>
+        <div className="hp-premium-scroll" ref={scrollRef} onScroll={handleScroll}>
           {editorialProducts.map((p, i) => (
-            <Link key={p.id} to={`/products/${p.handle}`} className="hp-editorial-product">
-              <div className="hp-editorial-product-img">
-                <img src={p.featuredImage?.url || getProductImage(p, i + 4)} alt={p.title} />
-                <span className="hp-badge">New</span>
+            <Link
+              key={p.id}
+              to={`/products/${p.handle}`}
+              className="hp-premium-card"
+              onMouseEnter={() => setHoveredProduct(p.id)}
+              onMouseLeave={() => setHoveredProduct(null)}
+            >
+              <div className="hp-premium-card-img">
+                <img src={p.featuredImage?.url || getProductImage(p, i + 4)} alt={p.title} loading="lazy" />
+                <div className="hp-premium-card-overlay" />
+                <span className="hp-premium-badge">Exclusivo</span>
+                <div className="hp-premium-card-action">Quick View</div>
               </div>
-              <div className="hp-editorial-product-info">
-                <h4>{p.title}</h4>
-
-                <p>{p.priceRange?.minVariantPrice ? new Intl.NumberFormat("en-US", {style:"currency", currency: p.priceRange.minVariantPrice.currencyCode}).format(p.priceRange.minVariantPrice.amount) : "$299.00"}</p>
+              <div className="hp-premium-card-info">
+                <div className="hp-premium-card-top">
+                  <h4>{p.title}</h4>
+                  <span className="hp-premium-ref">REF: {String(i + 1001).padStart(4, '0')}</span>
+                </div>
+                <div className="hp-premium-card-bottom">
+                  <p className="hp-premium-price">
+                    {p.priceRange?.minVariantPrice ? new Intl.NumberFormat("en-US", {style:"currency", currency: p.priceRange.minVariantPrice.currencyCode}).format(p.priceRange.minVariantPrice.amount) : "$299.00"}
+                  </p>
+                  <div className="hp-premium-specs">
+                    <span>Swiss Movement</span>
+                    <span>•</span>
+                    <span>Sapphire Crystal</span>
+                  </div>
+                </div>
               </div>
             </Link>
           ))}
+          <div className="hp-premium-card-spacer" />
         </div>
       </div>
     </section>
@@ -461,33 +498,52 @@ export default function Homepage() {
         .hp-editorial-arrow{font-size:20px;color:#fff;opacity:0.8;transition:opacity 0.25s ease,transform 0.25s ease}
         .hp-editorial-card:hover .hp-editorial-arrow{opacity:1;transform:translateX(4px)}
 
-        /* EDITORIAL */
-        .hp-editorial{display:flex;height:620px;overflow:hidden;background:#fff}
-        .hp-editorial-main{width:560px;min-width:560px;position:relative;overflow:hidden;transition:width 0.6s ease,min-width 0.6s ease,opacity 0.6s ease;flex-shrink:0}
-        .hp-editorial-main video{width:100%;height:100%;object-fit:cover;display:block}
-        .hp-editorial-main-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.05) 50%,transparent 100%)}
-        .hp-editorial-main-content{position:absolute;bottom:36px;left:36px;right:36px}
-        .hp-editorial-main-tag{font-size:10px;color:rgba(255,255,255,0.75);margin-bottom:8px;letter-spacing:1.5px;text-transform:uppercase}
-        .hp-editorial-main h3{font-size:22px;font-weight:400;color:#fff;line-height:1.35;margin-bottom:20px;max-width:340px}
-        .hp-editorial-right{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#fff;min-width:0}
-        .hp-editorial-right-head{padding:24px 36px 20px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
-        .hp-editorial-right-head h3{font-size:17px;font-weight:500}
-        .hp-editorial-right-arrows{display:flex;gap:8px}
-        .hp-editorial-right-arrows button{width:36px;height:36px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
-        .hp-editorial-right-arrows button:hover{border-color:#000;background:#000;color:#fff}
-        .hp-editorial-scroll{display:flex;gap:0;overflow-x:auto;flex:1;scrollbar-width:none;-ms-overflow-style:none}
-        .hp-editorial-scroll::-webkit-scrollbar{display:none}
-        .hp-editorial-product{min-width:300px;width:300px;flex-shrink:0;text-decoration:none;color:inherit;display:flex;flex-direction:column;padding:20px 28px;border-right:1px solid #f0f0f0;transition:background 0.2s;box-sizing:border-box}
-        .hp-editorial-product:hover{background:#fafafa}
-        .hp-editorial-product:hover .hp-editorial-product-img img{transform:scale(1.04)}
-        .hp-editorial-product-img{width:100%;height:360px;background:#f5f5f5;position:relative;overflow:hidden;margin-bottom:14px;flex-shrink:0}
-        .hp-editorial-product-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s}
-        .hp-badge{position:absolute;top:10px;right:10px;padding:5px 10px;font-size:10px;font-weight:500;background:#fff;color:#000;border:1px solid #ddd}
-        .hp-badge-eco{position:absolute;top:40px;right:10px;padding:5px 10px;font-size:10px;font-weight:500;background:#fff;color:#2E7D32;border:1px solid #c8e6c9}
-        .hp-editorial-product-info{flex-shrink:0}
-        .hp-editorial-product-info h4{font-size:12px;font-weight:500;margin-bottom:3px;line-height:1.4;color:#000}
-        .hp-editorial-product-info .specs{font-size:11px;color:#999;margin-bottom:4px}
-        .hp-editorial-product-info p{font-size:13px;font-weight:600;color:#000}
+        /* PREMIUM EDITORIAL - Luxury Watch Collection */
+        .hp-premium-editorial{display:flex;height:700px;overflow:hidden;background:#faf9f7}
+        .hp-premium-left{width:45%;min-width:480px;position:relative;display:flex;flex-direction:column}
+        .hp-premium-media{flex:1;position:relative;overflow:hidden}
+        .hp-premium-media video,.hp-premium-media img{width:100%;height:100%;object-fit:cover}
+        .hp-premium-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(15,30,50,0.7) 0%,rgba(20,60,90,0.5) 50%,rgba(10,40,70,0.6) 100%)}
+        .hp-premium-content{position:absolute;bottom:0;left:0;right:0;padding:48px 56px;z-index:1;color:#fff}
+        .hp-premium-top-line{width:48px;height:1px;background:rgba(255,255,255,0.6);margin-bottom:20px}
+        .hp-premium-tag{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:16px;color:rgba(255,255,255,0.85);font-weight:300}
+        .hp-premium-content h2{font-size:42px;font-weight:300;line-height:1.15;margin-bottom:18px;letter-spacing:-1px;font-family:'Times New Roman',serif}
+        .hp-premium-content h2 .italic{font-style:italic;font-weight:400;color:#7fb3d3}
+        .hp-premium-desc{font-size:15px;line-height:1.65;color:rgba(255,255,255,0.85);margin-bottom:32px;max-width:380px;font-weight:300}
+        .hp-premium-cta{display:flex;align-items:center;gap:24px}
+        .hp-premium-btn{display:inline-flex;align-items:center;gap:10px;padding:16px 32px;background:#fff;color:#1a1a1a;text-decoration:none;font-size:13px;font-weight:500;letter-spacing:0.5px;transition:all 0.3s ease;border:none;cursor:pointer}
+        .hp-premium-btn:hover{background:#1a1a1a;color:#fff;transform:translateY(-2px)}
+        .hp-premium-count{font-size:12px;letter-spacing:1px;color:rgba(255,255,255,0.7);text-transform:uppercase}
+        .hp-premium-right{flex:1;display:flex;flex-direction:column;min-width:0}
+        .hp-premium-header{padding:32px 40px 24px;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+        .hp-premium-header-title{display:flex;align-items:center;gap:16px}
+        .hp-premium-line{width:32px;height:1px;background:#1a1a1a}
+        .hp-premium-header h3{font-size:14px;font-weight:400;letter-spacing:1.5px;text-transform:uppercase;color:#1a1a1a}
+        .hp-premium-arrows{display:flex;gap:12px}
+        .hp-premium-arrows button{width:40px;height:40px;border:1px solid rgba(0,0,0,0.15);background:transparent;cursor:pointer;transition:all 0.3s ease;border-radius:0;display:flex;align-items:center;justify-content:center;color:#1a1a1a}
+        .hp-premium-arrows button:hover{border-color:#1a1a1a;background:#1a1a1a;color:#fff}
+        .hp-premium-scroll{display:flex;gap:0;overflow-x:auto;flex:1;scrollbar-width:none;-ms-overflow-style:none;padding-top:8px}
+        .hp-premium-scroll::-webkit-scrollbar{display:none}
+        .hp-premium-card{width:340px;min-width:340px;height:100%;flex-shrink:0;text-decoration:none;color:inherit;display:flex;flex-direction:column;padding:32px 32px 28px;border-right:1px solid rgba(0,0,0,0.04);transition:all 0.35s ease;background:transparent}
+        .hp-premium-card:hover{background:rgba(255,255,255,0.6)}
+        .hp-premium-card-spacer{min-width:32px;flex-shrink:0}
+        .hp-premium-card-img{width:100%;height:320px;position:relative;margin-bottom:20px;overflow:hidden;background:rgba(0,0,0,0.02)}
+        .hp-premium-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease}
+        .hp-premium-card:hover .hp-premium-card-img img{transform:scale(1.05)}
+        .hp-premium-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.2) 0%,transparent 50%);opacity:0;transition:opacity 0.3s ease}
+        .hp-premium-card:hover .hp-premium-card-overlay{opacity:1}
+        .hp-premium-badge{position:absolute;top:16px;left:16px;padding:8px 14px;background:rgba(255,255,255,0.95);font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:500;color:#1a1a1a}
+        .hp-premium-card-action{position:absolute;bottom:20px;left:50%;transform:translateX(-50%) translateY(10px);padding:12px 24px;background:#1a1a1a;color:#fff;font-size:11px;letter-spacing:0.5px;opacity:0;transition:all 0.3s ease;white-space:nowrap}
+        .hp-premium-card:hover .hp-premium-card-action{opacity:1;transform:translateX(-50%) translateY(0)}
+        .hp-premium-card-info{flex:1;display:flex;flex-direction:column}
+        .hp-premium-card-top{margin-bottom:auto}
+        .hp-premium-card h4{font-size:15px;font-weight:400;line-height:1.4;color:#1a1a1a;margin-bottom:6px;font-family:'Times New Roman',serif}
+        .hp-premium-ref{font-size:11px;color:rgba(0,0,0,0.5);letter-spacing:0.5px}
+        .hp-premium-card-bottom{padding-top:16px;border-top:1px solid rgba(0,0,0,0.06)}
+        .hp-premium-price{font-size:18px;font-weight:500;color:#1a1a1a;margin-bottom:8px;letter-spacing:-0.5px}
+        .hp-premium-specs{display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(0,0,0,0.5)}
+        .hp-premium-specs span:first-child,.hp-premium-specs span:last-child{font-weight:400}
+        .hp-premium-specs span:nth-child(2){color:rgba(0,0,0,0.2)}
 
         /* BLUE LINK */
         .hp-blue-link{text-align:center;padding:20px}
@@ -576,6 +632,12 @@ export default function Homepage() {
           .hp-editorial-card{width:280px;min-width:280px;height:420px}
           .hp-editorial-card-content h4{font-size:13px}
           .hp-product{min-width:calc(25% - 15px)}
+          .hp-premium-editorial{height:620px}
+          .hp-premium-left{min-width:420px}
+          .hp-premium-content{padding:40px 48px}
+          .hp-premium-content h2{font-size:36px}
+          .hp-premium-card{width:300px;min-width:300px;padding:24px}
+          .hp-premium-card-img{height:280px}
         }
         @media(max-width:900px){
           .hp-nav{display:none}
@@ -596,6 +658,17 @@ export default function Homepage() {
           .hp-spotlight-controls{display:none}
           .hp-more-grid{grid-template-columns:repeat(2,1fr)}
           .hp-finder{flex-direction:column;gap:16px;text-align:center}
+          .hp-premium-editorial{flex-direction:column;height:auto}
+          .hp-premium-left{width:100%;min-width:0;height:280px}
+          .hp-premium-media{height:100%}
+          .hp-premium-content{padding:24px 20px}
+          .hp-premium-content h2{font-size:28px}
+          .hp-premium-desc{font-size:13px;max-width:100%}
+          .hp-premium-cta{flex-direction:column;align-items:flex-start;gap:16px}
+          .hp-premium-right{height:auto;min-height:380px}
+          .hp-premium-header{padding:20px 24px}
+          .hp-premium-card{padding:20px 16px;border:none;margin-right:16px;width:240px;min-width:240px}
+          .hp-premium-card-img{height:220px}
         }
         @media(max-width:600px){
           .hp-hero{height:85vw;min-height:300px;margin-top:88px;}
@@ -632,11 +705,29 @@ export default function Homepage() {
           .hp-editorial-card-content h4{font-size:12px;max-width:100%}
           .hp-editorial-card-meta span{font-size:13px}
           .hp-editorial-arrow{font-size:16px}
-          .hp-editorial{flex-direction:column;height:auto;margin-top:16px}
-          .hp-editorial-main{width:100%!important;min-width:100%!important;height:240px;opacity:1!important}
-          .hp-editorial-right-head{padding:16px 16px 12px}
-          .hp-editorial-product{min-width:200px;width:200px;padding:12px 14px}
-          .hp-editorial-product-img{height:200px}
+          .hp-premium-editorial{height:auto}
+          .hp-premium-left{height:240px}
+          .hp-premium-content{padding:20px 16px}
+          .hp-premium-top-line{width:32px;margin-bottom:12px}
+          .hp-premium-tag{font-size:9px;letter-spacing:1.5px;margin-bottom:10px}
+          .hp-premium-content h2{font-size:22px}
+          .hp-premium-desc{font-size:12px;margin-bottom:20px}
+          .hp-premium-btn{padding:12px 24px;font-size:12px}
+          .hp-premium-cta{gap:12px}
+          .hp-premium-right{min-height:320px}
+          .hp-premium-header{padding:16px 20px}
+          .hp-premium-arrows{display:none}
+          .hp-premium-scroll{display:grid;grid-template-columns:1fr 1fr;gap:12px;overflow-x:visible;padding-top:0}
+          .hp-premium-card{width:100%!important;min-width:0!important;padding:16px 12px;border:none;margin:0!important}
+          .hp-premium-card-spacer{display:none}
+          .hp-premium-card-img{height:180px;margin-bottom:12px}
+          .hp-premium-badge{padding:6px 10px;font-size:9px;top:12px;left:12px}
+          .hp-premium-card h4{font-size:13px;margin-bottom:4px}
+          .hp-premium-ref{font-size:10px}
+          .hp-premium-price{font-size:15px;margin-bottom:6px}
+          .hp-premium-specs{font-size:10px}
+          .hp-premium-card-action{display:none}
+        }
           .hp-highlights{grid-template-columns:1fr}
           .hp-highlights-list{padding:28px 16px}
           .hp-highlights-list a{font-size:20px;padding:9px 0}
