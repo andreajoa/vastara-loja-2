@@ -506,29 +506,46 @@ export default function Homepage() {
         .hp-blue-dot{width:14px;height:14px;background:#5DADE2;border-radius:50%}
 
         /* BRANDS - Premium Curated Collection */
-        .hp-brands{padding:100px 56px;background:#fff}
-        .hp-brands-header{text-align:center;margin-bottom:80px;position:relative}
-        .hp-brands-label{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#888;margin-bottom:20px;display:block}
-        .hp-brands-header h2{font-size:52px;font-weight:300;line-height:1.15;margin-bottom:16px;letter-spacing:-1.5px;font-family:'Georgia','Times New Roman',serif;color:#0a0a0a}
-        .hp-brands-header p{font-size:15px;color:#666;max-width:500px;margin:0 auto;line-height:1.7;font-weight:300}
-        .hp-brands-header::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:60px;height:1px;background:#e0e0e0}
-        .hp-brands-header::after{content:'';position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);width:60px;height:1px;background:#e0e0e0}
-        .hp-brands-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;max-width:1600px;margin:0 auto}
-        .hp-brand-card{text-decoration:none;color:inherit;display:block;position:relative}
-        .hp-brand-card-featured{grid-column:2 / span 1;grid-row:1}
+        .hp-brands{padding:80px 0;background:#0a0a0a}
+        .hp-brands-header{text-align:center;margin-bottom:48px;padding:0 24px}
+        .hp-brands-label{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:12px;display:block}
+        .hp-brands-header h2{font-size:36px;font-weight:300;line-height:1.2;font-family:'Georgia','Times New Roman',serif;color:#fff}
+        .hp-brands-header h2 em{color:#c9a84c;font-style:normal}
+        .hp-brands-header p{display:none}
+        .hp-brands-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;max-width:100%;margin:0}
+        .hp-brand-card{text-decoration:none;color:inherit;display:block;position:relative;height:360px;overflow:hidden;background:#111}
+        .hp-brand-card-featured{grid-column:1;grid-row:1}
         .hp-brand-card:hover{z-index:10}
-        .hp-brand-card-inner{position:relative;overflow:hidden;background:#fff;border-radius:2px;box-shadow:0 4px 24px rgba(0,0,0,0.08);transition:all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);height:380px}
-        .hp-brand-card:hover .hp-brand-card-inner{box-shadow:0 20px 60px rgba(0,0,0,0.15);transform:translateY(-12px)}
-        .hp-brand-card-inner img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease}
-        .hp-brand-card:hover .hp-brand-card-inner img{transform:scale(1.08)}
-        .hp-brand-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.5) 0%,rgba(0,0,0,0.1) 40%,transparent 100%);opacity:0;transition:opacity 0.4s ease;pointer-events:none}
-        .hp-brand-card:hover .hp-brand-card-overlay{opacity:1}
-        .hp-brand-card-content{position:absolute;bottom:0;left:0;right:0;padding:32px 28px;z-index:2;color:#fff}
-        .hp-featured-badge{position:absolute;top:20px;right:20px;padding:10px 18px;background:rgba(13,27,42,0.95);color:#fff;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;z-index:5;border-radius:2px;backdrop-filter:blur(10px)}
-        .hp-brand-card h3{font-size:26px;font-weight:400;color:#fff;margin-bottom:8px;font-family:'Georgia','Times New Roman',serif;letter-spacing:-0.5px;text-shadow:0 2px 8px rgba(0,0,0,0.3)}
-        .hp-brand-card p{font-size:13px;color:rgba(255,255,255,0.85);margin-bottom:16px;font-weight:300;line-height:1.5;max-width:280px;text-shadow:0 1px 4px rgba(0,0,0,0.3)}
-        .hp-brand-arrow{font-size:13px;color:#fff;text-transform:uppercase;letter-spacing:1.5px;font-weight:500;display:inline-flex;align-items:center;gap:6px;transition:gap 0.2s;text-shadow:0 2px 8px rgba(0,0,0,0.3)}
-        .hp-brand-card:hover .hp-brand-arrow{gap:12px}
+        .hp-brand-card-img-wrapper{position:absolute;inset:0}
+        .hp-brand-card-img-wrapper img{width:100%;height:100%;object-fit:cover;opacity:0.55;transition:transform 0.7s ease,opacity 0.4s ease}
+        .hp-brand-card:hover .hp-brand-card-img-wrapper img{transform:scale(1.06);opacity:0.65}
+        .hp-brand-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.95) 0%,rgba(0,0,0,0.5) 45%,rgba(0,0,0,0.15) 100%);pointer-events:none}
+        .hp-brand-card-content{position:absolute;bottom:0;left:0;right:0;padding:28px 24px;z-index:2}
+        .hp-brand-tag{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#c9a84c;margin-bottom:8px;display:block;font-weight:600}
+        .hp-brand-card h3{font-size:28px;font-weight:400;color:#fff;margin-bottom:6px;font-family:'Georgia','Times New Roman',serif;text-shadow:0 2px 16px rgba(0,0,0,0.9);line-height:1}
+        .hp-brand-card p{font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:14px;line-height:1.5;text-shadow:0 1px 8px rgba(0,0,0,0.9)}
+        .hp-brand-arrow{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#fff;background:rgba(201,168,76,0.2);border:0.5px solid rgba(201,168,76,0.5);padding:7px 14px;display:inline-block;transition:all 0.2s}
+        .hp-brand-card:hover .hp-brand-arrow{background:#c9a84c;color:#0a0a0a}
+        .hp-featured-badge{position:absolute;top:20px;right:20px;background:rgba(0,0,0,0.75);border:0.5px solid rgba(201,168,76,0.5);color:#c9a84c;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:7px 14px;z-index:5}
+        .hp-brand-card-feat{text-decoration:none;color:inherit;display:block;position:relative;height:300px;overflow:hidden;background:#111;margin-top:2px}
+        .hp-brand-card-feat img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%;opacity:0.45;transition:transform 0.7s,opacity 0.4s}
+        .hp-brand-card-feat:hover img{transform:scale(1.04);opacity:0.55}
+        .hp-brand-card-feat-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,0.97) 0%,rgba(0,0,0,0.6) 55%,rgba(0,0,0,0.15) 100%)}
+        .hp-brand-card-feat-content{position:absolute;top:50%;left:48px;transform:translateY(-50%)}
+        .hp-brand-card-feat-content .feat-tag{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:#c9a84c;display:block;margin-bottom:10px;font-weight:600}
+        .hp-brand-card-feat-content h3{font-size:44px;font-weight:300;color:#fff;font-family:'Georgia','Times New Roman',serif;margin-bottom:6px;text-shadow:0 2px 20px rgba(0,0,0,0.9);line-height:1}
+        .hp-brand-card-feat-content p{font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:20px;text-shadow:0 1px 8px rgba(0,0,0,0.9)}
+        .hp-brand-feat-arrow{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#fff;background:rgba(201,168,76,0.2);border:0.5px solid rgba(201,168,76,0.5);padding:9px 20px;display:inline-block;transition:all 0.2s}
+        .hp-brand-card-feat:hover .hp-brand-feat-arrow{background:#c9a84c;color:#0a0a0a}
+        .hp-brand-feat-badge{position:absolute;top:24px;right:24px;background:rgba(0,0,0,0.8);border:0.5px solid rgba(201,168,76,0.4);color:#c9a84c;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:7px 14px;z-index:5}
+        @media(max-width:600px){
+          .hp-brand-card{height:260px}
+          .hp-brand-card h3{font-size:22px}
+          .hp-brand-card-feat{height:220px}
+          .hp-brand-card-feat-content{left:24px}
+          .hp-brand-card-feat-content h3{font-size:28px}
+          .hp-brand-card-feat-content p{display:none}
+        }
 
         /* HIGHLIGHTS (unused - kept for compatibility) */
         .hp-highlights{display:none}
@@ -714,6 +731,7 @@ export default function Homepage() {
           .hp-brand-card-content{padding:16px 14px}
           .hp-brand-card h3{font-size:15px}
           .hp-brand-card p{font-size:10px;margin-bottom:8px}
+          .hp-brand-card-img-wrapper{padding:6px;border-width:1px}
           .hp-brand-arrow{font-size:10px}
           .hp-featured-badge{display:none}
           .hp-brand-card:last-child{display:none}
@@ -822,68 +840,62 @@ export default function Homepage() {
 
       <section className="hp-brands">
         <div className="hp-brands-header">
-          <span className="hp-brands-label">CURATED BRANDS</span>
-          <h2>Brands We Represent</h2>
-          <p>Discover our carefully selected collection of renowned watchmakers</p>
+          <span className="hp-brands-label">Curated Brands</span>
+          <h2>Brands We <em>Represent</em></h2>
         </div>
         <div className="hp-brands-grid">
           <Link to="/collections/north-edge-collection" className="hp-brand-card">
-            <div className="hp-brand-card-inner">
-              <img src={img.quad5} alt="North Edge" />
-              <div className="hp-brand-card-overlay" />
-              <div className="hp-brand-card-content">
-                <h3>North Edge</h3>
-                <p>Adventure Meets Precision</p>
-                <span className="hp-brand-arrow">Explore →</span>
-              </div>
+            <div className="hp-brand-card-img-wrapper"><img src={img.quad5} alt="North Edge" /></div>
+            <div className="hp-brand-card-overlay" />
+            <div className="hp-brand-card-content">
+              <span className="hp-brand-tag">Adventure</span>
+              <h3>North Edge</h3>
+              <p>Adventure Meets Precision</p>
+              <span className="hp-brand-arrow">Explore →</span>
             </div>
           </Link>
           <Link to="/collections/fossil-watch" className="hp-brand-card">
-            <div className="hp-brand-card-inner">
-              <img src={img.quad6} alt="Fossil" />
-              <div className="hp-brand-card-overlay" />
-              <div className="hp-brand-card-content">
-                <h3>Fossil</h3>
-                <p>American Heritage Since 1984</p>
-                <span className="hp-brand-arrow">Explore →</span>
-              </div>
-            </div>
-          </Link>
-          <Link to="/collections/naviforce-collection" className="hp-brand-card hp-brand-card-featured">
-            <div className="hp-featured-badge">Best Seller</div>
-            <div className="hp-brand-card-inner">
-              <img src={img.quad7} alt="Naviforce" />
-              <div className="hp-brand-card-overlay" />
-              <div className="hp-brand-card-content">
-                <h3>Naviforce</h3>
-                <p>Where Innovation Meets Style</p>
-                <span className="hp-brand-arrow">Explore →</span>
-              </div>
+            <div className="hp-brand-card-img-wrapper"><img src={img.quad6} alt="Fossil" /></div>
+            <div className="hp-brand-card-overlay" />
+            <div className="hp-brand-card-content">
+              <span className="hp-brand-tag">Heritage</span>
+              <h3>Fossil</h3>
+              <p>American Heritage Since 1984</p>
+              <span className="hp-brand-arrow">Explore →</span>
             </div>
           </Link>
           <Link to="/collections/pagani-collection" className="hp-brand-card">
-            <div className="hp-brand-card-inner">
-              <img src={img.quad8} alt="Pagani" />
-              <div className="hp-brand-card-overlay" />
-              <div className="hp-brand-card-content">
-                <h3>Pagani</h3>
-                <p>Luxury Within Reach</p>
-                <span className="hp-brand-arrow">Explore →</span>
-              </div>
+            <div className="hp-brand-card-img-wrapper"><img src={img.quad8} alt="Pagani" /></div>
+            <div className="hp-brand-card-overlay" />
+            <div className="hp-brand-card-content">
+              <span className="hp-brand-tag">Luxury</span>
+              <h3>Pagani</h3>
+              <p>Luxury Within Reach</p>
+              <span className="hp-brand-arrow">Explore →</span>
             </div>
           </Link>
           <Link to="/collections/berny-collection" className="hp-brand-card">
-            <div className="hp-brand-card-inner">
-              <img src={img.quad9} alt="Berny" />
-              <div className="hp-brand-card-overlay" />
-              <div className="hp-brand-card-content">
-                <h3>Berny</h3>
-                <p>Timeless Elegance</p>
-                <span className="hp-brand-arrow">Explore →</span>
-              </div>
+            <div className="hp-brand-card-img-wrapper"><img src={img.quad9} alt="Berny" /></div>
+            <div className="hp-brand-card-overlay" />
+            <div className="hp-brand-card-content">
+              <span className="hp-brand-tag">Elegance</span>
+              <h3>Berny</h3>
+              <p>Timeless Elegance</p>
+              <span className="hp-brand-arrow">Explore →</span>
             </div>
           </Link>
         </div>
+        <Link to="/collections/naviforce-collection" className="hp-brand-card-feat">
+          <img src={img.quad7} alt="Naviforce" />
+          <div className="hp-brand-card-feat-overlay" />
+          <div className="hp-brand-card-feat-content">
+            <span className="feat-tag">Best Seller</span>
+            <h3>Naviforce</h3>
+            <p>Where Innovation Meets Style</p>
+            <span className="hp-brand-feat-arrow">Explore Collection →</span>
+          </div>
+          <div className="hp-brand-feat-badge">Featured Brand</div>
+        </Link>
       </section>
 
       <section className="hp-spotlight">
