@@ -516,10 +516,10 @@ export default function Homepage() {
         .hp-brand-card{text-decoration:none;color:inherit;display:block;position:relative;height:360px;overflow:hidden;background:#111}
         .hp-brand-card-featured{grid-column:1;grid-row:1}
         .hp-brand-card:hover{z-index:10}
-        .hp-brand-card-img-wrapper{position:absolute;inset:0}
-        .hp-brand-card-img-wrapper img{width:100%;height:100%;object-fit:cover;object-position:center center;opacity:0.75;transition:transform 0.7s ease,opacity 0.4s ease}
-        .hp-brand-card:hover .hp-brand-card-img-wrapper img{transform:scale(1.06);opacity:0.85}
-        .hp-brand-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.97) 0%,rgba(0,0,0,0.55) 40%,rgba(0,0,0,0.1) 100%);pointer-events:none}
+        .hp-brand-card-img-wrapper{position:absolute;inset:0;background:#111}
+        .hp-brand-card-img-wrapper img{width:100%;height:100%;object-fit:cover;object-position:center center;mix-blend-mode:luminosity;opacity:0.9;transition:transform 0.7s ease,opacity 0.4s ease}
+        .hp-brand-card:hover .hp-brand-card-img-wrapper img{transform:scale(1.06);opacity:1}
+        .hp-brand-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.96) 0%,rgba(0,0,0,0.6) 38%,rgba(0,0,0,0.2) 65%,rgba(0,0,0,0) 100%);pointer-events:none}
         .hp-brand-card-content{position:absolute;bottom:0;left:0;right:0;padding:28px 24px;z-index:2}
         .hp-brand-tag{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#c9a84c;margin-bottom:8px;display:block;font-weight:600}
         .hp-brand-card h3{font-size:28px;font-weight:400;color:#fff;margin-bottom:6px;font-family:'Georgia','Times New Roman',serif;text-shadow:0 2px 16px rgba(0,0,0,0.9);line-height:1}
@@ -528,7 +528,7 @@ export default function Homepage() {
         .hp-brand-card:hover .hp-brand-arrow{background:#c9a84c;color:#0a0a0a}
         .hp-featured-badge{position:absolute;top:20px;right:20px;background:rgba(0,0,0,0.75);border:0.5px solid rgba(201,168,76,0.5);color:#c9a84c;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:7px 14px;z-index:5}
         .hp-brand-card-feat{text-decoration:none;color:inherit;display:block;position:relative;height:300px;overflow:hidden;background:#111;margin-top:2px}
-        .hp-brand-card-feat img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%;opacity:0.55;transition:transform 0.7s,opacity 0.4s}
+        .hp-brand-card-feat img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%;mix-blend-mode:luminosity;opacity:0.85;transition:transform 0.7s,opacity 0.4s}
         .hp-brand-card-feat:hover img{transform:scale(1.04);opacity:0.55}
         .hp-brand-card-feat-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,0.97) 0%,rgba(0,0,0,0.6) 55%,rgba(0,0,0,0.15) 100%)}
         .hp-brand-card-feat-content{position:absolute;top:50%;left:48px;transform:translateY(-50%)}
