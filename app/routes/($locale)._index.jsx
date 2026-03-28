@@ -1,6 +1,7 @@
 import React from 'react';
 import {useLoaderData, Link} from 'react-router';
 import {WatchQuiz} from '~/components/WatchQuiz';
+import {ReviewsStrip} from '~/components/ReviewsStrip';
 import {useState, useEffect, useRef} from 'react';
 
 export const meta = () => [{title: 'VASTARA | Luxury Timepieces'}];
@@ -685,6 +686,8 @@ export default function Homepage() {
         </Link>
         <div className="hp-spotlight-controls"><button>▶</button><button>🔊</button></div>
       </section>
+
+      <ReviewsStrip />
 
       <FadingHeadlines headlines={[
         "Every watch has a soul and a story to be told.",
