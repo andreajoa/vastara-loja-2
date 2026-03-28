@@ -727,14 +727,12 @@ export default function Homepage() {
           .hp-brands-header::after{bottom:-15px;width:30px}
           .hp-brands-header h2{font-size:22px}
           .hp-brands-grid{grid-template-columns:repeat(2,1fr);gap:12px}
-          .hp-brand-card-inner{height:220px}
           .hp-brand-card-content{padding:16px 14px}
-          .hp-brand-card h3{font-size:15px}
+          .hp-brand-card h3{font-size:18px}
           .hp-brand-card p{font-size:10px;margin-bottom:8px}
-          .hp-brand-card-img-wrapper{padding:6px;border-width:1px}
+          .hp-brand-card-img-wrapper{padding:0;border:none}
           .hp-brand-arrow{font-size:10px}
           .hp-featured-badge{display:none}
-          .hp-brand-card:last-child{display:none}
           .hp-brands{padding:32px 16px}
           .hp-brands-header{margin-bottom:32px}
           .hp-brands-header h2{font-size:22px}
