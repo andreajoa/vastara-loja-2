@@ -759,7 +759,13 @@ export default function Homepage() {
 
 
       <section className="hp-hero">
-        {heroSlides.map((s, i) => (<div key={i} className={`hp-hero-slide ${i === currentSlide ? 'active' : ''}`}><img src={s.image} alt={s.title} /><div className="hp-hero-overlay" /></div>))}
+        <div className="hide-on-mobile">
+          {heroSlides.map((s, i) => (<div key={i} className={`hp-hero-slide ${i === currentSlide ? 'active' : ''}`}><img src={s.image} alt={s.title} /><div className="hp-hero-overlay" /></div>))}
+        </div>
+        <div className="show-on-mobile">
+          <MobileFade images={[img.hero, img.banner2, img.banner3]} />
+          <div className="hp-hero-overlay" />
+        </div>
         <div className="hp-hero-content">
           <p className="hp-hero-tag">{heroSlides[currentSlide].tag}</p>
           <h1>{heroSlides[currentSlide].title}</h1>
