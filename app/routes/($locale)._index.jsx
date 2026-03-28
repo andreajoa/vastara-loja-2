@@ -55,85 +55,60 @@ function EditorialSection({products, getProductImage, bulovaProducts}) {
 
   const editorialNext = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({left: 380, behavior: 'smooth'});
+      scrollRef.current.scrollBy({left: 360, behavior: 'smooth'});
     }
   };
   const editorialPrev = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({left: -380, behavior: 'smooth'});
+      scrollRef.current.scrollBy({left: -360, behavior: 'smooth'});
     }
   };
 
   return (
-    <section className="hp-premium-editorial">
-      <div className="hp-premium-left">
-        <div className="hp-premium-media">
+    <section className="hp-iceblue">
+      <div className="hp-iceblue-hero">
+        <div className="hp-iceblue-media">
           <div className="hide-on-mobile">
             <AutoPlayVideo src="https://cdn.shopify.com/videos/c/o/v/f027b635fb744591b3b550d87636de63.mp4" />
           </div>
           <div className="show-on-mobile">
             <MobileFade images={['https://cdn.shopify.com/s/files/1/0778/2921/0327/files/1_ef7d86c9-66f8-4623-b34d-226d928023a0.jpg?v=1774215389','https://cdn.shopify.com/s/files/1/0778/2921/0327/files/3_6737b1bb-d696-4062-8fee-ee78d12bb1cc.jpg?v=1774216753']} />
           </div>
-          <div className="hp-premium-overlay" />
+          <div className="hp-iceblue-overlay" />
         </div>
-        <div className="hp-premium-content">
-          <div className="hp-premium-top-line" />
-          <p className="hp-premium-tag">COLLECTION EXCLUSIVE</p>
+        <div className="hp-iceblue-content">
+          <p className="hp-iceblue-tag">COLLECTION EXCLUSIVE</p>
           <h2>Ice Blue <span className="italic">Timepieces</span></h2>
-          <p className="hp-premium-desc">A fusion of precision engineering and refined elegance. Each timepiece captures the essence of cool sophistication.</p>
-          <div className="hp-premium-cta">
-            <Link to="/collections/ice-blue" className="hp-premium-btn">Discover Collection</Link>
-            <span className="hp-premium-count">{editorialProducts.length} Timepieces</span>
-          </div>
+          <p className="hp-iceblue-desc">A fusion of precision engineering and refined elegance. Each timepiece captures the essence of cool sophistication.</p>
+          <Link to="/collections/ice-blue" className="hp-iceblue-btn">Explore Collection</Link>
         </div>
       </div>
-      <div className="hp-premium-right">
-        <div className="hp-premium-header">
-          <div className="hp-premium-header-title">
-            <span className="hp-premium-line" />
-            <h3>Featured</h3>
-          </div>
-          <div className="hp-premium-arrows">
-            <button onClick={editorialPrev} aria-label="Previous">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12 4L6 10L12 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/></svg>
-            </button>
-            <button onClick={editorialNext} aria-label="Next">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M8 4L14 10L8 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/></svg>
-            </button>
-          </div>
+      <div className="hp-iceblue-products">
+        <div className="hp-iceblue-header">
+          <h3>The Collection</h3>
+          <p>{editorialProducts.length} Timepieces</p>
         </div>
-        <div className="hp-premium-scroll" ref={scrollRef}>
+        <div className="hp-iceblue-scroll" ref={scrollRef}>
           {editorialProducts.map((p, i) => (
-            <Link
-              key={p.id}
-              to={`/products/${p.handle}`}
-              className="hp-premium-card"
-            >
-              <div className="hp-premium-card-img">
+            <Link key={p.id} to={`/products/${p.handle}`} className="hp-iceblue-card">
+              <div className="hp-iceblue-card-inner">
                 <img src={p.featuredImage?.url || getProductImage(p, i + 4)} alt={p.title} loading="lazy" />
-                <div className="hp-premium-card-overlay" />
-                <span className="hp-premium-badge">Exclusive</span>
-                <div className="hp-premium-card-action">Quick View</div>
+                <div className="hp-iceblue-card-overlay" />
               </div>
-              <div className="hp-premium-card-info">
-                <div className="hp-premium-card-top">
-                  <h4>{p.title}</h4>
-                  <span className="hp-premium-ref">REF: {String(i + 1001).padStart(4, '0')}</span>
-                </div>
-                <div className="hp-premium-card-bottom">
-                  <p className="hp-premium-price">
-                    {p.priceRange?.minVariantPrice ? new Intl.NumberFormat("en-US", {style:"currency", currency: p.priceRange.minVariantPrice.currencyCode}).format(p.priceRange.minVariantPrice.amount) : "$299.00"}
-                  </p>
-                  <div className="hp-premium-specs">
-                    <span>Swiss Movement</span>
-                    <span>•</span>
-                    <span>Sapphire Crystal</span>
-                  </div>
-                </div>
+              <div className="hp-iceblue-card-details">
+                <h4>{p.title}</h4>
+                <p>{p.priceRange?.minVariantPrice ? new Intl.NumberFormat("en-US", {style:"currency", currency: p.priceRange.minVariantPrice.currencyCode}).format(p.priceRange.minVariantPrice.amount) : "$299.00"}</p>
               </div>
             </Link>
           ))}
-          <div className="hp-premium-card-spacer" />
+        </div>
+        <div className="hp-iceblue-nav">
+          <button onClick={editorialPrev} aria-label="Previous">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 6L9 12L15 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/></svg>
+          </button>
+          <button onClick={editorialNext} aria-label="Next">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/></svg>
+          </button>
         </div>
       </div>
     </section>
@@ -491,53 +466,39 @@ export default function Homepage() {
         .hp-editorial-arrow{font-size:20px;color:#fff;opacity:0.8;transition:opacity 0.25s ease,transform 0.25s ease}
         .hp-editorial-card:hover .hp-editorial-arrow{opacity:1;transform:translateX(4px)}
 
-        /* PREMIUM EDITORIAL - Luxury Watch Collection */
-        .hp-premium-editorial{display:flex;height:700px;overflow:hidden;background:#faf9f7}
-        .hp-premium-left{width:45%;min-width:480px;position:relative;display:flex;flex-direction:column}
-        .hp-premium-media{flex:1;position:relative;overflow:hidden}
-        .hp-premium-media video,.hp-premium-media img{width:100%;height:100%;object-fit:cover}
-        .hp-premium-media .show-on-mobile{position:absolute!important;inset:0!important;}
-        .hp-premium-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(15,30,50,0.7) 0%,rgba(20,60,90,0.5) 50%,rgba(10,40,70,0.6) 100%)}
-        .hp-premium-content{position:absolute;bottom:0;left:0;right:0;padding:48px 56px;z-index:1;color:#fff}
-        .hp-premium-top-line{width:48px;height:1px;background:rgba(255,255,255,0.6);margin-bottom:20px}
-        .hp-premium-tag{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:16px;color:rgba(255,255,255,0.85);font-weight:300}
-        .hp-premium-content h2{font-size:42px;font-weight:300;line-height:1.15;margin-bottom:18px;letter-spacing:-1px;font-family:'Times New Roman',serif}
-        .hp-premium-content h2 .italic{font-style:italic;font-weight:400;color:#7fb3d3}
-        .hp-premium-desc{font-size:15px;line-height:1.65;color:rgba(255,255,255,0.85);margin-bottom:32px;max-width:380px;font-weight:300}
-        .hp-premium-cta{display:flex;align-items:center;gap:24px}
-        .hp-premium-btn{display:inline-flex;align-items:center;gap:10px;padding:16px 32px;background:#fff;color:#1a1a1a;text-decoration:none;font-size:13px;font-weight:500;letter-spacing:0.5px;transition:all 0.3s ease;border:none;cursor:pointer}
-        .hp-premium-btn:hover{background:#1a1a1a;color:#fff;transform:translateY(-2px)}
-        .hp-premium-count{font-size:12px;letter-spacing:1px;color:rgba(255,255,255,0.7);text-transform:uppercase}
-        .hp-premium-right{flex:1;display:flex;flex-direction:column;min-width:0}
-        .hp-premium-header{padding:32px 40px 24px;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
-        .hp-premium-header-title{display:flex;align-items:center;gap:16px}
-        .hp-premium-line{width:32px;height:1px;background:#1a1a1a}
-        .hp-premium-header h3{font-size:14px;font-weight:400;letter-spacing:1.5px;text-transform:uppercase;color:#1a1a1a}
-        .hp-premium-arrows{display:flex;gap:12px}
-        .hp-premium-arrows button{width:40px;height:40px;border:1px solid rgba(0,0,0,0.15);background:transparent;cursor:pointer;transition:all 0.3s ease;border-radius:0;display:flex;align-items:center;justify-content:center;color:#1a1a1a}
-        .hp-premium-arrows button:hover{border-color:#1a1a1a;background:#1a1a1a;color:#fff}
-        .hp-premium-scroll{display:flex;gap:0;overflow-x:auto;flex:1;scrollbar-width:none;-ms-overflow-style:none;padding-top:8px}
-        .hp-premium-scroll::-webkit-scrollbar{display:none}
-        .hp-premium-card{width:340px;min-width:340px;height:100%;flex-shrink:0;text-decoration:none;color:inherit;display:flex;flex-direction:column;padding:32px 32px 28px;border-right:1px solid rgba(0,0,0,0.04);transition:all 0.35s ease;background:transparent}
-        .hp-premium-card:hover{background:rgba(255,255,255,0.6)}
-        .hp-premium-card-spacer{min-width:32px;flex-shrink:0}
-        .hp-premium-card-img{width:100%;height:320px;position:relative;margin-bottom:20px;overflow:hidden;background:rgba(0,0,0,0.02)}
-        .hp-premium-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease}
-        .hp-premium-card:hover .hp-premium-card-img img{transform:scale(1.05)}
-        .hp-premium-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.2) 0%,transparent 50%);opacity:0;transition:opacity 0.3s ease}
-        .hp-premium-card:hover .hp-premium-card-overlay{opacity:1}
-        .hp-premium-badge{position:absolute;top:16px;left:16px;padding:8px 14px;background:rgba(255,255,255,0.95);font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:500;color:#1a1a1a}
-        .hp-premium-card-action{position:absolute;bottom:20px;left:50%;transform:translateX(-50%) translateY(10px);padding:12px 24px;background:#1a1a1a;color:#fff;font-size:11px;letter-spacing:0.5px;opacity:0;transition:all 0.3s ease;white-space:nowrap}
-        .hp-premium-card:hover .hp-premium-card-action{opacity:1;transform:translateX(-50%) translateY(0)}
-        .hp-premium-card-info{flex:1;display:flex;flex-direction:column}
-        .hp-premium-card-top{margin-bottom:auto}
-        .hp-premium-card h4{font-size:15px;font-weight:400;line-height:1.4;color:#1a1a1a;margin-bottom:6px;font-family:'Times New Roman',serif}
-        .hp-premium-ref{font-size:11px;color:rgba(0,0,0,0.5);letter-spacing:0.5px}
-        .hp-premium-card-bottom{padding-top:16px;border-top:1px solid rgba(0,0,0,0.06)}
-        .hp-premium-price{font-size:18px;font-weight:500;color:#1a1a1a;margin-bottom:8px;letter-spacing:-0.5px}
-        .hp-premium-specs{display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(0,0,0,0.5)}
-        .hp-premium-specs span:first-child,.hp-premium-specs span:last-child{font-weight:400}
-        .hp-premium-specs span:nth-child(2){color:rgba(0,0,0,0.2)}
+        /* ICE BLUE - Premium Collection */
+        .hp-iceblue{display:flex;min-height:720px;background:#fff;overflow:hidden}
+        .hp-iceblue-hero{width:45%;min-width:520px;position:relative;display:flex;flex-direction:column;overflow:hidden}
+        .hp-iceblue-media{flex:1;position:relative}
+        .hp-iceblue-media video,.hp-iceblue-media img{width:100%;height:100%;object-fit:cover}
+        .hp-iceblue-media .show-on-mobile{position:absolute!important;inset:0!important;}
+        .hp-iceblue-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,25,50,0.75) 0%,rgba(20,50,80,0.55) 50%,rgba(5,30,60,0.7) 100%)}
+        .hp-iceblue-content{position:absolute;bottom:0;left:0;right:0;padding:48px 52px;z-index:2;color:#fff}
+        .hp-iceblue-tag{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:20px;color:rgba(255,255,255,0.9);font-weight:400}
+        .hp-iceblue-content h2{font-size:44px;font-weight:300;line-height:1.1;margin-bottom:20px;letter-spacing:-1px;font-family:'Georgia','Times New Roman',serif}
+        .hp-iceblue-content h2 .italic{font-style:italic;font-weight:400;color:#8ecae6}
+        .hp-iceblue-desc{font-size:15px;line-height:1.6;color:rgba(255,255,255,0.9);margin-bottom:36px;max-width:400px;font-weight:300}
+        .hp-iceblue-btn{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;background:#fff;color:#0d1b2a;text-decoration:none;font-size:13px;font-weight:500;letter-spacing:0.5px;transition:all 0.3s ease;border:none;cursor:pointer}
+        .hp-iceblue-btn:hover{background:#0d1b2a;color:#fff;transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,255,255,0.2)}
+        .hp-iceblue-products{flex:1;display:flex;flex-direction:column;min-width:0;border-left:1px solid #f5f5f5}
+        .hp-iceblue-header{padding:36px 40px 24px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center}
+        .hp-iceblue-header h3{font-size:14px;font-weight:400;letter-spacing:2px;text-transform:uppercase;color:#0d1b2a}
+        .hp-iceblue-header p{font-size:12px;color:#999}
+        .hp-iceblue-scroll{display:flex;gap:16px;overflow-x:auto;flex:1;scrollbar-width:none;-ms-overflow-style:none;padding:16px 40px}
+        .hp-iceblue-scroll::-webkit-scrollbar{display:none}
+        .hp-iceblue-card{min-width:320px;width:320px;flex-shrink:0;text-decoration:none;color:inherit;display:block;transition:transform 0.3s ease}
+        .hp-iceblue-card:hover{transform:translateY(-4px)}
+        .hp-iceblue-card-inner{width:320px;height:380px;position:relative;margin-bottom:16px;overflow:hidden;background:#f8f8f8}
+        .hp-iceblue-card-inner img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease}
+        .hp-iceblue-card:hover .hp-iceblue-card-inner img{transform:scale(1.06)}
+        .hp-iceblue-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.4) 0%,transparent 50%);opacity:0;transition:opacity 0.3s ease}
+        .hp-iceblue-card:hover .hp-iceblue-card-overlay{opacity:1}
+        .hp-iceblue-card-details{padding:8px 0}
+        .hp-iceblue-card h4{font-size:14px;font-weight:400;line-height:1.4;color:#0d1b2a;margin-bottom:6px;font-family:'Georgia','Times New Roman',serif}
+        .hp-iceblue-card p{font-size:16px;font-weight:500;color:#0d1b2a;letter-spacing:-0.5px}
+        .hp-iceblue-nav{display:flex;gap:8px;padding:20px 40px 24px}
+        .hp-iceblue-nav button{width:48px;height:48px;border:1px solid #e0e0e0;background:transparent;cursor:pointer;transition:all 0.3s ease;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#0d1b2a}
+        .hp-iceblue-nav button:hover{border-color:#0d1b2a;background:#0d1b2a;color:#fff}
 
         /* BLUE LINK */
         .hp-blue-link{text-align:center;padding:20px}
@@ -652,17 +613,19 @@ export default function Homepage() {
           .hp-spotlight-controls{display:none}
           .hp-more-grid{grid-template-columns:repeat(2,1fr)}
           .hp-finder{flex-direction:column;gap:16px;text-align:center}
-          .hp-premium-editorial{flex-direction:column;height:auto}
-          .hp-premium-left{width:100%;min-width:0;height:280px}
-          .hp-premium-media{height:100%}
-          .hp-premium-content{padding:24px 20px}
-          .hp-premium-content h2{font-size:28px}
-          .hp-premium-desc{font-size:13px;max-width:100%}
-          .hp-premium-cta{flex-direction:column;align-items:flex-start;gap:16px}
-          .hp-premium-right{height:auto;min-height:380px}
-          .hp-premium-header{padding:20px 24px}
-          .hp-premium-card{padding:20px 16px;border:none;margin-right:16px;width:240px;min-width:240px}
-          .hp-premium-card-img{height:220px}
+          .hp-iceblue{flex-direction:column;min-height:auto}
+          .hp-iceblue-hero{width:100%;min-width:0;height:280px}
+          .hp-iceblue-media{height:100%}
+          .hp-iceblue-content{padding:28px 20px}
+          .hp-iceblue-content h2{font-size:28px}
+          .hp-iceblue-desc{font-size:13px;max-width:100%}
+          .hp-iceblue-btn{padding:12px 24px;font-size:12px}
+          .hp-iceblue-products{border-left:none}
+          .hp-iceblue-header{padding:20px 20px 16px}
+          .hp-iceblue-scroll{padding:12px 20px;gap:12px}
+          .hp-iceblue-card{min-width:calc(50% - 8px);width:calc(50% - 8px)}
+          .hp-iceblue-card-inner{width:100%;height:240px}
+          .hp-iceblue-nav{display:none}
         }
         @media(max-width:600px){
           .hp-hero{height:85vw;min-height:300px;margin-top:88px;}
@@ -699,28 +662,19 @@ export default function Homepage() {
           .hp-editorial-card-content h4{font-size:12px;max-width:100%}
           .hp-editorial-card-meta span{font-size:13px}
           .hp-editorial-arrow{font-size:16px}
-          .hp-premium-editorial{height:auto}
-          .hp-premium-left{height:240px}
-          .hp-premium-content{padding:20px 16px}
-          .hp-premium-top-line{width:32px;margin-bottom:12px}
-          .hp-premium-tag{font-size:9px;letter-spacing:1.5px;margin-bottom:10px}
-          .hp-premium-content h2{font-size:22px}
-          .hp-premium-desc{font-size:12px;margin-bottom:20px}
-          .hp-premium-btn{padding:12px 24px;font-size:12px}
-          .hp-premium-cta{gap:12px}
-          .hp-premium-right{min-height:320px}
-          .hp-premium-header{padding:16px 20px}
-          .hp-premium-arrows{display:none}
-          .hp-premium-scroll{display:grid;grid-template-columns:1fr 1fr;gap:12px;overflow-x:visible;padding-top:0}
-          .hp-premium-card{width:100%!important;min-width:0!important;padding:16px 12px;border:none;margin:0!important}
-          .hp-premium-card-spacer{display:none}
-          .hp-premium-card-img{height:180px;margin-bottom:12px}
-          .hp-premium-badge{padding:6px 10px;font-size:9px;top:12px;left:12px}
-          .hp-premium-card h4{font-size:13px;margin-bottom:4px}
-          .hp-premium-ref{font-size:10px}
-          .hp-premium-price{font-size:15px;margin-bottom:6px}
-          .hp-premium-specs{font-size:10px}
-          .hp-premium-card-action{display:none}
+          .hp-iceblue{height:auto}
+          .hp-iceblue-hero{height:220px}
+          .hp-iceblue-content{padding:20px 16px}
+          .hp-iceblue-content h2{font-size:24px}
+          .hp-iceblue-desc{font-size:12px;margin-bottom:20px}
+          .hp-iceblue-products{border-left:none}
+          .hp-iceblue-header{padding:16px 16px 12px}
+          .hp-iceblue-scroll{display:grid;grid-template-columns:1fr 1fr;gap:12px;overflow-x:visible;padding:12px 16px}
+          .hp-iceblue-card{width:100%!important;min-width:0!important}
+          .hp-iceblue-card-inner{height:200px;margin-bottom:12px}
+          .hp-iceblue-nav{display:none}
+          .hp-iceblue-card h4{font-size:13px}
+          .hp-iceblue-card p{font-size:14px}
           .hp-highlights{grid-template-columns:1fr}
           .hp-highlights-list{padding:28px 16px}
           .hp-highlights-list a{font-size:20px;padding:9px 0}
