@@ -355,9 +355,9 @@ export default function Homepage() {
   }, []);
 
   const heroSlides = [
-    { image: img.hero, tag: 'Waterbury Heritage Chronograph', title: 'Bold Style\nin Ice Blue', subtitle: 'A Fresh Color Brings New Energy' },
-    { image: img.banner2, tag: 'New Collection 2026', title: 'Timeless\nElegance', subtitle: 'Crafted for Those Who Appreciate Quality' },
-    { image: img.banner3, tag: 'Limited Edition', title: 'The Art of\nPrecision', subtitle: 'Swiss Movement, Brazilian Soul' },
+    { image: img.hero, tag: 'Curated Timepieces', title: 'We Select What Deserves\nYour Wrist', subtitle: 'A refined selection of watches from trusted brands, chosen for design, quality, and presence.' },
+    { image: img.banner2, tag: 'Our Selection Process', title: 'Only the Best\nMake It Here', subtitle: 'Every watch is evaluated for craftsmanship, materials, and real-world performance before joining Vastara.' },
+    { image: img.banner3, tag: 'From Leading Watchmakers', title: 'One Destination.\nMultiple Icons.', subtitle: 'Discover timepieces from globally recognized brands — curated into a single premium experience.' },
   ];
 
   const getProductImage = (p, i) => p?.featuredImage?.url || [img.quad1, img.quad2, img.quad3, img.quad5, img.quad6, img.quad7, img.quad8, img.quad9][i % 8];
