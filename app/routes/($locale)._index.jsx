@@ -436,6 +436,31 @@ export default function Homepage() {
         .hp-product-count{font-size:11px;color:#999}
         .hp-product p{font-size:14px;font-weight:600;color:#000}
 
+        /* EDITORIAL PRODUCTS - Full Bleed Luxury Magazine Style */
+        .hp-editorial-products{padding:60px 48px;background:#f8f8f8}
+        .hp-editorial-products-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;padding:0 4px}
+        .hp-editorial-products-head h2{font-size:28px;font-weight:300;letter-spacing:-0.5px;color:#111;font-style:italic}
+        .hp-editorial-products-arrows{display:flex;gap:12px}
+        .hp-editorial-products-arrows button{width:44px;height:44px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all 0.25s ease;color:#111}
+        .hp-editorial-products-arrows button:hover{border-color:#000;background:#000;color:#fff;transform:translateY(-2px)}
+        .hp-editorial-products-scroll{display:flex;gap:0;overflow-x:auto;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none}
+        .hp-editorial-products-scroll::-webkit-scrollbar{display:none}
+        .hp-editorial-card{width:320px;min-width:320px;height:480px;position:relative;text-decoration:none;color:inherit;display:block;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);transition:all 0.35s ease;margin-right:1px}
+        .hp-editorial-card:first-child{margin-left:1px}
+        .hp-editorial-card:hover{transform:scale(1.02);box-shadow:0 8px 32px rgba(0,0,0,0.15);z-index:2}
+        .hp-editorial-card-img{width:100%;height:100%;position:relative}
+        .hp-editorial-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease}
+        .hp-editorial-card:hover .hp-editorial-card-img img{transform:scale(1.06)}
+        .hp-editorial-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.25) 40%,transparent 65%);transition:background 0.3s ease}
+        .hp-editorial-card:hover .hp-editorial-card-overlay{background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.35) 40%,transparent 60%)}
+        .hp-editorial-card-content{position:absolute;bottom:0;left:0;right:0;padding:28px 24px;z-index:1;transform:translateY(0);transition:transform 0.3s ease}
+        .hp-editorial-card:hover .hp-editorial-card-content{transform:translateY(-4px)}
+        .hp-editorial-card-content h4{font-size:15px;font-weight:400;color:#fff;line-height:1.4;margin-bottom:8px;letter-spacing:-0.2px;max-width:280px}
+        .hp-editorial-card-meta{display:flex;justify-content:space-between;align-items:center}
+        .hp-editorial-card-meta span{font-size:16px;font-weight:500;color:#fff;letter-spacing:-0.3px}
+        .hp-editorial-arrow{font-size:20px;color:#fff;opacity:0.8;transition:opacity 0.25s ease,transform 0.25s ease}
+        .hp-editorial-card:hover .hp-editorial-arrow{opacity:1;transform:translateX(4px)}
+
         /* EDITORIAL */
         .hp-editorial{display:flex;height:620px;overflow:hidden;background:#fff}
         .hp-editorial-main{width:560px;min-width:560px;position:relative;overflow:hidden;transition:width 0.6s ease,min-width 0.6s ease,opacity 0.6s ease;flex-shrink:0}
@@ -546,6 +571,10 @@ export default function Homepage() {
 
         /* RESPONSIVE */
         @media(max-width:1200px){
+          .hp-editorial-products{padding:48px 24px}
+          .hp-editorial-products-head h2{font-size:22px}
+          .hp-editorial-card{width:280px;min-width:280px;height:420px}
+          .hp-editorial-card-content h4{font-size:13px}
           .hp-product{min-width:calc(25% - 15px)}
         }
         @media(max-width:900px){
@@ -594,6 +623,15 @@ export default function Homepage() {
           .hp-product-img{width:100%;height:auto;aspect-ratio:1}
           .hp-product h4{font-size:11px}
           .hp-product p{font-size:12px}
+          .hp-editorial-products{padding:32px 16px}
+          .hp-editorial-products-head h2{font-size:18px;margin-bottom:20px}
+          .hp-editorial-products-arrows{display:none}
+          .hp-editorial-products-scroll{display:grid;grid-template-columns:1fr 1fr;gap:12px;overflow-x:visible}
+          .hp-editorial-card{width:100%!important;min-width:0!important;height:280px;margin:0!important}
+          .hp-editorial-card-content{padding:18px 14px}
+          .hp-editorial-card-content h4{font-size:12px;max-width:100%}
+          .hp-editorial-card-meta span{font-size:13px}
+          .hp-editorial-arrow{font-size:16px}
           .hp-editorial{flex-direction:column;height:auto;margin-top:16px}
           .hp-editorial-main{width:100%!important;min-width:100%!important;height:240px;opacity:1!important}
           .hp-editorial-right-head{padding:16px 16px 12px}
@@ -654,12 +692,27 @@ export default function Homepage() {
         <Link to="/collections/womens-watches" className="hp-2col-card"><img src={img.quad6} alt="Women's Best Sellers" /><div className="hp-2col-info"><div className="hp-2col-info-text"><span>Women's Best Sellers</span><p>Shop Now</p></div><div className="hp-2col-info-arrow">→</div></div></Link>
       </section>
 
-      <section className="hp-section">
-        <div className="hp-section-inner">
-          <div className="hp-section-head"><h2>Our Most-Loved Styles</h2><div className="hp-section-arrows"><button onClick={scrollLeft}>&#8592;</button><button onClick={scrollRight}>&#8594;</button></div></div>
-          <div className="hp-products" ref={sliderRef}>
-            {products.slice(0, 12).map((p, i) => (<Link key={p.id} to={`/products/${p.handle}`} className="hp-product"><div className="hp-product-img"><img src={getProductImage(p, i)} alt={p.title} /></div><h4>{p.title}</h4><div className="hp-product-rating">{(() => { const r = getProductReviews(p.id); return (<><span className="hp-product-stars">{'★'.repeat(r.stars)}{'☆'.repeat(5-r.stars)}</span><span className="hp-product-count">({r.count})</span></>); })()}</div><p>{p.priceRange?.minVariantPrice ? new Intl.NumberFormat('en-US', {style:'currency', currency: p.priceRange.minVariantPrice.currencyCode}).format(p.priceRange.minVariantPrice.amount) : '$199.00'}</p></Link>))}
-          </div>
+      <section className="hp-editorial-products">
+        <div className="hp-editorial-products-head">
+          <h2>Our Most-Loved Styles</h2>
+          <div className="hp-editorial-products-arrows"><button onClick={scrollLeft}>&#8592;</button><button onClick={scrollRight}>&#8594;</button></div>
+        </div>
+        <div className="hp-editorial-products-scroll" ref={sliderRef}>
+          {products.slice(0, 12).map((p, i) => (
+            <Link key={p.id} to={`/products/${p.handle}`} className="hp-editorial-card">
+              <div className="hp-editorial-card-img">
+                <img src={getProductImage(p, i)} alt={p.title} />
+                <div className="hp-editorial-card-overlay" />
+              </div>
+              <div className="hp-editorial-card-content">
+                <h4>{p.title}</h4>
+                <div className="hp-editorial-card-meta">
+                  <span>{p.priceRange?.minVariantPrice ? new Intl.NumberFormat('en-US', {style:'currency', currency: p.priceRange.minVariantPrice.currencyCode}).format(p.priceRange.minVariantPrice.amount) : '$199.00'}</span>
+                  <span className="hp-editorial-arrow">→</span>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 
