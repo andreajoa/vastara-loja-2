@@ -216,7 +216,7 @@ export default function Collection() {
 
       {/* HERO */}
       <div style={{background:'#0a0a0a',padding:'96px 0 0',position:'relative',overflow:'hidden',borderBottom:'0.5px solid rgba(255,255,255,0.06)',minHeight:'560px'}}>
-        {collection.image&&(<><div style={{position:'absolute',inset:0,background:'linear-gradient(90deg,rgba(10,10,10,1) 0%,rgba(10,10,10,0.85) 40%,rgba(10,10,10,0.3) 70%,rgba(10,10,10,0.1) 100%)',zIndex:1}} /><img src={collection.image.url} alt={collection.title} style={{position:'absolute',right:0,top:0,height:'100%',width:'55%',objectFit:'cover',objectPosition:'center top',opacity:0.85}} /></>)}
+        <><div style={{position:'absolute',inset:0,background:'linear-gradient(90deg,rgba(10,10,10,1) 0%,rgba(10,10,10,0.88) 38%,rgba(10,10,10,0.4) 65%,rgba(10,10,10,0.05) 100%)',zIndex:1}} /><img src='https://cdn.shopify.com/s/files/1/0778/2921/0327/files/banner_1_e7421a31-581d-4825-a5a0-f4d325d4697a.jpg?v=1772467291' alt='Vastara' style={{position:'absolute',right:0,top:0,height:'100%',width:'60%',objectFit:'cover',objectPosition:'center center',opacity:0.75}} /></>
         <div style={{position:'relative',padding:'0 48px 48px',maxWidth:'580px',zIndex:2}}>
           <span style={{fontSize:'9px',letterSpacing:'4px',textTransform:'uppercase',color:'#c9a84c',display:'block',marginBottom:'14px'}}>Curated Collection</span>
           <h1 style={{fontSize:'clamp(28px, 4vw, 44px)',fontWeight:300,color:'#fff',fontFamily:'Georgia,serif',letterSpacing:'-0.5px',lineHeight:1.1,marginBottom:'14px',textTransform:'none'}}>
