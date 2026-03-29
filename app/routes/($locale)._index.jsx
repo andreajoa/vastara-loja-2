@@ -351,6 +351,13 @@ export default function Homepage() {
         *{box-sizing:border-box;margin:0;padding:0}
         .hp{font-family:'Inter',-apple-system,sans-serif;background:#fff;color:#000;overflow-x:hidden}
 
+        .hp-ticker{background:#0a0a0a;padding:14px 0;overflow:hidden;white-space:nowrap;flex-shrink:0}
+        .hp-ticker-track{display:inline-flex;animation:hpTicker 32s linear infinite}
+        .hp-ticker-track:hover{animation-play-state:paused}
+        .hp-ticker-item{display:inline-flex;align-items:center;padding:0 28px}
+        .hp-ticker-text{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.65);font-weight:400;white-space:nowrap}
+        .hp-ticker-dot{width:4px;height:4px;min-width:4px;background:#c9a84c;border-radius:50%;margin-left:28px}
+        @keyframes hpTicker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
         /* TOPBAR */
         .hp-top{background:#000;color:#fff;display:flex;align-items:center;justify-content:center;padding:10px 20px;font-size:13px}
         .hp-top-inner{display:flex;align-items:center;gap:16px}
@@ -801,6 +808,32 @@ export default function Homepage() {
         <div className="hp-hero-dots">{heroSlides.map((_, i) => (<div key={i} className={`hp-hero-dot ${i === currentSlide ? 'active' : ''}`} onClick={() => setCurrentSlide(i)} />))}</div>
         <div className="hp-hero-arrows"><button className="hp-hero-arrow" onClick={() => setCurrentSlide((currentSlide - 1 + 3) % 3)}>←</button><button className="hp-hero-arrow" onClick={() => setCurrentSlide((currentSlide + 1) % 3)}>→</button></div>
       </section>
+
+      <div className="hp-ticker">
+        <div className="hp-ticker-track">
+          {[
+            'Precision Timepieces',
+            'Free Worldwide Shipping',
+            '1-Year Warranty',
+            'Curated for the Few',
+            'Worn With Intention',
+            'Quality First',
+            'USA · UK · Canada · Australia',
+            'Precision Timepieces',
+            'Free Worldwide Shipping',
+            '1-Year Warranty',
+            'Curated for the Few',
+            'Worn With Intention',
+            'Quality First',
+            'USA · UK · Canada · Australia',
+          ].map((t, i) => (
+            <div key={i} className="hp-ticker-item">
+              <span className="hp-ticker-text">{t}</span>
+              <span className="hp-ticker-dot" />
+            </div>
+          ))}
+        </div>
+      </div>
 
       <section className="hp-2col">
         <Link to="/collections/mens-watches" className="hp-2col-card">
