@@ -191,10 +191,34 @@ export default function Collection() {
   },[allProducts,activeTags,priceRange,sortBy,quickFilter]);
 
   const featured = filtered.slice(0,2);
-  const midPoint = Math.floor((filtered.length-2)/2)+2;
-  const firstGrid = filtered.slice(2, midPoint);
-  const secondGrid = filtered.slice(midPoint);
+  const rest = filtered.slice(2);
+  // Split into chunks of 8, with editorial banner between each chunk
+  const chunkSize = 8;
+  const chunks = [];
+  for(let i=0; i<rest.length; i+=chunkSize) {
+    chunks.push(rest.slice(i, i+chunkSize));
+  }
   const activeCount = activeTags.length+(priceRange?1:0);
+
+  // Every 4th product in a chunk becomes a featured wide card
+  const renderChunk = (chunk) => {
+    const rows = [];
+    let i = 0;
+    while(i < chunk.length) {
+      if(i % 5 === 4 && i + 1 < chunk.length) {
+        // Wide featured card
+        rows.push({type:'wide', product: chunk[i]});
+        i++;
+      } else {
+        // Collect up to 2 for normal grid row
+        const pair = [chunk[i]];
+        if(i+1 < chunk.length && (i+1) % 5 !== 4) pair.push(chunk[i+1]);
+        rows.push({type:'pair', products: pair});
+        i += pair.length;
+      }
+    }
+    return rows;
+  };
 
   return (
     <div style={{fontFamily:"'Inter',-apple-system,sans-serif",minHeight:'100vh',background:'#0a0a0a'}}>
@@ -300,25 +324,43 @@ export default function Collection() {
               )}
 
               {/* SECTION LABEL */}
-              {firstGrid.length > 0 && (
+              {rest.length > 0 && (
                 <div style={{padding:'22px 20px 14px',display:'flex',alignItems:'center',gap:'14px'}}>
                   <span style={{fontSize:'9px',letterSpacing:'3px',textTransform:'uppercase',color:'rgba(255,255,255,0.2)',whiteSpace:'nowrap'}}>Full Collection</span>
                   <div style={{flex:1,height:'0.5px',background:'rgba(255,255,255,0.07)'}}></div>
                 </div>
               )}
 
-              {/* FIRST GRID */}
-              <div className="col-grid">
-                {firstGrid.map(p=><ProductCard key={p.id} product={p} />)}
-              </div>
+              {/* CHUNKS WITH EDITORIAL BREAKS */}
+              {chunks.map((chunk, ci) => (
+                <div key={ci}>
+                  {renderChunk(chunk).map((row, ri) => {
+                    if(row.type === 'wide') {
+                      return (
+                        <div key={ri} style={{position:'relative',height:'280px',overflow:'hidden',background:'#111',margin:'3px 0',display:'flex',alignItems:'stretch'}}>
+                          <div style={{flex:'0 0 55%',position:'relative',overflow:'hidden'}}>
+                            {row.product.featuredImage&&<img src={row.product.featuredImage.url} alt={row.product.title} style={{width:'100%',height:'100%',objectFit:'contain',opacity:0.88}} />}
+                          </div>
+                          <div style={{flex:1,display:'flex',flexDirection:'column',justifyContent:'center',padding:'32px 28px',background:'#0f0f0f',borderLeft:'0.5px solid rgba(255,255,255,0.05)'}}>
+                            <span style={{fontSize:'8px',letterSpacing:'3px',textTransform:'uppercase',color:'#c9a84c',display:'block',marginBottom:'10px'}}>Featured</span>
+                            <div style={{fontSize:'16px',fontWeight:400,color:'#fff',marginBottom:'8px',lineHeight:1.3,fontFamily:'Georgia,serif'}}>{row.product.title}</div>
+                            <div style={{fontSize:'14px',color:'#c9a84c',fontWeight:500,marginBottom:'16px'}}>{new Intl.NumberFormat('en-US',{style:'currency',currency:row.product.priceRange?.minVariantPrice?.currencyCode||'USD'}).format(parseFloat(row.product.priceRange?.minVariantPrice?.amount||0))}</div>
+                            <Link to={`/products/${row.product.handle}`} style={{fontSize:'9px',letterSpacing:'2px',textTransform:'uppercase',color:'#fff',background:'rgba(201,168,76,0.15)',border:'0.5px solid rgba(201,168,76,0.45)',padding:'8px 16px',display:'inline-block',textDecoration:'none',width:'fit-content'}}>View Product →</Link>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return (
+                      <div key={ri} className="col-grid">
+                        {row.products.map(p=><ProductCard key={p.id} product={p} />)}
+                      </div>
+                    );
+                  })}
 
-              {/* MID BANNER */}
-              {secondGrid.length > 0 && <MidBanner collectionTitle={collection.title} />}
-
-              {/* SECOND GRID */}
-              <div className="col-grid">
-                {secondGrid.map(p=><ProductCard key={p.id} product={p} />)}
-              </div>
+                  {/* Editorial banner between chunks, not after last */}
+                  {ci < chunks.length - 1 && <MidBanner collectionTitle={collection.title} />}
+                </div>
+              ))}
             </>
           )}
         </div>
