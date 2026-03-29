@@ -408,16 +408,17 @@ export default function Homepage() {
         .hp-hero-arrow:hover{background:rgba(255,255,255,0.1);border-color:#fff}
 
         /* 2 COLUMN */
-        .hp-2col{display:grid;grid-template-columns:1fr 1fr;gap:4px}
-        .hp-2col-card{position:relative;aspect-ratio:1.1;overflow:hidden;display:block;text-decoration:none}
-        .hp-2col-card img{width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease}
-        .hp-2col-card:hover img{transform:scale(1.04)}
-        .hp-2col-info{position:absolute;bottom:24px;left:24px;right:24px;background:#fff;display:flex;align-items:stretch;border:3px solid #000;box-shadow:0 8px 32px rgba(0,0,0,0.25)}
-        .hp-2col-info-text{flex:1;padding:22px 28px;background:#fff}
-        .hp-2col-info-text span{font-size:13px;color:#555;display:block;margin-bottom:6px}
-        .hp-2col-info-text p{font-size:16px;font-weight:700;color:#000}
-        .hp-2col-info-arrow{width:70px;background:#000;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px}
-        .hp-2col-card:hover .hp-2col-info-arrow{background:#333}
+        .hp-2col{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+        .hp-2col-card{display:flex;flex-direction:column;text-decoration:none;background:#0c0c0c;overflow:hidden}
+        .hp-2col-card-img{overflow:hidden;position:relative}
+        .hp-2col-card-img img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;opacity:0.6;mix-blend-mode:luminosity;transition:transform 0.7s ease,opacity 0.4s ease}
+        .hp-2col-card:hover .hp-2col-card-img img{transform:scale(1.04);opacity:0.75}
+        .hp-2col-card-img-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.35) 70%,rgba(0,0,0,0.7) 100%);pointer-events:none}
+        .hp-2col-info{padding:22px 28px;background:#111;border-top:0.5px solid rgba(255,255,255,0.06)}
+        .hp-2col-info span{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#c9a84c;display:block;margin-bottom:8px;font-weight:600}
+        .hp-2col-info p{font-size:22px;font-weight:300;color:#fff;font-family:Georgia,serif;margin-bottom:16px;line-height:1.2}
+        .hp-2col-info-cta{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#fff;background:rgba(201,168,76,0.15);border:0.5px solid rgba(201,168,76,0.5);padding:8px 18px;display:inline-block;transition:all 0.2s}
+        .hp-2col-card:hover .hp-2col-info-cta{background:#c9a84c;color:#0c0c0c}
 
         /* SECTION */
         .hp-section{padding:48px 48px 56px;background:#f4f4f4}
@@ -630,7 +631,7 @@ export default function Homepage() {
         }
         @media(max-width:900px){
           .hp-nav{display:none}
-          .hp-2col,.hp-highlights{grid-template-columns:1fr}
+          .hp-2col{grid-template-columns:1fr}
           .hp-editorial{flex-direction:column;height:auto;margin-top:16px}
           .hp-editorial-main{width:100%!important;min-width:100%!important;height:220px;opacity:1!important;border-radius:12px;overflow:hidden;margin-bottom:16px;}
           .hp-editorial-main-content{padding:20px!important;bottom:0!important;left:0!important;right:0!important;}
@@ -685,11 +686,8 @@ export default function Homepage() {
           .hp-hero-arrows{bottom:12px;right:12px}
           .hp-hero-dots{bottom:12px;left:12px}
           .hp-2col{grid-template-columns:1fr}
-          .hp-2col-card{aspect-ratio:1.2}
-          .hp-2col-info{bottom:12px;left:12px;right:12px}
-          .hp-2col-info-text{padding:14px 16px}
-          .hp-2col-info-text p{font-size:14px}
-          .hp-2col-info-arrow{width:50px;font-size:18px}
+          .hp-2col-info{padding:18px 20px}
+          .hp-2col-info p{font-size:18px}
           .hp-section{padding:24px 16px 32px;margin-bottom:8px}
           .hp-products{display:grid!important;grid-template-columns:1fr 1fr;gap:12px;overflow-x:visible!important;padding:4px 0 8px}
           .hp-product{width:100%!important;min-width:0!important}
@@ -805,8 +803,28 @@ export default function Homepage() {
       </section>
 
       <section className="hp-2col">
-        <Link to="/collections/mens-watches" className="hp-2col-card"><img src={img.quad5} alt="Men's Best Sellers" /><div className="hp-2col-info"><div className="hp-2col-info-text"><span>Men's Best Sellers</span><p>Shop Now</p></div><div className="hp-2col-info-arrow">→</div></div></Link>
-        <Link to="/collections/womens-watches" className="hp-2col-card"><img src={img.quad6} alt="Women's Best Sellers" /><div className="hp-2col-info"><div className="hp-2col-info-text"><span>Women's Best Sellers</span><p>Shop Now</p></div><div className="hp-2col-info-arrow">→</div></div></Link>
+        <Link to="/collections/mens-watches" className="hp-2col-card">
+          <div className="hp-2col-card-img">
+            <img src={img.quad5} alt="Men's Best Sellers" />
+            <div className="hp-2col-card-img-overlay" />
+          </div>
+          <div className="hp-2col-info">
+            <span>Men's Collection</span>
+            <p>Best Sellers</p>
+            <span className="hp-2col-info-cta">Shop Now →</span>
+          </div>
+        </Link>
+        <Link to="/collections/womens-watches" className="hp-2col-card">
+          <div className="hp-2col-card-img">
+            <img src={img.quad6} alt="Women's Best Sellers" />
+            <div className="hp-2col-card-img-overlay" />
+          </div>
+          <div className="hp-2col-info">
+            <span>Women's Collection</span>
+            <p>Best Sellers</p>
+            <span className="hp-2col-info-cta">Shop Now →</span>
+          </div>
+        </Link>
       </section>
 
       <section className="hp-editorial-products">
