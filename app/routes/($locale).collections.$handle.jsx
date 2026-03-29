@@ -215,8 +215,8 @@ export default function Collection() {
       `}</style>
 
       {/* HERO */}
-      <div style={{background:'#0a0a0a',padding:'96px 0 0',position:'relative',overflow:'hidden',borderBottom:'0.5px solid rgba(255,255,255,0.06)'}}>
-        {collection.image&&<img src={collection.image.url} alt={collection.title} style={{position:'absolute',top:0,right:0,height:'100%',width:'50%',objectFit:'contain',objectPosition:'center right',opacity:0.18,mixBlendMode:'luminosity'}} />}
+      <div style={{background:'#0a0a0a',padding:'96px 0 0',position:'relative',overflow:'hidden',borderBottom:'0.5px solid rgba(255,255,255,0.06)',minHeight:'480px'}}>
+        {collection.image&&<img src={collection.image.url} alt={collection.title} style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',objectPosition:'center top',opacity:0.22,mixBlendMode:'luminosity'}} />}
         <div style={{position:'relative',padding:'0 48px 48px',maxWidth:'680px'}}>
           <span style={{fontSize:'9px',letterSpacing:'4px',textTransform:'uppercase',color:'#c9a84c',display:'block',marginBottom:'14px'}}>Curated Collection</span>
           <h1 style={{fontSize:'clamp(28px, 4vw, 44px)',fontWeight:300,color:'#fff',fontFamily:'Georgia,serif',letterSpacing:'-0.5px',lineHeight:1.1,marginBottom:'14px',textTransform:'none'}}>
