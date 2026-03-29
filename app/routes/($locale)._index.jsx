@@ -539,6 +539,7 @@ export default function Homepage() {
         .hp-brand-card-feat:hover .hp-brand-feat-arrow{background:#c9a84c;color:#0a0a0a}
         .hp-brand-feat-badge{position:absolute;top:24px;right:24px;background:rgba(0,0,0,0.8);border:0.5px solid rgba(201,168,76,0.4);color:#c9a84c;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:7px 14px;z-index:5}
         @media(max-width:600px){
+          .hp-brands-grid{grid-template-columns:repeat(2,1fr);gap:2px}
           .hp-brand-card{aspect-ratio:1/1;height:auto}
           .hp-brand-card h3{font-size:22px}
           .hp-brand-card-feat{aspect-ratio:1/1;height:auto}
