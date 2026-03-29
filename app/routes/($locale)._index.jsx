@@ -358,6 +358,16 @@ export default function Homepage() {
         .hp-ticker-text{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.65);font-weight:400;white-space:nowrap}
         .hp-ticker-dot{width:4px;height:4px;min-width:4px;background:#c9a84c;border-radius:50%;margin-left:28px}
         @keyframes hpTicker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+        .hp-slogan-banner{background:#0a0a0a;padding:40px 48px;text-align:center;position:relative;overflow:hidden}
+        .hp-slogan-banner::before{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:1px;height:0;background:rgba(201,168,76,0.2)}
+        .hp-slogan-line{width:32px;height:1px;background:rgba(201,168,76,0.4);margin:0 auto 20px}
+        .hp-slogan-text{font-size:22px;font-weight:300;color:#fff;font-family:'Georgia','Times New Roman',serif;font-style:italic;letter-spacing:0.2px;line-height:1.3}
+        .hp-slogan-text em{color:#c9a84c;font-style:italic}
+        .hp-slogan-attr{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.2);margin-top:16px;display:block}
+        @media(max-width:600px){
+          .hp-slogan-banner{padding:32px 24px}
+          .hp-slogan-text{font-size:18px}
+        }
         /* TOPBAR */
         .hp-top{background:#000;color:#fff;display:flex;align-items:center;justify-content:center;padding:10px 20px;font-size:13px}
         .hp-top-inner{display:flex;align-items:center;gap:16px}
@@ -819,13 +829,16 @@ export default function Homepage() {
             'Worn With Intention',
             'Quality First',
             'USA · UK · Canada · Australia',
+            'Only what deserves your wrist',
             'Precision Timepieces',
             'Free Worldwide Shipping',
             '1-Year Warranty',
+            'Only what deserves your wrist',
             'Curated for the Few',
             'Worn With Intention',
             'Quality First',
             'USA · UK · Canada · Australia',
+            'Only what deserves your wrist',
           ].map((t, i) => (
             <div key={i} className="hp-ticker-item">
               <span className="hp-ticker-text">{t}</span>
@@ -970,6 +983,12 @@ export default function Homepage() {
         "Crafted for those who understand that time is the only true luxury.",
         "From the first light of dawn to the last hour of night — wear it all."
       ]} />
+      <div className="hp-slogan-banner">
+        <div className="hp-slogan-line" />
+        <p className="hp-slogan-text">"Only what deserves <em>your wrist.</em>"</p>
+        <span className="hp-slogan-attr">— Vastara</span>
+      </div>
+
       <BeforeAfterSlider
         leftImg="https://cdn.shopify.com/s/files/1/0778/2921/0327/files/dia.jpg?v=1772493338"
         rightImg="https://cdn.shopify.com/s/files/1/0778/2921/0327/files/noite.jpg?v=1772493357"

@@ -372,6 +372,13 @@ export default function Footer({footer}) {
         </div>
       </div>
 
+      {/* Slogan bar */}
+      <div style={{borderTop:'0.5px solid rgba(255,255,255,0.06)',padding:'28px 48px',display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:'16px'}}>
+        <span style={{fontSize:'14px',letterSpacing:'8px',textTransform:'uppercase',color:'rgba(255,255,255,0.9)',fontWeight:'700'}}>VASTARA</span>
+        <div style={{width:'1px',height:'32px',background:'rgba(255,255,255,0.08)',flexShrink:0}} />
+        <p style={{fontSize:'13px',color:'rgba(255,255,255,0.35)',fontFamily:'Georgia,serif',fontStyle:'italic',letterSpacing:'0.3px'}}>"Only what deserves your wrist."</p>
+      </div>
+
       {/* Bottom bar */}
       <div className="vf-bottom">
         <p className="vf-bottom-copy"><span suppressHydrationWarning>{new Date().getFullYear()}</span> Vastara. All rights reserved.</p>
