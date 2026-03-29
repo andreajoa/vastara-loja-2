@@ -665,7 +665,7 @@ export default function Homepage() {
           .hp-brands-header::before{top:-20px;width:40px}
           .hp-brands-header::after{bottom:-20px;width:40px}
           .hp-brands-header h2{font-size:28px}
-          .hp-brands-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+          .hp-brands-grid{grid-template-columns:repeat(2,1fr);gap:2px}
           .hp-brand-card-inner{height:280px}
           .hp-brand-card-content{padding:20px 18px}
           .hp-brand-card h3{font-size:18px}
@@ -727,7 +727,7 @@ export default function Homepage() {
           .hp-brands-header::before{top:-15px;width:30px}
           .hp-brands-header::after{bottom:-15px;width:30px}
           .hp-brands-header h2{font-size:22px}
-          .hp-brands-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+          .hp-brands-grid{grid-template-columns:repeat(2,1fr);gap:2px}
           .hp-brand-card-content{padding:16px 14px}
           .hp-brand-card h3{font-size:18px}
           .hp-brand-card p{font-size:10px;margin-bottom:8px}
@@ -737,7 +737,7 @@ export default function Homepage() {
           .hp-brands{padding:32px 16px}
           .hp-brands-header{margin-bottom:32px}
           .hp-brands-header h2{font-size:22px}
-          .hp-brands-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+          .hp-brands-grid{grid-template-columns:repeat(2,1fr);gap:2px}
           .hp-brand-card-inner img{height:140px}
           .hp-brand-card-content{padding:14px}
           .hp-brand-card h3{font-size:13px}
@@ -748,7 +748,7 @@ export default function Homepage() {
           .hp-brands{padding:48px 24px}
           .hp-brands-header{margin-bottom:40px}
           .hp-brands-header h2{font-size:28px}
-          .hp-brands-grid{grid-template-columns:repeat(3,1fr);gap:16px}
+          .hp-brands-grid{grid-template-columns:repeat(2,1fr);gap:2px}
           .hp-brand-card-inner img{height:160px}
           .hp-brand-card-content{padding:16px}
           .hp-brand-card h3{font-size:14px}
