@@ -102,7 +102,7 @@ function ProductCard({product, featured, badge}) {
   if (featured) {
     return (
       <Link to={`/products/${product.handle}`} style={{position:'relative',height:'380px',overflow:'hidden',background:'#111',textDecoration:'none',display:'block'}}>
-        {image&&<img src={image.url} alt={image.altText||product.title} style={{width:'100%',height:'100%',objectFit:'contain',opacity:0.88,transition:'transform 0.7s ease'}}
+        {image&&<img src={image.url} alt={image.altText||product.title} style={{width:'100%',height:'100%',objectFit:'contain',opacity:0.93,transition:'transform 0.7s ease'}}
           onMouseEnter={e=>e.currentTarget.style.transform='scale(1.05)'}
           onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}
         />}
@@ -118,9 +118,9 @@ function ProductCard({product, featured, badge}) {
   return (
     <Link to={`/products/${product.handle}`} style={{textDecoration:'none',color:'inherit',background:'#111',display:'block'}}>
       <div style={{aspectRatio:'1',overflow:'hidden',background:'#111'}}>
-        {image&&<img src={image.url} alt={image.altText||product.title} style={{width:'100%',height:'100%',objectFit:'contain',opacity:0.85,transition:'transform 0.6s ease,opacity 0.3s ease'}}
+        {image&&<img src={image.url} alt={image.altText||product.title} style={{width:'100%',height:'100%',objectFit:'contain',opacity:0.92,transition:'transform 0.6s ease,opacity 0.3s ease'}}
           onMouseEnter={e=>{e.currentTarget.style.transform='scale(1.05)';e.currentTarget.style.opacity='0.98'}}
-          onMouseLeave={e=>{e.currentTarget.style.transform='scale(1)';e.currentTarget.style.opacity='0.85'}}
+          onMouseLeave={e=>{e.currentTarget.style.transform='scale(1)';e.currentTarget.style.opacity='0.92'}}
         />}
       </div>
       <div style={{padding:'13px 15px 16px',borderTop:'0.5px solid rgba(255,255,255,0.05)'}}>
@@ -139,7 +139,7 @@ function MidBanner({collectionTitle}) {
       <div style={{position:'absolute',top:'50%',left:'28px',transform:'translateY(-50%)'}}>
         <span style={{fontSize:'8px',letterSpacing:'4px',textTransform:'uppercase',color:'#c9a84c',display:'block',marginBottom:'10px'}}>Vastara Selection</span>
         <div style={{fontSize:'22px',fontWeight:300,color:'#fff',fontFamily:'Georgia,serif',marginBottom:'6px',lineHeight:1.2}}>Only what deserves<br />your wrist.</div>
-        <div style={{fontSize:'10px',color:'rgba(255,255,255,0.35)',marginBottom:'14px'}}>Each piece chosen for craftsmanship, quality and presence.</div>
+        <div style={{fontSize:'11px',color:'rgba(255,255,255,0.4)',marginBottom:'14px',lineHeight:1.7,fontStyle:'italic',fontFamily:'Georgia,serif'}}>A selection built around presence,<br/>precision, and timeless design.</div>
         <Link to={`/collections`} style={{fontSize:'9px',letterSpacing:'2px',textTransform:'uppercase',color:'#fff',background:'rgba(201,168,76,0.15)',border:'0.5px solid rgba(201,168,76,0.45)',padding:'7px 16px',display:'inline-block',textDecoration:'none'}}>
           Explore the Selection →
         </Link>
@@ -339,9 +339,9 @@ export default function Collection() {
                       return (
                         <div key={ri} style={{position:'relative',height:'280px',overflow:'hidden',background:'#111',margin:'3px 0',display:'flex',alignItems:'stretch'}}>
                           <div style={{flex:'0 0 55%',position:'relative',overflow:'hidden'}}>
-                            {row.product.featuredImage&&<img src={row.product.featuredImage.url} alt={row.product.title} style={{width:'100%',height:'100%',objectFit:'contain',opacity:0.88}} />}
+                            {row.product.featuredImage&&<img src={row.product.featuredImage.url} alt={row.product.title} style={{width:'100%',height:'100%',objectFit:'contain',opacity:0.95}} />}
                           </div>
-                          <div style={{flex:1,display:'flex',flexDirection:'column',justifyContent:'center',padding:'32px 28px',background:'#0f0f0f',borderLeft:'0.5px solid rgba(255,255,255,0.05)'}}>
+                          <div style={{flex:1,display:'flex',flexDirection:'column',justifyContent:'center',padding:'32px 28px',background:'#141414',borderLeft:'0.5px solid rgba(255,255,255,0.07)'}}>
                             <span style={{fontSize:'8px',letterSpacing:'3px',textTransform:'uppercase',color:'#c9a84c',display:'block',marginBottom:'10px'}}>Featured</span>
                             <div style={{fontSize:'16px',fontWeight:400,color:'#fff',marginBottom:'8px',lineHeight:1.3,fontFamily:'Georgia,serif'}}>{row.product.title}</div>
                             <div style={{fontSize:'14px',color:'#c9a84c',fontWeight:500,marginBottom:'16px'}}>{new Intl.NumberFormat('en-US',{style:'currency',currency:row.product.priceRange?.minVariantPrice?.currencyCode||'USD'}).format(parseFloat(row.product.priceRange?.minVariantPrice?.amount||0))}</div>
