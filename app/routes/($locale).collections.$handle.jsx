@@ -219,8 +219,13 @@ export default function Collection() {
         <><div style={{position:'absolute',inset:0,background:'linear-gradient(90deg,rgba(10,10,10,1) 0%,rgba(10,10,10,0.88) 38%,rgba(10,10,10,0.4) 65%,rgba(10,10,10,0.05) 100%)',zIndex:1}} /><img src='https://cdn.shopify.com/s/files/1/0778/2921/0327/files/banner_1_e7421a31-581d-4825-a5a0-f4d325d4697a.jpg?v=1772467291' alt='Vastara' style={{position:'absolute',right:0,top:0,height:'100%',width:'60%',objectFit:'cover',objectPosition:'center center',opacity:0.75}} /></>
         <div style={{position:'relative',padding:'0 48px 48px',maxWidth:'580px',zIndex:2}}>
           <span style={{fontSize:'9px',letterSpacing:'4px',textTransform:'uppercase',color:'#c9a84c',display:'block',marginBottom:'14px'}}>Curated Collection</span>
-          <h1 style={{fontSize:'clamp(28px, 4vw, 44px)',fontWeight:300,color:'#fff',fontFamily:'Georgia,serif',letterSpacing:'-0.5px',lineHeight:1.1,marginBottom:'14px',textTransform:'none'}}>
-            {collection.title}
+          <h1 style={{fontWeight:300,color:'#fff',fontFamily:'Georgia,serif',lineHeight:1.1,marginBottom:'14px',textTransform:'none'}}>
+            <span style={{fontSize:'clamp(32px,4vw,52px)',letterSpacing:'-0.5px',display:'block'}}>
+              {collection.title} <span style={{color:'#c9a84c'}}>—</span>
+            </span>
+            <span style={{fontSize:'clamp(22px,3vw,36px)',color:'#c9a84c',display:'block',marginTop:'6px',letterSpacing:'-0.3px',fontStyle:'italic'}}>
+              Only what deserves your wrist.
+            </span>
           </h1>
           <p style={{fontSize:'13px',color:'rgba(255,255,255,0.38)',maxWidth:'480px',lineHeight:1.85,marginBottom:'28px'}}>
             {collection.description || 'A curated selection of timepieces chosen for design, quality, and presence. Only what deserves your wrist.'}
