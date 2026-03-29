@@ -102,7 +102,7 @@ function ProductCard({product, featured, badge}) {
   if (featured) {
     return (
       <Link to={`/products/${product.handle}`} style={{position:'relative',height:'380px',overflow:'hidden',background:'#111',textDecoration:'none',display:'block'}}>
-        {image&&<img src={image.url} alt={image.altText||product.title} style={{width:'100%',height:'100%',objectFit:'contain',opacity:0.93,transition:'transform 0.7s ease'}}
+        {image&&<img src={image.url} alt={image.altText||product.title} style={{width:'100%',height:'100%',objectFit:'contain',opacity:0.97,transition:'transform 0.7s ease'}}
           onMouseEnter={e=>e.currentTarget.style.transform='scale(1.05)'}
           onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}
         />}
@@ -118,9 +118,9 @@ function ProductCard({product, featured, badge}) {
   return (
     <Link to={`/products/${product.handle}`} style={{textDecoration:'none',color:'inherit',background:'#111',display:'block'}}>
       <div style={{aspectRatio:'1',overflow:'hidden',background:'#111'}}>
-        {image&&<img src={image.url} alt={image.altText||product.title} style={{width:'100%',height:'100%',objectFit:'contain',opacity:0.92,transition:'transform 0.6s ease,opacity 0.3s ease'}}
+        {image&&<img src={image.url} alt={image.altText||product.title} style={{width:'100%',height:'100%',objectFit:'contain',opacity:0.95,transition:'transform 0.6s ease,opacity 0.3s ease'}}
           onMouseEnter={e=>{e.currentTarget.style.transform='scale(1.05)';e.currentTarget.style.opacity='0.98'}}
-          onMouseLeave={e=>{e.currentTarget.style.transform='scale(1)';e.currentTarget.style.opacity='0.92'}}
+          onMouseLeave={e=>{e.currentTarget.style.transform='scale(1)';e.currentTarget.style.opacity='1'}}
         />}
       </div>
       <div style={{padding:'13px 15px 16px',borderTop:'0.5px solid rgba(255,255,255,0.05)'}}>
@@ -200,21 +200,22 @@ export default function Collection() {
   }
   const activeCount = activeTags.length+(priceRange?1:0);
 
-  // Every 4th product in a chunk becomes a featured wide card
+  // Fixed pattern: 3 pairs (6 products) then 1 wide card — always intentional
   const renderChunk = (chunk) => {
     const rows = [];
     let i = 0;
+    let pairCount = 0;
     while(i < chunk.length) {
-      if(i % 5 === 4 && i + 1 < chunk.length) {
-        // Wide featured card
+      if(pairCount === 3 && i < chunk.length) {
         rows.push({type:'wide', product: chunk[i]});
         i++;
+        pairCount = 0;
       } else {
-        // Collect up to 2 for normal grid row
         const pair = [chunk[i]];
-        if(i+1 < chunk.length && (i+1) % 5 !== 4) pair.push(chunk[i+1]);
+        if(i+1 < chunk.length) pair.push(chunk[i+1]);
         rows.push({type:'pair', products: pair});
         i += pair.length;
+        pairCount++;
       }
     }
     return rows;
@@ -337,11 +338,11 @@ export default function Collection() {
                   {renderChunk(chunk).map((row, ri) => {
                     if(row.type === 'wide') {
                       return (
-                        <div key={ri} style={{position:'relative',height:'280px',overflow:'hidden',background:'#111',margin:'3px 0',display:'flex',alignItems:'stretch'}}>
+                        <div key={ri} style={{position:'relative',height:'320px',overflow:'hidden',background:'#111',margin:'3px 0',display:'flex',alignItems:'stretch'}}>
                           <div style={{flex:'0 0 55%',position:'relative',overflow:'hidden'}}>
-                            {row.product.featuredImage&&<img src={row.product.featuredImage.url} alt={row.product.title} style={{width:'100%',height:'100%',objectFit:'contain',opacity:0.95}} />}
+                            {row.product.featuredImage&&<img src={row.product.featuredImage.url} alt={row.product.title} style={{width:'100%',height:'100%',objectFit:'contain',opacity:1.0,filter:'brightness(1.08)'}} />}
                           </div>
-                          <div style={{flex:1,display:'flex',flexDirection:'column',justifyContent:'center',padding:'32px 28px',background:'#141414',borderLeft:'0.5px solid rgba(255,255,255,0.07)'}}>
+                          <div style={{flex:1,display:'flex',flexDirection:'column',justifyContent:'center',padding:'32px 28px',background:'#1c1c1c',borderLeft:'0.5px solid rgba(255,255,255,0.08)'}}>
                             <span style={{fontSize:'8px',letterSpacing:'3px',textTransform:'uppercase',color:'#c9a84c',display:'block',marginBottom:'10px'}}>Featured</span>
                             <div style={{fontSize:'16px',fontWeight:400,color:'#fff',marginBottom:'8px',lineHeight:1.3,fontFamily:'Georgia,serif'}}>{row.product.title}</div>
                             <div style={{fontSize:'14px',color:'#c9a84c',fontWeight:500,marginBottom:'16px'}}>{new Intl.NumberFormat('en-US',{style:'currency',currency:row.product.priceRange?.minVariantPrice?.currencyCode||'USD'}).format(parseFloat(row.product.priceRange?.minVariantPrice?.amount||0))}</div>
