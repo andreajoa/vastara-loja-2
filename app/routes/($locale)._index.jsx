@@ -149,6 +149,9 @@ function FadingHeadlines({headlines}) {
         opacity: visible ? 1 : 0,
         transform: visible ? 'translateY(0)' : 'translateY(12px)',
         transition:'opacity 0.6s ease, transform 0.6s ease',
+        .hp-brand-card-img-wrapper{background:#faf8f8;padding:8px;border:1px solid #e8e4e}
+        .hp-brand-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.15) 0%,rgba(0,0,0.08) 40%,rgba(0,0,0,0.04) 70%,transparent 100%);pointer-events:none}
+        .hp-brand-card:hover .hp-brand-card-overlay{opacity:1}
         fontStyle:'italic',
         color:'#111',
         letterSpacing:'-0.3px',
@@ -865,9 +868,9 @@ export default function Homepage() {
             <div className="hp-brand-card-img-wrapper"><img src={img.quad5} alt="North Edge" /></div>
             <div className="hp-brand-card-overlay" />
             <div className="hp-brand-card-content">
-              <span className="hp-brand-tag">Adventure</span>
+              <span className="hp-brand-tag">Craftsmanship</span>
               <h3>North Edge</h3>
-              <p>Adventure Meets Precision</p>
+              <p>Built for the Bold & the Adventurous</p>
               <span className="hp-brand-arrow">Explore →</span>
             </div>
           </Link>
@@ -875,9 +878,9 @@ export default function Homepage() {
             <div className="hp-brand-card-img-wrapper"><img src={img.quad6} alt="Fossil" /></div>
             <div className="hp-brand-card-overlay" />
             <div className="hp-brand-card-content">
-              <span className="hp-brand-tag">Heritage</span>
+              <span className="hp-brand-tag">Authentic</span>
               <h3>Fossil</h3>
-              <p>American Heritage Since 1984</p>
+              <p>Timeless Icons of American Style</p>
               <span className="hp-brand-arrow">Explore →</span>
             </div>
           </Link>
@@ -885,9 +888,9 @@ export default function Homepage() {
             <div className="hp-brand-card-img-wrapper"><img src={img.quad8} alt="Pagani" /></div>
             <div className="hp-brand-card-overlay" />
             <div className="hp-brand-card-content">
-              <span className="hp-brand-tag">Luxury</span>
+              <span className="hp-brand-tag">Refined</span>
               <h3>Pagani</h3>
-              <p>Luxury Within Reach</p>
+              <p>Timepieces of Distinction</p>
               <span className="hp-brand-arrow">Explore →</span>
             </div>
           </Link>
@@ -895,9 +898,9 @@ export default function Homepage() {
             <div className="hp-brand-card-img-wrapper"><img src={img.quad9} alt="Berny" /></div>
             <div className="hp-brand-card-overlay" />
             <div className="hp-brand-card-content">
-              <span className="hp-brand-tag">Elegance</span>
+              <span className="hp-brand-tag">Timeless</span>
               <h3>Berny</h3>
-              <p>Timeless Elegance</p>
+              <p>Elegance in Every Detail</p>
               <span className="hp-brand-arrow">Explore →</span>
             </div>
           </Link>
