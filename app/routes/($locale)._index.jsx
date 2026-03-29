@@ -149,9 +149,6 @@ function FadingHeadlines({headlines}) {
         opacity: visible ? 1 : 0,
         transform: visible ? 'translateY(0)' : 'translateY(12px)',
         transition:'opacity 0.6s ease, transform 0.6s ease',
-        .hp-brand-card-img-wrapper{background:#faf8f8;padding:8px;border:1px solid #e8e4e}
-        .hp-brand-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.15) 0%,rgba(0,0,0.08) 40%,rgba(0,0,0,0.04) 70%,transparent 100%);pointer-events:none}
-        .hp-brand-card:hover .hp-brand-card-overlay{opacity:1}
         fontStyle:'italic',
         color:'#111',
         letterSpacing:'-0.3px',
