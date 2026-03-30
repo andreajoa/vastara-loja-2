@@ -1282,11 +1282,79 @@ export default function Product() {
               </span>
             )}
           </div>
-          {variantId && (
-            <AddBtn variantId={variantId} qty={qty} available={available}
-              label="Add to Bag"
-              className="pdp-hero-cta" />
-          )}
+          {/* ── VARIANT SELECTOR ── */}
+          {productOptions.map(option => {
+            if (option.optionValues.length <= 1) return null;
+            const hasVariantImages = option.optionValues.some(v => v.firstSelectableVariant?.image);
+            return (
+              <div key={option.name} style={{marginBottom:'16px'}}>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'10px'}}>
+                  <span style={{fontSize:'9px',letterSpacing:'3px',textTransform:'uppercase',color:'#c9a84c',fontWeight:'600'}}>{option.name}</span>
+                  <span style={{fontSize:'10px',color:'rgba(255,255,255,0.35)'}}>
+                    {option.optionValues.find(v => v.selected)?.name || ''}
+                  </span>
+                </div>
+                {hasVariantImages ? (
+                  <div style={{display:'flex',gap:'6px',flexWrap:'wrap'}}>
+                    {option.optionValues.map(value => {
+                      const varImg = value.firstSelectableVariant?.image;
+                      const isSelected = value.selected;
+                      const isAvailable = value.firstSelectableVariant?.availableForSale !== false;
+                      return value.isDifferentProduct ? (
+                        <Link key={value.name} to={'/products/'+value.handle+'?'+value.variantUriQuery}
+                          style={{display:'block',width:'58px',height:'58px',border:isSelected?'1.5px solid #c9a84c':'1px solid rgba(255,255,255,0.15)',background:'rgba(255,255,255,0.04)',overflow:'hidden',opacity:isAvailable?1:0.3,textDecoration:'none',flexShrink:0,transition:'border-color 0.15s'}}>
+                          {varImg && <img src={varImg.url} alt={value.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} />}
+                        </Link>
+                      ) : (
+                        <button key={value.name} type="button" title={value.name}
+                          disabled={!value.exists}
+                          onClick={() => { if (!value.selected) navigate('?'+value.variantUriQuery, {replace:true,preventScrollReset:true}); }}
+                          style={{width:'58px',height:'58px',border:isSelected?'1.5px solid #c9a84c':'1px solid rgba(255,255,255,0.15)',background:'rgba(255,255,255,0.04)',cursor:value.exists?'pointer':'not-allowed',overflow:'hidden',opacity:isAvailable?1:0.3,flexShrink:0,transition:'border-color 0.15s',padding:0}}>
+                          {varImg
+                            ? <img src={varImg.url} alt={value.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} />
+                            : <span style={{fontSize:'8px',color:'rgba(255,255,255,0.5)',lineHeight:'1.2',display:'flex',alignItems:'center',justifyContent:'center',height:'100%',textAlign:'center',padding:'4px'}}>{value.name}</span>
+                          }
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div style={{display:'flex',gap:'6px',flexWrap:'wrap'}}>
+                    {option.optionValues.map(value => (
+                      value.isDifferentProduct
+                        ? <Link key={value.name} to={'/products/'+value.handle+'?'+value.variantUriQuery}
+                            style={{padding:'7px 14px',border:value.selected?'1px solid #c9a84c':'1px solid rgba(255,255,255,0.15)',background:value.selected?'rgba(201,168,76,0.1)':'transparent',color:value.selected?'#c9a84c':'rgba(255,255,255,0.5)',fontSize:'11px',textDecoration:'none',cursor:'pointer',transition:'all 0.15s'}}>
+                            {value.name}
+                          </Link>
+                        : <button key={value.name} type="button"
+                            disabled={!value.exists}
+                            onClick={() => { if (!value.selected) navigate('?'+value.variantUriQuery, {replace:true,preventScrollReset:true}); }}
+                            style={{padding:'7px 14px',border:value.selected?'1px solid #c9a84c':'1px solid rgba(255,255,255,0.15)',background:value.selected?'rgba(201,168,76,0.1)':'transparent',color:value.selected?'#c9a84c':'rgba(255,255,255,0.5)',fontSize:'11px',cursor:value.exists?'pointer':'not-allowed',opacity:value.exists?1:0.3,transition:'all 0.15s'}}>
+                            {value.name}
+                          </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+
+          {/* ── QUANTITY + ADD TO BAG ── */}
+          <div style={{display:'flex',gap:'8px',marginBottom:'16px',alignItems:'stretch'}}>
+            <div style={{display:'flex',alignItems:'center',border:'1px solid rgba(255,255,255,0.2)',height:'48px',flexShrink:0}}>
+              <button onClick={() => setQty(q => Math.max(1,q-1))} style={{width:'38px',height:'48px',background:'none',border:'none',fontSize:'18px',cursor:'pointer',color:'rgba(255,255,255,0.5)',display:'flex',alignItems:'center',justifyContent:'center'}}>−</button>
+              <span style={{width:'30px',textAlign:'center',fontSize:'13px',color:'#fff'}}>{qty}</span>
+              <button onClick={() => setQty(q => q+1)} style={{width:'38px',height:'48px',background:'none',border:'none',fontSize:'18px',cursor:'pointer',color:'rgba(255,255,255,0.5)',display:'flex',alignItems:'center',justifyContent:'center'}}>+</button>
+            </div>
+            <div style={{flex:1}}>
+              {variantId && (
+                <AddBtn variantId={variantId} qty={qty} available={available}
+                  label={available ? `Add to Bag${price ? '  —  '+fmt(price.amount,price.currencyCode) : ''}` : 'Sold Out'}
+                  className="pdp-hero-cta"
+                  style={{display:'block',width:'100%',padding:'15px',background:available?'#c9a84c':'rgba(255,255,255,0.1)',color:available?'#0a0a0a':'rgba(255,255,255,0.3)',fontSize:'10px',letterSpacing:'2.5px',textTransform:'uppercase',fontWeight:'700',border:'none',cursor:available?'pointer':'not-allowed'}} />
+              )}
+            </div>
+          </div>
 
           {/* ── TRUST BADGES ── */}
           <div className="pdp-trust-badges">
