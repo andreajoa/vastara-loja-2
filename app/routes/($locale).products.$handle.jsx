@@ -418,6 +418,28 @@ const CSS = `
   }
   .pdp-hero-cta:hover { background: #b8943e; transform: translateY(-1px); }
 
+  /* ── TRUST BADGES ── */
+  .pdp-trust-badges {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .pdp-trust-badge {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 400;
+  }
+  .pdp-trust-badge svg {
+    color: #c9a84c;
+    flex-shrink: 0;
+  }
+
   /* ── SPLIT SECTION: IMAGE + BUY-IT-TOGETHER ── */
   .pdp-split {
     display: grid;
@@ -1265,6 +1287,29 @@ export default function Product() {
               label="Add to Bag"
               className="pdp-hero-cta" />
           )}
+
+          {/* ── TRUST BADGES ── */}
+          <div className="pdp-trust-badges">
+            <div className="pdp-trust-badge">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+              <span>Free Shipping</span>
+            </div>
+            <div className="pdp-trust-badge">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              <span>1-Year Warranty</span>
+            </div>
+            <div className="pdp-trust-badge">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0110 0v4"/>
+              </svg>
+              <span>Secure Checkout</span>
+            </div>
+          </div>
         </div>
 
         {/* RIGHT: full product image, no crop */}
