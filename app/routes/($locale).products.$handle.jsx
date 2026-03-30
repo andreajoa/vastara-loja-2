@@ -282,7 +282,7 @@ function getAvgRating(reviews) {
 }
 
 // ============================================
-// CSS — Mockup-faithful redesign
+// CSS
 // ============================================
 const CSS = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap');
@@ -323,28 +323,20 @@ const CSS = `
   }
   .pdp-sticky-nav a:hover { color: #0a0a0a; }
 
-  /* ── HERO ── */
+  /* ── HERO ──
+     Desktop: two-column layout — content left, image right (fully visible, no crop)
+     Mobile: stacked — image on top, content below
+  */
   .pdp-hero {
     position: relative;
-    min-height: 88vh;
     background: #111;
-    display: flex;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 88vh;
     overflow: hidden;
   }
-  .pdp-hero-bg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.55;
-  }
-  .pdp-hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(105deg, rgba(5,5,5,0.82) 0%, rgba(5,5,5,0.35) 60%, transparent 100%);
-  }
+
+  /* Left column: text content */
   .pdp-hero-content {
     position: relative;
     z-index: 2;
@@ -352,8 +344,36 @@ const CSS = `
     flex-direction: column;
     justify-content: flex-end;
     padding: 80px 72px;
-    max-width: 680px;
+    /* subtle dark gradient only on the left panel */
+    background: linear-gradient(135deg, rgba(5,5,5,0.96) 0%, rgba(5,5,5,0.80) 100%);
   }
+
+  /* Right column: image shown in full, no cropping */
+  .pdp-hero-image-col {
+    position: relative;
+    overflow: hidden;
+    background: #0d0d0d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pdp-hero-image-col::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(5,5,5,0.45) 0%, transparent 40%);
+    pointer-events: none;
+  }
+  /* The product image: contain so the full watch is always visible */
+  .pdp-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
+    padding: 24px;
+  }
+
   .pdp-hero-eyebrow {
     font-size: 10px;
     letter-spacing: 3px;
@@ -364,7 +384,7 @@ const CSS = `
   }
   .pdp-hero-title {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: clamp(42px, 6vw, 72px);
+    font-size: clamp(38px, 4.5vw, 64px);
     font-weight: 300;
     line-height: 1.08;
     color: #fff;
@@ -794,8 +814,29 @@ const CSS = `
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
     .pdp-sticky-nav { display: none; }
-    .pdp-hero-content { padding: 48px 28px; }
-    .pdp-hero-title { font-size: 40px; }
+
+    /* Hero: mobile — single column, image on top full-width, content below */
+    .pdp-hero {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto;
+      min-height: unset;
+    }
+    /* On mobile image goes first (top), content goes second */
+    .pdp-hero-image-col {
+      order: -1;
+      min-height: 320px;
+    }
+    .pdp-hero-img {
+      padding: 16px;
+      max-height: 360px;
+      object-fit: contain;
+    }
+    .pdp-hero-content {
+      padding: 40px 28px 48px;
+      background: linear-gradient(180deg, rgba(5,5,5,0.98) 0%, rgba(5,5,5,0.92) 100%);
+    }
+    .pdp-hero-title { font-size: 36px; }
+
     .pdp-split { grid-template-columns: 1fr; }
     .pdp-split-img { min-height: 300px; }
     .pdp-bit-panel { padding: 36px 24px; }
@@ -1190,9 +1231,14 @@ export default function Product() {
       </nav>
 
       {/* ── HERO ── */}
+      {/*
+        Desktop: two-column grid
+          Left  → dark content panel (text + CTA)
+          Right → product image shown fully with object-fit: contain (no crop)
+        Mobile: single column, image on top, content below
+      */}
       <section id="hero" className="pdp-hero">
-        {heroImage && <img src={heroImage.url} alt={heroImage.altText || product.title} className="pdp-hero-bg" fetchPriority="high" loading="eager" />}
-        <div className="pdp-hero-overlay" />
+        {/* LEFT: content */}
         <div className="pdp-hero-content">
           {product.vendor && <div className="pdp-hero-eyebrow">{product.vendor}</div>}
           <h1 className="pdp-hero-title">
@@ -1201,7 +1247,7 @@ export default function Product() {
           <p className="pdp-hero-subtitle">
             A sophisticated automatic watch crafted for those who appreciate the finer details.
           </p>
-          <div style={{display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '28px'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '28px', flexWrap: 'wrap'}}>
             <StarRating rating={parseFloat(avgRating)} size={15} />
             <span style={{fontSize: '12px', color: 'rgba(255,255,255,0.6)', cursor: 'pointer'}}
               onClick={() => document.getElementById('reviews')?.scrollIntoView({behavior: 'smooth'})}>
@@ -1218,6 +1264,21 @@ export default function Product() {
             <AddBtn variantId={variantId} qty={qty} available={available}
               label="Add to Bag"
               className="pdp-hero-cta" />
+          )}
+        </div>
+
+        {/* RIGHT: full product image, no crop */}
+        <div className="pdp-hero-image-col">
+          {heroImage ? (
+            <img
+              src={heroImage.url}
+              alt={heroImage.altText || product.title}
+              className="pdp-hero-img"
+              fetchPriority="high"
+              loading="eager"
+            />
+          ) : (
+            <div style={{fontSize: '120px', opacity: 0.3}}>⌚</div>
           )}
         </div>
       </section>
