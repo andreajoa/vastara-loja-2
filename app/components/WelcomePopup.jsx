@@ -261,7 +261,7 @@ export default function WelcomePopup() {
                 </button>
                 <p style={{fontSize: '10px', color: 'rgba(255,255,255,0.18)', textAlign: 'center', lineHeight: '1.7', margin: 0}}>
                   No spam. Unsubscribe at any time.{' '}
-                  <Link to="/policies/privacy-policy" style={{color: 'rgba(255,255,255,0.28)'}}>
+                  <Link to="/pages/privacy-policy" style={{color: 'rgba(255,255,255,0.28)'}}>
                     Privacy Policy
                   </Link>
                 </p>

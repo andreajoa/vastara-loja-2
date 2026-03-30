@@ -122,7 +122,7 @@ const FALLBACK_GROUPS = [
     {id:'f3a', title:'Our Story',            url:'/pages/about'},
     {id:'f3b', title:'Careers',              url:'/pages/careers'},
     {id:'f3c', title:'Press',                url:'/pages/press'},
-    {id:'f3d', title:'Privacy Policy',       url:'/policies/privacy-policy'},
+    {id:'f3d', title:'Privacy Policy',       url:'/pages/privacy-policy'},
     {id:'f3e', title:'Terms of Service',     url:'/policies/terms-of-service'},
     {id:'f3f', title:'Cookie Policy',        url:'/policies/cookie-policy'},
     {id:'f3g', title:'Your Privacy Choices', url:'/pages/privacy-choices'},
@@ -240,7 +240,7 @@ function NewsletterForm() {
         <button type="submit" className="vf-newsletter-btn" disabled={loading}>{loading ? '...' : 'Subscribe'}</button>
       </form>
       {error && <p style={{fontSize:'11px',color:'#ef4444',marginTop:'6px'}}>{error}</p>}
-      <p className="vf-newsletter-legal">By submitting your email address you are agreeing to the{' '}<Link to="/policies/privacy-policy">Privacy Policy</Link> and{' '}<Link to="/policies/terms-of-service">Terms &amp; Conditions</Link>.</p>
+      <p className="vf-newsletter-legal">By submitting your email address you are agreeing to the{' '}<Link to="/pages/privacy-policy">Privacy Policy</Link> and{' '}<Link to="/policies/terms-of-service">Terms &amp; Conditions</Link>.</p>
     </div>
   );
 }
@@ -383,7 +383,7 @@ export default function Footer({footer}) {
       <div className="vf-bottom">
         <p className="vf-bottom-copy"><span suppressHydrationWarning>{new Date().getFullYear()}</span> Vastara. All rights reserved.</p>
         <div className="vf-bottom-links">
-          {[['Accessibility','/pages/accessibility'],['Privacy Policy','/policies/privacy-policy'],['Terms','/policies/terms-of-service'],['Refund Policy','/policies/refund-policy']].map(([label,href]) => (
+          {[['Accessibility','/pages/accessibility'],['Privacy Policy','/pages/privacy-policy'],['Terms','/policies/terms-of-service'],['Refund Policy','/policies/refund-policy']].map(([label,href]) => (
             <Link key={label} to={href} className="vf-bottom-link">{label}</Link>
           ))}
         </div>
