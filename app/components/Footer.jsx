@@ -113,8 +113,8 @@ const FALLBACK_GROUPS = [
   ]},
   {id:'f2', title:'Support', type:'links', items:[
     {id:'f2a', title:'FAQ',                  url:'/pages/faq'},
-    {id:'f2b', title:'Returns & Refunds',    url:'/policies/refund-policy'},
-    {id:'f2c', title:'Shipping Policy',      url:'/policies/shipping-policy'},
+    {id:'f2b', title:'Returns & Refunds',    url:'/pages/refund-policy'},
+    {id:'f2c', title:'Shipping Policy',      url:'/pages/shipping-policy'},
     {id:'f2d', title:'Contact Us',           url:'/pages/contact'},
     {id:'f2e', title:'Warranty',             url:'/pages/warranty'},
   ]},
@@ -123,8 +123,8 @@ const FALLBACK_GROUPS = [
     {id:'f3b', title:'Careers',              url:'/pages/careers'},
     {id:'f3c', title:'Press',                url:'/pages/press'},
     {id:'f3d', title:'Privacy Policy',       url:'/pages/privacy-policy'},
-    {id:'f3e', title:'Terms of Service',     url:'/policies/terms-of-service'},
-    {id:'f3f', title:'Cookie Policy',        url:'/policies/cookie-policy'},
+    {id:'f3e', title:'Terms of Service',     url:'/pages/terms-of-service'},
+    {id:'f3f', title:'Cookie Policy',        url:'/pages/cookie-policy'},
     {id:'f3g', title:'Your Privacy Choices', url:'/pages/privacy-choices'},
   ]},
   {id:'f4', title:'Vastara', type:'brand', items:[]},
@@ -240,7 +240,7 @@ function NewsletterForm() {
         <button type="submit" className="vf-newsletter-btn" disabled={loading}>{loading ? '...' : 'Subscribe'}</button>
       </form>
       {error && <p style={{fontSize:'11px',color:'#ef4444',marginTop:'6px'}}>{error}</p>}
-      <p className="vf-newsletter-legal">By submitting your email address you are agreeing to the{' '}<Link to="/pages/privacy-policy">Privacy Policy</Link> and{' '}<Link to="/policies/terms-of-service">Terms &amp; Conditions</Link>.</p>
+      <p className="vf-newsletter-legal">By submitting your email address you are agreeing to the{' '}<Link to="/pages/privacy-policy">Privacy Policy</Link> and{' '}<Link to="/pages/terms-of-service">Terms &amp; Conditions</Link>.</p>
     </div>
   );
 }
@@ -383,7 +383,7 @@ export default function Footer({footer}) {
       <div className="vf-bottom">
         <p className="vf-bottom-copy"><span suppressHydrationWarning>{new Date().getFullYear()}</span> Vastara. All rights reserved.</p>
         <div className="vf-bottom-links">
-          {[['Accessibility','/pages/accessibility'],['Privacy Policy','/pages/privacy-policy'],['Terms','/policies/terms-of-service'],['Refund Policy','/policies/refund-policy']].map(([label,href]) => (
+          {[['Accessibility','/pages/accessibility'],['Privacy Policy','/pages/privacy-policy'],['Terms','/pages/terms-of-service'],['Refund Policy','/pages/refund-policy']].map(([label,href]) => (
             <Link key={label} to={href} className="vf-bottom-link">{label}</Link>
           ))}
         </div>
