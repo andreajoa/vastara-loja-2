@@ -330,7 +330,7 @@ export default function Homepage() {
   }, []);
 
   const heroSlides = [
-    { image: img.hero, tag: 'Curated Multi-Brand Collection', title: 'Premium Watches from the World's Leading Brands', subtitle: 'Discover Fossil, Pagani, North Edge & more — carefully selected for design, performance, and everyday presence.' },
+    { image: img.hero, tag: "Curated Multi-Brand Collection", title: "Premium Watches from the World's Leading Brands", subtitle: "Discover Fossil, Pagani, North Edge & more — carefully selected for design, performance, and everyday presence." },
     { image: img.banner2, tag: 'Our Selection Standard', title: 'Only the Watches Worth Wearing', subtitle: 'Every timepiece is handpicked based on build quality, materials, durability, and real-world performance — so you don't have to search endlessly.' },
     { image: img.banner3, tag: 'Trusted Global Brands', title: 'One Destination for the Best in Watches', subtitle: 'Explore a curated selection from internationally recognized watchmakers — all in one premium shopping experience.' },
   ];
