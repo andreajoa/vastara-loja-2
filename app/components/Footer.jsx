@@ -119,7 +119,7 @@ const FALLBACK_GROUPS = [
     {id:'f2e', title:'Warranty',             url:'/pages/warranty'},
   ]},
   {id:'f3', title:'Company', type:'links', items:[
-    {id:'f3a', title:'Our Story',            url:'/pages/about'},
+    {id:'f3a', title:'Our Story',            url:'/pages/about-us'},
     {id:'f3b', title:'Careers',              url:'/pages/careers'},
     {id:'f3c', title:'Press',                url:'/pages/press'},
     {id:'f3d', title:'Privacy Policy',       url:'/pages/privacy-policy'},
