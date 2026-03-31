@@ -228,7 +228,7 @@ export default function Collection() {
         .col-feat-row{display:grid;grid-template-columns:1fr 1fr;gap:3px}
         .col-sb{display:block}
         .col-mob-btn{display:none}
-        @media(max-width:900px){
+        .hero-video-bg{display:block}.hero-img-mobile{display:none!important}@media(max-width:900px){.hero-video-bg{display:none!important}.hero-img-mobile{display:block!important}@media(max-width:900px){
           .col-sb{display:none}
           .col-mob-btn{display:flex}
           .col-feat-row{grid-template-columns:1fr}
@@ -241,8 +241,8 @@ export default function Collection() {
 
       {/* HERO */}
       <div style={{background:'#0a0a0a',padding:'96px 0 0',position:'relative',overflow:'hidden',borderBottom:'0.5px solid rgba(255,255,255,0.06)',minHeight:'560px'}}>
-        <><div style={{position:'absolute',inset:0,background:'linear-gradient(90deg,rgba(10,10,10,1) 0%,rgba(10,10,10,0.88) 38%,rgba(10,10,10,0.4) 65%,rgba(10,10,10,0.05) 100%)',zIndex:1}} /><img src='https://cdn.shopify.com/s/files/1/0778/2921/0327/files/banner_1_e7421a31-581d-4825-a5a0-f4d325d4697a.jpg?v=1772467291' alt='Vastara' style={{position:'absolute',right:0,top:0,height:'100%',width:'60%',objectFit:'cover',objectPosition:'center center',opacity:0.75}} /></>
-        <div style={{position:'relative',padding:'0 48px 48px',maxWidth:'580px',zIndex:2}}>
+        <><div style={{position:'absolute',inset:0,background:'linear-gradient(90deg,rgba(10,10,10,1) 0%,rgba(10,10,10,0.88) 38%,rgba(10,10,10,0.4) 65%,rgba(10,10,10,0.05) 100%)',zIndex:1}} /><video autoPlay muted loop playsInline className="hero-video-bg" style={{position:'absolute',right:0,top:0,height:'100%',width:'60%',objectFit:'cover',objectPosition:'center center',opacity:0.75}} src='https://cdn.shopify.com/videos/c/o/v/154a542c6cd04d6d877e79be717993b3.mp4' /><img src='https://cdn.shopify.com/s/files/1/0778/2921/0327/files/banner_1_e7421a31-581d-4825-a5a0-f4d325d4697a.jpg?v=1772467291' alt='Vastara' className="hero-img-mobile" style={{position:'absolute',right:0,top:0,height:'100%',width:'60%',objectFit:'cover',objectPosition:'center center',opacity:0.75,display:'none'}} /></>
+        <div style={{position:'relative',padding:'0 64px 64px',maxWidth:'580px',zIndex:2}}>
           <span style={{fontSize:'9px',letterSpacing:'4px',textTransform:'uppercase',color:'#c9a84c',display:'block',marginBottom:'14px'}}>Curated Collection</span>
           <h1 style={{fontWeight:300,color:'#fff',fontFamily:'Georgia,serif',lineHeight:1.1,marginBottom:'14px',textTransform:'none'}}>
             <span style={{fontSize:'clamp(32px,4vw,52px)',letterSpacing:'-0.5px',display:'block'}}>
