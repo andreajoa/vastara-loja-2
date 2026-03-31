@@ -80,7 +80,7 @@ function EditorialSection({products, getProductImage, bulovaProducts}) {
           <p className="hp-iceblue-tag">COLLECTION EXCLUSIVE</p>
           <h2>Ice Blue <span className="italic">Timepieces</span></h2>
           <p className="hp-iceblue-desc">A fusion of precision engineering and refined elegance. Each timepiece captures the essence of cool sophistication.</p>
-          <Link to="/collections/ice-blue" className="hp-iceblue-btn">Explore Collection</Link>
+          <Link to="/collections/bulova" className="hp-iceblue-btn">Explore Collection</Link>
         </div>
       </div>
       <div className="hp-iceblue-products">
