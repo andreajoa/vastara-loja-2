@@ -1356,6 +1356,44 @@ export default function Product() {
             </div>
           </div>
 
+          {/* ── PAYMENT BADGES ── */}
+          <div style={{display:'flex',alignItems:'center',gap:'6px',marginBottom:'16px',flexWrap:'wrap'}}>
+            <span style={{fontSize:'10px',color:'rgba(255,255,255,0.4)',letterSpacing:'1px',textTransform:'uppercase',marginRight:'4px'}}>Secure payment</span>
+            {/* Visa */}
+            <svg width="38" height="24" viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{borderRadius:'4px',background:'#fff',padding:'2px 4px'}}>
+              <rect width="38" height="24" rx="3" fill="white"/>
+              <text x="50%" y="16" textAnchor="middle" fontSize="11" fontWeight="700" fontFamily="Arial" fill="#1A1F71">VISA</text>
+            </svg>
+            {/* Mastercard */}
+            <svg width="38" height="24" viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{borderRadius:'4px',background:'#252525',padding:'2px'}}>
+              <rect width="38" height="24" rx="3" fill="#252525"/>
+              <circle cx="14" cy="12" r="7" fill="#EB001B"/>
+              <circle cx="24" cy="12" r="7" fill="#F79E1B"/>
+              <path d="M19 6.8a7 7 0 0 1 0 10.4A7 7 0 0 1 19 6.8z" fill="#FF5F00"/>
+            </svg>
+            {/* Amex */}
+            <svg width="38" height="24" viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{borderRadius:'4px',background:'#2557D6',padding:'2px 4px'}}>
+              <rect width="38" height="24" rx="3" fill="#2557D6"/>
+              <text x="50%" y="16" textAnchor="middle" fontSize="8" fontWeight="700" fontFamily="Arial" fill="white">AMEX</text>
+            </svg>
+            {/* PayPal */}
+            <svg width="38" height="24" viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{borderRadius:'4px',background:'#fff',padding:'2px 4px'}}>
+              <rect width="38" height="24" rx="3" fill="white"/>
+              <text x="50%" y="16" textAnchor="middle" fontSize="8" fontWeight="700" fontFamily="Arial" fill="#003087">Pay</text>
+              <text x="50%" y="16" textAnchor="middle" fontSize="8" fontWeight="700" fontFamily="Arial" fill="#009cde" dx="8">Pal</text>
+            </svg>
+            {/* Apple Pay */}
+            <svg width="38" height="24" viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{borderRadius:'4px',background:'#000',padding:'2px 4px'}}>
+              <rect width="38" height="24" rx="3" fill="black"/>
+              <text x="50%" y="16" textAnchor="middle" fontSize="8" fontWeight="500" fontFamily="Arial" fill="white">Apple Pay</text>
+            </svg>
+            {/* Stripe lock */}
+            <div style={{display:'flex',alignItems:'center',gap:'3px',marginLeft:'2px'}}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              <span style={{fontSize:'9px',color:'rgba(255,255,255,0.35)',letterSpacing:'0.5px'}}>SSL Secured</span>
+            </div>
+          </div>
+
           {/* ── TRUST BADGES ── */}
           <div className="pdp-trust-badges">
             <div className="pdp-trust-badge">
