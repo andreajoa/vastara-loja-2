@@ -3,6 +3,7 @@ import {Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData} from 're
 import appStyles from '~/styles/app.css?url';
 import {MENU_FRAGMENT} from '~/lib/fragments';
 import Layout from '~/components/Layout';
+import {GoogleAnalytics} from '~/components/GoogleAnalytics';
 
 export const links = () => [
   {rel:'icon', type:'image/png', href:'/favicon.png'},
@@ -102,6 +103,7 @@ export default function App() {
       </head>
       <body>
         <Analytics.Provider cart={data.cart} shop={data.shop} consent={data.consent}>
+          <GoogleAnalytics measurementId='G-LW70Z8LP18' />
           <Layout header={data.header} footer={data.footer}>
             <Outlet />
           </Layout>
