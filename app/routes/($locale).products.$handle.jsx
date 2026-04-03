@@ -888,6 +888,25 @@ function AddBtn({variantId, qty, available, label, style, className}) {
     if (fetcher.state === 'idle' && submitted.current && fetcher.data?.cart) {
       submitted.current = false;
       openCart(fetcher.data.cart);
+      try {
+        if (typeof window !== 'undefined' && window.gtag) {
+          const lines = fetcher.data.cart?.lines?.nodes || [];
+          const line = lines[lines.length - 1];
+          if (line) {
+            window.gtag('event', 'add_to_cart', {
+              currency: line.cost?.totalAmount?.currencyCode || 'USD',
+              value: parseFloat(line.cost?.totalAmount?.amount || 0),
+              items: [{
+                item_id: line.merchandise?.id,
+                item_name: line.merchandise?.product?.title,
+                item_variant: line.merchandise?.title,
+                price: parseFloat(line.merchandise?.price?.amount || 0),
+                quantity: line.quantity || 1,
+              }],
+            });
+          }
+        }
+      } catch(e) {}
     }
   }, [fetcher.state]);
 
