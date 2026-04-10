@@ -7,8 +7,7 @@ import {GoogleAnalytics} from '~/components/GoogleAnalytics';
 
 export const links = () => [
   {rel:'icon', type:'image/png', href:'/favicon.png'},
-  {rel:'apple-touch-icon', href:'/favicon.png', sizes:'180x180'},
-  // Hreflang com self-reference (todas as páginas referenciam todas as outras)
+  {rel:'apple-touch-icon', href:'/favicon.png'},
   {rel:'alternate', hrefLang:'en-us', href:'https://vastara.online/en-us/'},
   {rel:'alternate', hrefLang:'en-gb', href:'https://vastara.online/en-gb/'},
   {rel:'alternate', hrefLang:'en-ca', href:'https://vastara.online/en-ca/'},
@@ -16,47 +15,14 @@ export const links = () => [
   {rel:'alternate', hrefLang:'en-nz', href:'https://vastara.online/en-nz/'},
   {rel:'alternate', hrefLang:'x-default', href:'https://vastara.online/'},
   {rel:'stylesheet', href:appStyles},
-  // Font preconnections for faster loading
   {rel:'preconnect', href:'https://fonts.googleapis.com'},
   {rel:'preconnect', href:'https://fonts.gstatic.com', crossOrigin:'anonymous'},
-  {rel:'preconnect', href:'https://cdn.shopify.com', crossOrigin:'anonymous'},
-  // Preload critical font (Playfair Display)
-  {rel:'preload', href:'https://fonts.gstatic.com/s/playfairdisplay/v37/nuFvD-vysZs7B96zM4.woff2', as:'font', type:'font/woff2', crossOrigin:'anonymous'},
-  // DNS prefetch for Google Analytics
-  {rel:'dns-prefetch', href:'https://www.googletagmanager.com'},
-  {rel:'dns-prefetch', href:'https://www.google-analytics.com'},
-  // Favicon preload for LCP
-  {rel:'preload', href:'/favicon.png', as:'image', type:'image/png'},
+  {rel:'preload', href:'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap', as:'style', onLoad:"this.onload=null;this.rel='stylesheet'"},
 ];
 
-// Meta tags dinâmicas para cada página com hreflang corrigido
-export const meta = ({data, location}) => {
-  const currentPath = location?.pathname || '/';
-  const origin = 'https://vastara.online';
-  const baseUrl = `${origin}${currentPath}`;
-
-  // Lista de locales suportados
-  const locales = ['en-us', 'en-gb', 'en-ca', 'en-au', 'en-nz'];
-
-  // Gerar tags hreflang para a página atual
-  const hreflangLinks = locales.map(locale => ({
-    tagName: 'link',
-    rel: 'alternate',
-    hrefLang: locale,
-    href: `${origin}/${locale}${currentPath}`,
-  }));
-
-  // Adicionar x-default e self-reference
-  hreflangLinks.push(
-    {tagName: 'link', rel: 'alternate', hrefLang: 'x-default', href: baseUrl},
-    {tagName: 'link', rel: 'canonical', href: baseUrl}
-  );
-
-  return [
-    {name: 'robots', content: 'index, follow'},
-    ...hreflangLinks,
-  ];
-};
+export const meta = () => [
+  {name: 'robots', content: 'index, follow'},
+];
 
 export async function loader({context}) {
   const {storefront, env, cart} = context;
@@ -91,12 +57,15 @@ export default function App() {
   return (
     <html lang="en">
       <head>
-      {/* Google Tag Manager - Moved to end of body to reduce render blocking */}
+      {/* Google Tag Manager */}
+      <script dangerouslySetInnerHTML={{__html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-TRLDBT7Q');`}} />
+      {/* End Google Tag Manager */}
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="theme-color" content="#0a0a0a" />
         <meta name="color-scheme" content="light" />
         <Meta /><Links />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-LW70Z8LP18" nonce={nonce}></script>
         <script nonce={nonce} dangerouslySetInnerHTML={{__html: `
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
@@ -140,19 +109,13 @@ export default function App() {
       <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TRLDBT7Q" height="0" width="0" style={{display:'none',visibility:'hidden'}}></iframe></noscript>
       {/* End Google Tag Manager (noscript) */}
         <Analytics.Provider cart={data.cart} shop={data.shop} consent={data.consent}>
+          <GoogleAnalytics measurementId='G-LW70Z8LP18' />
           <Layout header={data.header} footer={data.footer}>
             <Outlet />
           </Layout>
         </Analytics.Provider>
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        {/* Google Analytics - Moved to end of body, deferred for better performance */}
-        <script defer nonce={nonce} dangerouslySetInnerHTML={{__html: `
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-LW70Z8LP18');
-        `}} />
       </body>
     </html>
   );
