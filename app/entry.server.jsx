@@ -22,8 +22,36 @@ export default async function handleRequest(
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
-    styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.shopify.com", "https://fonts.googleapis.com"],
+    // Allow inline styles and scripts with nonce
+    styleSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.shopify.com", "https://fonts.googleapis.com"],
     fontSrc: ["'self'", "https://fonts.gstatic.com"],
+    // Allow scripts from Shopify, Google Analytics, and inline with nonce
+    scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'",
+      "https://cdn.shopify.com",
+      "https://shopify.com",
+      "https://www.googletagmanager.com",
+      "https://www.google-analytics.com",
+    ],
+    // Allow images from Shopify CDN and other trusted sources
+    imgSrc: ["'self'", "https://cdn.shopify.com", "https://*.shopify.com", "data:", "https://www.googletagmanager.com"],
+    // Allow connect to Google Analytics and IPAPI
+    connectSrc: ["'self'",
+      "https://cdn.shopify.com",
+      "https://shopify.com",
+      "https://www.googletagmanager.com",
+      "https://www.google-analytics.com",
+      "https://ipapi.co",
+    ],
+    // Allow frames for Google Tag Manager (if needed)
+    frameSrc: ["'self'", "https://www.googletagmanager.com"],
+    // Allow XHR/fetch to same-origin and Google services
+    defaultSrc: ["'self'",
+      "https://cdn.shopify.com",
+      "https://shopify.com",
+      "https://www.googletagmanager.com",
+      "https://www.google-analytics.com",
+      "https://ipapi.co",
+    ],
   });
 
   const body = await renderToReadableStream(

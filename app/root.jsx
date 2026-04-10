@@ -7,7 +7,7 @@ import {GoogleAnalytics} from '~/components/GoogleAnalytics';
 
 export const links = () => [
   {rel:'icon', type:'image/png', href:'/favicon.png'},
-  {rel:'apple-touch-icon', href:'/favicon.png'},
+  {rel:'apple-touch-icon', href:'/favicon.png', sizes:'180x180'},
   // Hreflang com self-reference (todas as páginas referenciam todas as outras)
   {rel:'alternate', hrefLang:'en-us', href:'https://vastara.online/en-us/'},
   {rel:'alternate', hrefLang:'en-gb', href:'https://vastara.online/en-gb/'},
@@ -16,9 +16,17 @@ export const links = () => [
   {rel:'alternate', hrefLang:'en-nz', href:'https://vastara.online/en-nz/'},
   {rel:'alternate', hrefLang:'x-default', href:'https://vastara.online/'},
   {rel:'stylesheet', href:appStyles},
+  // Font preconnections for faster loading
   {rel:'preconnect', href:'https://fonts.googleapis.com'},
   {rel:'preconnect', href:'https://fonts.gstatic.com', crossOrigin:'anonymous'},
-  {rel:'preload', href:'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap', as:'style', onLoad:"this.onload=null;this.rel='stylesheet'"},
+  {rel:'preconnect', href:'https://cdn.shopify.com', crossOrigin:'anonymous'},
+  // Preload critical font (Playfair Display)
+  {rel:'preload', href:'https://fonts.gstatic.com/s/playfairdisplay/v37/nuFvD-vysZs7B96zM4.woff2', as:'font', type:'font/woff2', crossOrigin:'anonymous'},
+  // DNS prefetch for Google Analytics
+  {rel:'dns-prefetch', href:'https://www.googletagmanager.com'},
+  {rel:'dns-prefetch', href:'https://www.google-analytics.com'},
+  // Favicon preload for LCP
+  {rel:'preload', href:'/favicon.png', as:'image', type:'image/png'},
 ];
 
 // Meta tags dinâmicas para cada página com hreflang corrigido

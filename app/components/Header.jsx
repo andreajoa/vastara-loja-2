@@ -177,21 +177,31 @@ export default function Header({header, cartCount, onCartOpen}) {
             <Link to="/account" className="vst-icon-btn" title="Account">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </Link>
-            <button onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              console.log('Cart button clicked, onCartOpen:', typeof onCartOpen);
-              onCartOpen();
-            }} className="vst-icon-btn" title="Cart" type="button">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-              {cartCount > 0 && <span className="vst-cart-badge">{cartCount}</span>}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Cart button clicked, onCartOpen:', typeof onCartOpen);
+                onCartOpen();
+              }}
+              className="vst-icon-btn"
+              aria-label={`Shopping cart${cartCount > 0 ? ` with ${cartCount} items` : ''}`}
+              type="button"
+            >
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              {cartCount > 0 && <span className="vst-cart-badge" aria-live="polite">{cartCount}</span>}
             </button>
           </div>
 
-          <button className="vst-mobile-btn" onClick={() => setMobileOpen(!mobileOpen)}>
-            <span style={{display:'block',width:'22px',height:'1.5px',background:'#0a0a0a',transition:'all 0.3s',transform:mobileOpen?'rotate(45deg) translate(5px,5px)':'none'}}/>
-            <span style={{display:'block',width:'22px',height:'1.5px',background:'#0a0a0a',transition:'all 0.3s',opacity:mobileOpen?0:1}}/>
-            <span style={{display:'block',width:'22px',height:'1.5px',background:'#0a0a0a',transition:'all 0.3s',transform:mobileOpen?'rotate(-45deg) translate(5px,-5px)':'none'}}/>
+          <button
+            className="vst-mobile-btn"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileOpen}
+          >
+            <span style={{display:'block',width:'22px',height:'1.5px',background:'#0a0a0a',transition:'all 0.3s',transform:mobileOpen?'rotate(45deg) translate(5px,5px)':'none'}} aria-hidden="true"/>
+            <span style={{display:'block',width:'22px',height:'1.5px',background:'#0a0a0a',transition:'all 0.3s',opacity:mobileOpen?0:1}} aria-hidden="true"/>
+            <span style={{display:'block',width:'22px',height:'1.5px',background:'#0a0a0a',transition:'all 0.3s',transform:mobileOpen?'rotate(-45deg) translate(5px,-5px)':'none'}} aria-hidden="true"/>
           </button>
         </div>
       </div>
