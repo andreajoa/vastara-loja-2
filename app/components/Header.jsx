@@ -1,5 +1,5 @@
-import {Link, useLocation} from 'react-router';
-import {useState, useEffect} from 'react';
+import {Link, useLocation, useFetcher, useNavigate} from 'react-router';
+import {useState, useEffect, useRef, useCallback} from 'react';
 
 const MENU_IMAGES = {
   default: 'https://cdn.shopify.com/s/files/1/0778/2921/0327/files/VERTICAL_1.jpg?v=1772467367',
@@ -63,6 +63,14 @@ export default function Header({header, cartCount, onCartOpen}) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState(null);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const searchInputRef = useRef(null);
+  const searchTimerRef = useRef(null);
+  const searchFetcher = useFetcher({key: 'header-search'});
+  const navigate = useNavigate();
   useEffect(() => setMounted(true), []);
   const location = useLocation();
 
@@ -71,6 +79,47 @@ export default function Header({header, cartCount, onCartOpen}) {
     window.addEventListener('scroll', fn);
     return () => window.removeEventListener('scroll', fn);
   }, []);
+
+  // Predictive search with debounce
+  const doSearch = useCallback((term) => {
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    if (!term.trim()) { setSearchResults(null); setSearchLoading(false); return; }
+    setSearchLoading(true);
+    searchTimerRef.current = setTimeout(() => {
+      searchFetcher.load(`/search?predictive=true&q=${encodeURIComponent(term.trim())}&limit=6`);
+    }, 250);
+  }, [searchFetcher]);
+
+  // Read fetcher results
+  useEffect(() => {
+    if (searchFetcher.data?.result) {
+      setSearchResults(searchFetcher.data.result);
+      setSearchLoading(false);
+    }
+  }, [searchFetcher.data]);
+
+  // Focus input when search opens
+  useEffect(() => {
+    if (searchOpen && searchInputRef.current) {
+      setTimeout(() => searchInputRef.current?.focus(), 100);
+    }
+  }, [searchOpen]);
+
+  // Close search on route change
+  useEffect(() => { setSearchOpen(false); setSearchTerm(''); setSearchResults(null); }, [location.pathname]);
+
+  // Close search on Escape
+  useEffect(() => {
+    if (!searchOpen) return;
+    const fn = (e) => { if (e.key === 'Escape') { setSearchOpen(false); setSearchTerm(''); setSearchResults(null); } };
+    document.addEventListener('keydown', fn);
+    return () => document.removeEventListener('keydown', fn);
+  }, [searchOpen]);
+
+  const totalResults = searchResults?.total || 0;
+  const products = searchResults?.items?.products || [];
+  const collections = searchResults?.items?.collections || [];
+  const queries = searchResults?.items?.queries || [];
 
   useEffect(() => { setMobileOpen(false); setActiveMenu(null); }, [location.pathname]);
 
@@ -149,6 +198,54 @@ export default function Header({header, cartCount, onCartOpen}) {
         .vst-mobile-drawer{position:fixed;top:96px;left:0;right:0;z-index:998;background:#fff;border-top:1px solid #f0f0f0;padding:16px 24px;max-height:80vh;overflow-y:auto;}
         .vst-mobile-item{display:block;padding:12px 0;font-size:11px;font-weight:400;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;color:#0a0a0a;border-bottom:1px solid #f5f5f5;}
         .vst-mobile-sub{display:block;padding:8px 0 8px 16px;font-size:13px;text-decoration:none;color:#888;border-bottom:1px solid #fafafa;font-weight:300;}
+
+        /* SEARCH OVERLAY */
+        .vst-search-backdrop{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.4);display:flex;justify-content:center;padding-top:96px;animation:vst-fade-in 0.15s ease;}
+        @keyframes vst-fade-in{from{opacity:0}to{opacity:1}}
+        .vst-search-overlay{background:#fff;width:100%;max-width:680px;max-height:calc(100vh - 120px);border-radius:0 0 12px 12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);display:flex;flex-direction:column;animation:vst-slide-down 0.2s ease;}
+        @keyframes vst-slide-down{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+        .vst-search-bar{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid #f0f0f0;}
+        .vst-search-input{flex:1;border:none;outline:none;font-size:15px;font-weight:300;color:#0a0a0a;background:transparent;letter-spacing:0.2px;}
+        .vst-search-input::placeholder{color:#bbb;font-weight:300;}
+        .vst-search-input::-webkit-search-cancel-button{-webkit-appearance:none;}
+        .vst-search-close{background:none;border:none;cursor:pointer;padding:4px;display:flex;transition:opacity 0.15s;}
+        .vst-search-close:hover{opacity:0.5;}
+
+        .vst-search-results{flex:1;overflow-y:auto;padding:8px 0;}
+        .vst-search-loading{display:flex;align-items:center;gap:10px;padding:32px 20px;color:#999;font-size:13px;font-weight:300;}
+        .vst-search-spinner{width:16px;height:16px;border:1.5px solid #eee;border-top-color:#0a0a0a;border-radius:50%;animation:vst-spin 0.6s linear infinite;}
+        @keyframes vst-spin{to{transform:rotate(360deg)}}
+
+        .vst-search-empty{padding:32px 20px;text-align:center;color:#999;font-size:13px;font-weight:300;}
+        .vst-search-empty-hint{font-size:11px;color:#ccc;margin-top:6px;}
+        .vst-search-placeholder{padding:32px 20px;text-align:center;color:#bbb;font-size:13px;font-weight:300;}
+
+        .vst-search-section{padding:0 20px 12px;}
+        .vst-search-section-title{font-size:9px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:#aaa;padding:12px 0 8px;}
+        .vst-search-result-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f7f7f7;text-decoration:none;color:#0a0a0a;transition:all 0.15s;}
+        .vst-search-result-item:hover{padding-left:4px;}
+        .vst-search-result-item:hover .vst-search-result-title{color:#000;}
+        .vst-search-result-img{width:48px;height:48px;border-radius:6px;object-fit:cover;background:#f5f5f5;flex-shrink:0;}
+        .vst-search-result-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+        .vst-search-result-title{font-size:13px;font-weight:400;color:#222;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color 0.15s;}
+        .vst-search-result-price{font-size:12px;color:#888;font-weight:300;}
+        .vst-search-result-vendor{font-size:11px;color:#bbb;font-weight:300;text-transform:uppercase;letter-spacing:0.5px;}
+
+        .vst-search-view-all{display:block;padding:12px 0 4px;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#0a0a0a;text-decoration:none;font-weight:400;transition:opacity 0.15s;}
+        .vst-search-view-all:hover{opacity:0.5;}
+
+        .vst-search-suggestion{display:flex;align-items:center;gap:10px;width:100%;padding:9px 0;border:none;background:none;cursor:pointer;font-size:13px;color:#666;text-align:left;transition:color 0.15s;font-family:inherit;}
+        .vst-search-suggestion:hover{color:#0a0a0a;}
+
+        .vst-search-popular{display:flex;align-items:center;gap:8px;margin-top:16px;flex-wrap:wrap;justify-content:center;}
+        .vst-search-popular-label{font-size:10px;color:#ccc;text-transform:uppercase;letter-spacing:1px;}
+        .vst-search-popular-tag{padding:6px 14px;border-radius:20px;border:1px solid #e8e8e8;background:none;cursor:pointer;font-size:11px;color:#777;transition:all 0.15s;font-family:inherit;}
+        .vst-search-popular-tag:hover{border-color:#0a0a0a;color:#0a0a0a;}
+
+        @media(max-width:600px){
+          .vst-search-overlay{max-width:100%;border-radius:0;max-height:calc(100vh - 96px);}
+          .vst-search-backdrop{padding-top:64px;}
+        }
       `}</style>
 
       {/* HEADER BAR */}
@@ -171,9 +268,9 @@ export default function Header({header, cartCount, onCartOpen}) {
           </nav>
 
           <div className="vst-icons">
-            <Link to="/search" className="vst-icon-btn" title="Search">
+            <button onClick={() => setSearchOpen(true)} className="vst-icon-btn" title="Search" type="button" aria-label="Search">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            </Link>
+            </button>
             <Link to="/account" className="vst-icon-btn" title="Account">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </Link>
@@ -266,6 +363,123 @@ export default function Header({header, cartCount, onCartOpen}) {
               ))}
             </div>
           ))}
+        </div>
+      )}
+
+      {/* SEARCH OVERLAY */}
+      {searchOpen && (
+        <div className="vst-search-backdrop" onClick={() => { setSearchOpen(false); setSearchTerm(''); setSearchResults(null); }}>
+          <div className="vst-search-overlay" onClick={e => e.stopPropagation()}>
+            <div className="vst-search-bar">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input
+                ref={searchInputRef}
+                type="search"
+                value={searchTerm}
+                onChange={(e) => { setSearchTerm(e.target.value); doSearch(e.target.value); }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && searchTerm.trim()) {
+                    setSearchOpen(false);
+                    navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+                  }
+                }}
+                placeholder="Search watches, brands, collections..."
+                className="vst-search-input"
+                autoComplete="off"
+                autoFocus
+              />
+              <button onClick={() => { setSearchOpen(false); setSearchTerm(''); setSearchResults(null); }} className="vst-search-close" type="button" aria-label="Close search">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="1.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
+
+            <div className="vst-search-results">
+              {searchLoading && searchTerm.trim() && (
+                <div className="vst-search-loading">
+                  <div className="vst-search-spinner" />
+                  <span>Searching...</span>
+                </div>
+              )}
+
+              {!searchLoading && searchTerm.trim() && totalResults === 0 && (
+                <div className="vst-search-empty">
+                  <p>No results for "<strong>{searchTerm}</strong>"</p>
+                  <p className="vst-search-empty-hint">Try different keywords or browse our collections</p>
+                </div>
+              )}
+
+              {!searchLoading && products.length > 0 && (
+                <div className="vst-search-section">
+                  <div className="vst-search-section-title">Products</div>
+                  {products.slice(0, 4).map(p => (
+                    <Link key={p.id} to={`/products/${p.handle}`} className="vst-search-result-item" onClick={() => { setSearchOpen(false); setSearchTerm(''); setSearchResults(null); }}>
+                      {p.selectedOrFirstAvailableVariant?.image?.url && (
+                        <img src={p.selectedOrFirstAvailableVariant.image.url} alt={p.title} className="vst-search-result-img" width="48" height="48" loading="lazy" />
+                      )}
+                      <div className="vst-search-result-info">
+                        <span className="vst-search-result-title">{p.title}</span>
+                        <span className="vst-search-result-price">
+                          {p.selectedOrFirstAvailableVariant?.price?.amount && `$${Number(p.selectedOrFirstAvailableVariant.price.amount).toFixed(2)}`}
+                        </span>
+                      </div>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.5"><path d="m9 18 6-6-6-6"/></svg>
+                    </Link>
+                  ))}
+                  {products.length > 4 && (
+                    <Link to={`/search?q=${encodeURIComponent(searchTerm.trim())}`} className="vst-search-view-all" onClick={() => { setSearchOpen(false); setSearchTerm(''); setSearchResults(null); }}>
+                      View all {products.length} products →
+                    </Link>
+                  )}
+                </div>
+              )}
+
+              {!searchLoading && collections.length > 0 && (
+                <div className="vst-search-section">
+                  <div className="vst-search-section-title">Collections</div>
+                  {collections.slice(0, 3).map(c => (
+                    <Link key={c.id} to={`/collections/${c.handle}`} className="vst-search-result-item" onClick={() => { setSearchOpen(false); setSearchTerm(''); setSearchResults(null); }}>
+                      {c.image?.url && (
+                        <img src={c.image.url} alt={c.title} className="vst-search-result-img" width="48" height="48" loading="lazy" />
+                      )}
+                      <div className="vst-search-result-info">
+                        <span className="vst-search-result-title">{c.title}</span>
+                        <span className="vst-search-result-vendor">Collection</span>
+                      </div>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.5"><path d="m9 18 6-6-6-6"/></svg>
+                    </Link>
+                  ))}
+                </div>
+              )}
+
+              {!searchLoading && queries.length > 0 && products.length === 0 && collections.length === 0 && (
+                <div className="vst-search-section">
+                  <div className="vst-search-section-title">Suggestions</div>
+                  {queries.slice(0, 4).map((q, i) => (
+                    <button key={i} type="button" className="vst-search-suggestion"
+                      onClick={() => { setSearchTerm(q.text); doSearch(q.text); searchInputRef.current?.focus(); }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                      <span>{q.text}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {!searchLoading && !searchTerm.trim() && (
+                <div className="vst-search-placeholder">
+                  <p>Start typing to search watches, brands, and collections</p>
+                  <div className="vst-search-popular">
+                    <span className="vst-search-popular-label">Popular:</span>
+                    {['Bulova', 'Diver', 'Chronograph', 'Skeleton'].map(t => (
+                      <button key={t} type="button" className="vst-search-popular-tag"
+                        onClick={() => { setSearchTerm(t); doSearch(t); searchInputRef.current?.focus(); }}>
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </>
