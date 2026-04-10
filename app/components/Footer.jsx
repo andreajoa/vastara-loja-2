@@ -383,7 +383,12 @@ export default function Footer({footer}) {
       <div className="vf-bottom">
         <p className="vf-bottom-copy"><span suppressHydrationWarning>{new Date().getFullYear()}</span> Vastara. All rights reserved.</p>
         <div className="vf-bottom-links">
-          {['Accessibility','#'],['Privacy Policy','/policies/privacy-policy'],['Terms','/policies/terms-of-service'],['Refund Policy','/policies/refund-policy']].map(([label,href]) => (
+          {[
+            ['Accessibility', '#'],
+            ['Privacy Policy', '/policies/privacy-policy'],
+            ['Terms', '/policies/terms-of-service'],
+            ['Refund Policy', '/policies/refund-policy']
+          ].map(([label,href]) => (
             <Link key={label} to={href} className="vf-bottom-link">{label}</Link>
           ))}
         </div>

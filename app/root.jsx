@@ -50,10 +50,6 @@ export const meta = ({data, location}) => {
   ];
 };
 
-export const meta = () => [
-  {name: 'robots', content: 'index, follow'},
-];
-
 export async function loader({context}) {
   const {storefront, env, cart} = context;
   const [header, footer, cartData] = await Promise.all([

@@ -1,5 +1,3 @@
-import {json} from 'react-router';
-
 /**
  * Dynamic robots.txt route
  * This provides a fallback and can be customized per environment
