@@ -181,7 +181,6 @@ export default function Header({header, cartCount, onCartOpen}) {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('Cart button clicked, onCartOpen:', typeof onCartOpen);
                 onCartOpen();
               }}
               className="vst-icon-btn"
@@ -247,7 +246,7 @@ export default function Header({header, cartCount, onCartOpen}) {
 
             {/* RIGHT — image */}
             <div className="vst-mega-right">
-              <img src={megaImage} alt={hoveredSub?.title || activeItem.title} loading="lazy" decoding="async" style={{width:"100%",height:"100%",objectFit:"cover"}} />
+              <img src={megaImage} alt={hoveredSub?.title || activeItem.title} loading="lazy" decoding="async" width="200" height="200" style={{width:"100%",height:"100%",objectFit:"cover"}} />
               <div className="vst-mega-right-overlay"/>
               <div className="vst-mega-right-tag">{hoveredSub?.title || activeItem.title}</div>
             </div>

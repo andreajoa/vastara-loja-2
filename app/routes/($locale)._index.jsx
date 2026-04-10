@@ -38,7 +38,7 @@ export async function loader({context}) {
     storefront.query(BULOVA_QUERY, {variables: {country, language}}).catch(() => ({collection: null})),
     storefront.query(SPOTLIGHT_QUERY, {variables: {country, language}}).catch(() => ({product: null})),
   ]);
-  console.log("I18N:", JSON.stringify(context.storefront.i18n)); console.log("PRICE:", JSON.stringify(products?.nodes?.[0]?.priceRange)); return {
+  return {
     collections: collections.nodes,
     products: products.nodes,
     bulovaProducts: bulovaData?.collection?.products?.nodes || [],
