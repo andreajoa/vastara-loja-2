@@ -6,8 +6,34 @@ import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 /**
  * @type {Route.MetaFunction}
  */
-export const meta = ({data}) => {
-  return [{title: `Hydrogen | ${data?.blog.title ?? ''} blog`}];
+export const meta = ({data, location}) => {
+  const blog = data?.blog;
+  const title = blog?.title || 'Blog';
+  const description = blog?.seo?.description ||
+    `Read the latest articles from Vastara. Discover watch guides, style tips, and premium timepiece insights.`;
+  const blogHandle = blog?.handle || 'blog';
+  const url = `https://vastara.online/blogs/${blogHandle}`;
+  const image = 'https://cdn.shopify.com/s/files/1/0778/2921/0327/files/VERTICAL_1.jpg';
+
+  return [
+    {title: `Vastara | ${title}`},
+    {name: 'description', content: description},
+    {tagName: 'link', rel: 'canonical', href: url},
+    // Open Graph
+    {property: 'og:type', content: 'website'},
+    {property: 'og:url', content: url},
+    {property: 'og:title', content: `Vastara | ${title}`},
+    {property: 'og:description', content: description},
+    {property: 'og:image', content: image},
+    {property: 'og:site_name', content: 'Vastara'},
+    // Twitter Card
+    {name: 'twitter:card', content: 'summary_large_image'},
+    {name: 'twitter:title', content: `Vastara | ${title}`},
+    {name: 'twitter:description', content: description},
+    {name: 'twitter:image', content: image},
+    // Additional SEO
+    {name: 'robots', content: 'index, follow'},
+  ];
 };
 
 /**

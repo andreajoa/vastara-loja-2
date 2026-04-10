@@ -104,28 +104,28 @@ const CITIES = [
 const FALLBACK_GROUPS = [
   {id:'f1', title:'Explore Watches', type:'links', items:[
     {id:'f1a', title:'New Arrivals',         url:'/collections/new-arrivals'},
-    {id:'f1b', title:"Men's Watches",        url:'/collections/mens'},
-    {id:'f1c', title:"Women's Watches",      url:'/collections/womens'},
-    {id:'f1d', title:'Sport Watches',        url:'/collections/sport'},
-    {id:'f1e', title:'Automatic',            url:'/collections/automatic-watches'},
-    {id:'f1f', title:'Quartz',               url:'/collections/quartz'},
+    {id:'f1b', title:"Men's Watches",        url:'/collections/mens-watches'},
+    {id:'f1c', title:"Women's Watches",      url:'/collections/womens-watches'},
+    {id:'f1d', title:'Sport Watches',        url:'/collections/sport-watches'},
+    {id:'f1e', title:'Automatic',            url:'/collections/automatic'},
+    {id:'f1f', title:'Quartz',               url:'/collections/quartz-watches'},
     {id:'f1g', title:'Watch Blog',           url:'/blogs/news'},
   ]},
   {id:'f2', title:'Support', type:'links', items:[
-    {id:'f2a', title:'FAQ',                  url:'/pages/faq'},
-    {id:'f2b', title:'Returns & Refunds',    url:'/pages/refund-policy'},
-    {id:'f2c', title:'Shipping Policy',      url:'/pages/shipping-policy'},
-    {id:'f2d', title:'Contact Us',           url:'/pages/contact'},
-    {id:'f2e', title:'Warranty',             url:'/pages/warranty'},
+    {id:'f2a', title:'FAQ',                  url:'#'}, // Placeholder - create FAQ page
+    {id:'f2b', title:'Returns & Refunds',    url:'/policies/refund-policy'},
+    {id:'f2c', title:'Shipping Policy',      url:'/policies/shipping-policy'},
+    {id:'f2d', title:'Contact Us',           url:'#'}, // Placeholder - create contact page
+    {id:'f2e', title:'Warranty',             url:'#'}, // Placeholder - create warranty page
   ]},
   {id:'f3', title:'Company', type:'links', items:[
-    {id:'f3a', title:'Our Story',            url:'/pages/about-us'},
-    {id:'f3b', title:'Careers',              url:'/pages/careers'},
-    {id:'f3c', title:'Press',                url:'/pages/press'},
-    {id:'f3d', title:'Privacy Policy',       url:'/pages/privacy-policy'},
-    {id:'f3e', title:'Terms of Service',     url:'/pages/terms-of-service'},
-    {id:'f3f', title:'Cookie Policy',        url:'/pages/cookie-policy'},
-    {id:'f3g', title:'Your Privacy Choices', url:'/pages/privacy-choices'},
+    {id:'f3a', title:'Our Story',            url:'#'}, // Placeholder - create about page
+    {id:'f3b', title:'Careers',              url:'#'}, // Placeholder - create careers page
+    {id:'f3c', title:'Press',                url:'#'}, // Placeholder - create press page
+    {id:'f3d', title:'Privacy Policy',       url:'/policies/privacy-policy'},
+    {id:'f3e', title:'Terms of Service',     url:'/policies/terms-of-service'},
+    {id:'f3f', title:'Cookie Policy',        url:'#'}, // Placeholder - create cookie policy page
+    {id:'f3g', title:'Your Privacy Choices', url:'#'}, // Placeholder - create privacy choices page
   ]},
   {id:'f4', title:'Vastara', type:'brand', items:[]},
 ];
@@ -383,7 +383,7 @@ export default function Footer({footer}) {
       <div className="vf-bottom">
         <p className="vf-bottom-copy"><span suppressHydrationWarning>{new Date().getFullYear()}</span> Vastara. All rights reserved.</p>
         <div className="vf-bottom-links">
-          {[['Accessibility','/pages/accessibility'],['Privacy Policy','/pages/privacy-policy'],['Terms','/pages/terms-of-service'],['Refund Policy','/pages/refund-policy']].map(([label,href]) => (
+          {['Accessibility','#'],['Privacy Policy','/policies/privacy-policy'],['Terms','/policies/terms-of-service'],['Refund Policy','/policies/refund-policy']].map(([label,href]) => (
             <Link key={label} to={href} className="vf-bottom-link">{label}</Link>
           ))}
         </div>

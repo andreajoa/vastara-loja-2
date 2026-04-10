@@ -8,6 +8,7 @@ import {GoogleAnalytics} from '~/components/GoogleAnalytics';
 export const links = () => [
   {rel:'icon', type:'image/png', href:'/favicon.png'},
   {rel:'apple-touch-icon', href:'/favicon.png'},
+  // Hreflang com self-reference (todas as páginas referenciam todas as outras)
   {rel:'alternate', hrefLang:'en-us', href:'https://vastara.online/en-us/'},
   {rel:'alternate', hrefLang:'en-gb', href:'https://vastara.online/en-gb/'},
   {rel:'alternate', hrefLang:'en-ca', href:'https://vastara.online/en-ca/'},
@@ -19,6 +20,35 @@ export const links = () => [
   {rel:'preconnect', href:'https://fonts.gstatic.com', crossOrigin:'anonymous'},
   {rel:'preload', href:'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap', as:'style', onLoad:"this.onload=null;this.rel='stylesheet'"},
 ];
+
+// Meta tags dinâmicas para cada página com hreflang corrigido
+export const meta = ({data, location}) => {
+  const currentPath = location?.pathname || '/';
+  const origin = 'https://vastara.online';
+  const baseUrl = `${origin}${currentPath}`;
+
+  // Lista de locales suportados
+  const locales = ['en-us', 'en-gb', 'en-ca', 'en-au', 'en-nz'];
+
+  // Gerar tags hreflang para a página atual
+  const hreflangLinks = locales.map(locale => ({
+    tagName: 'link',
+    rel: 'alternate',
+    hrefLang: locale,
+    href: `${origin}/${locale}${currentPath}`,
+  }));
+
+  // Adicionar x-default e self-reference
+  hreflangLinks.push(
+    {tagName: 'link', rel: 'alternate', hrefLang: 'x-default', href: baseUrl},
+    {tagName: 'link', rel: 'canonical', href: baseUrl}
+  );
+
+  return [
+    {name: 'robots', content: 'index, follow'},
+    ...hreflangLinks,
+  ];
+};
 
 export const meta = () => [
   {name: 'robots', content: 'index, follow'},

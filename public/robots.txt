@@ -1,0 +1,20 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow admin and account areas
+Disallow: /account
+Disallow: /admin
+Disallow: /cart
+Disallow: /checkout
+Disallow: /search
+Disallow: /recommendations
+Disallow: /cart.js
+Disallow: /cart/update.js
+Disallow: /recommendations/products
+
+# Sitemap
+Sitemap: https://vastara.online/sitemap.xml
+
+# Crawl-delay (optional, uncomment if needed)
+# Crawl-delay: 1

@@ -4,7 +4,35 @@ import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {useState, useMemo} from 'react';
 import {Link} from 'react-router';
 
-export const meta = ({data}) => [{title:`Vastara | ${data?.collection.title??''}`}];
+export const meta = ({data, location}) => {
+  const collection = data?.collection;
+  const title = collection?.title || 'Collection';
+  const description = collection?.description?.slice(0, 155) ||
+    `Discover ${title} at Vastara. Premium watches with free worldwide shipping. Quality timepieces for men and women.`;
+  const image = collection?.image?.url || 'https://cdn.shopify.com/s/files/1/0778/2921/0327/files/VERTICAL_1.jpg';
+  const url = `https://vastara.online/collections/${collection?.handle}`;
+  const productCount = collection?.products?.nodes?.length || 0;
+
+  return [
+    {title: `Vastara | ${title}`},
+    {name: 'description', content: description},
+    {tagName: 'link', rel: 'canonical', href: url},
+    // Open Graph
+    {property: 'og:type', content: 'website'},
+    {property: 'og:url', content: url},
+    {property: 'og:title', content: `Vastara | ${title}`},
+    {property: 'og:description', content: description},
+    {property: 'og:image', content: image},
+    {property: 'og:site_name', content: 'Vastara'},
+    // Twitter Card
+    {name: 'twitter:card', content: 'summary_large_image'},
+    {name: 'twitter:title', content: `Vastara | ${title}`},
+    {name: 'twitter:description', content: description},
+    {name: 'twitter:image', content: image},
+    // Additional SEO
+    {name: 'robots', content: 'index, follow'},
+  ];
+};
 
 export async function loader(args) {
   const deferredData = loadDeferredData(args);

@@ -5,8 +5,37 @@ import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 /**
  * @type {Route.MetaFunction}
  */
-export const meta = ({data}) => {
-  return [{title: `Hydrogen | ${data?.article.title ?? ''} article`}];
+export const meta = ({data, location}) => {
+  const article = data?.article;
+  const title = article?.title || 'Article';
+  const description = article?.seo?.description ||
+    article?.contentHtml?.replace(/<[^>]*>/g, '').slice(0, 150).trim() + '...';
+  const image = article?.image?.url || 'https://cdn.shopify.com/s/files/1/0778/2921/0327/files/VERTICAL_1.jpg';
+  const blogHandle = location?.pathname?.split('/').find(s => s.includes('blog')) || 'blog';
+  const articleHandle = article?.handle || '';
+  const url = `https://vastara.online/blogs/${blogHandle}/${articleHandle}`;
+  const publishedDate = article?.publishedAt;
+
+  return [
+    {title: `Vastara | ${title}`},
+    {name: 'description', content: description},
+    {tagName: 'link', rel: 'canonical', href: url},
+    // Open Graph
+    {property: 'og:type', content: 'article'},
+    {property: 'og:url', content: url},
+    {property: 'og:title', content: `Vastara | ${title}`},
+    {property: 'og:description', content: description},
+    {property: 'og:image', content: image},
+    {property: 'og:site_name', content: 'Vastara'},
+    {property: 'article:published_time', content: publishedDate},
+    // Twitter Card
+    {name: 'twitter:card', content: 'summary_large_image'},
+    {name: 'twitter:title', content: `Vastara | ${title}`},
+    {name: 'twitter:description', content: description},
+    {name: 'twitter:image', content: image},
+    // Additional SEO
+    {name: 'robots', content: 'index, follow'},
+  ];
 };
 
 /**

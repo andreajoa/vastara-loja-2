@@ -51,7 +51,7 @@ export const meta = ({data}) => {
   return [
     {title: `${title} | Vastara Watches`},
     {name: 'description', content: description},
-    {rel: 'canonical', href: url},
+    {tagName: 'link', rel: 'canonical', href: url},
     {property: 'og:type', content: 'product'},
     {property: 'og:title', content: `${title} | Vastara Watches`},
     {property: 'og:description', content: description},

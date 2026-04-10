@@ -4,7 +4,30 @@ import {WatchQuiz} from '~/components/WatchQuiz';
 import {ReviewsStrip} from '~/components/ReviewsStrip';
 import {useState, useEffect, useRef} from 'react';
 
-export const meta = () => [{title: 'VASTARA | Luxury Timepieces'}];
+export const meta = () => {
+  const title = 'VASTARA | Luxury Timepieces';
+  const description = 'Discover premium luxury watches at Vastara. Shop curated timepieces with free worldwide shipping, 1-year warranty, and exceptional quality.';
+
+  return [
+    {title},
+    {name: 'description', content: description},
+    {tagName: 'link', rel: 'canonical', href: 'https://vastara.online/'},
+    // Open Graph
+    {property: 'og:type', content: 'website'},
+    {property: 'og:url', content: 'https://vastara.online/'},
+    {property: 'og:title', content: title},
+    {property: 'og:description', content: description},
+    {property: 'og:image', content: 'https://cdn.shopify.com/s/files/1/0778/2921/0327/files/VERTICAL_1.jpg'},
+    {property: 'og:site_name', content: 'Vastara'},
+    // Twitter Card
+    {name: 'twitter:card', content: 'summary_large_image'},
+    {name: 'twitter:title', content: title},
+    {name: 'twitter:description', content: description},
+    {name: 'twitter:image', content: 'https://cdn.shopify.com/s/files/1/0778/2921/0327/files/VERTICAL_1.jpg'},
+    // Additional SEO
+    {name: 'robots', content: 'index, follow'},
+  ];
+};
 
 export async function loader({context}) {
   const {language, country} = context.storefront.i18n;
@@ -264,7 +287,7 @@ function MobileFade({images, style}) {
   return (
     <div style={{position:'relative', width:'100%', height:'100%', ...style}}>
       {images.map((src, i) => (
-        <img key={src} src={src} alt="" style={{
+        <img key={src} src={src} alt={`Vastara luxury watch collection image ${i + 1}`} style={{
           position:'absolute', inset:0, width:'100%', height:'100%',
           objectFit:'cover', display:'block',
           opacity: i === idx ? 1 : 0,
